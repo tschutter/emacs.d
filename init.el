@@ -291,6 +291,9 @@ User buffers are those not starting with *."
 ;;; Remember and restore point location after PgUp,PgDn
 (setq scroll-preserve-screen-position t)
 
+;;; Identify variables that are safe to be set as file variables.
+(put 'whitespace-line-column 'safe-local-variable 'integerp)
+
 ;;; Advanced highlighting of matching parenthesis.
 (require 'mic-paren)
 (paren-activate)
@@ -548,7 +551,7 @@ User buffers are those not starting with *."
             (if (not (eq system-type 'windows-nt))
                 (flyspell-prog-mode))  ;on-the-fly spell check in comments
             (make-local-variable 'whitespace-style)
-            (add-to-list 'whitespace-style 'lines-tail)
+            (add-to-list 'whitespace-style 'lines-tail)  ;highlight cols beyond whitespace-line-column
             (define-key python-mode-map (kbd "C-c h") 'pylookup-lookup)  ;lookup in Python doc
             (define-key python-mode-map (kbd "<f11>") 'pdb-insert-break)  ;insert debug break
             (define-key python-mode-map (kbd "<f12>") 'pyp)  ;insert debug print
