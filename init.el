@@ -213,13 +213,14 @@ User buffers are those not starting with *."
 (require 'tramp)  ; required to correctly modify  tramp-remote-process-environment
 (setq tramp-default-method "ssh")
 (setq tramp-persistency-file-name (concat emacs-var-directory "tramp"))
-(setq tramp-remote-process-environment
-      (split-string
-       (replace-regexp-in-string
-        "HOME/\.tramp_history"
-        "HOME/.var/tramp_history"
-        (mapconcat 'identity tramp-remote-process-environment "|"))
-       "|"))  ; move ~/.tramp_history file created on target to ~/.var/
+(if (< emacs-major-version 24) ; broken in emacs-24
+    (setq tramp-remote-process-environment
+          (split-string
+           (replace-regexp-in-string
+            "HOME/\.tramp_history"
+            "HOME/.var/tramp_history"
+            (mapconcat 'identity tramp-remote-process-environment "|"))
+           "|")))  ; move ~/.tramp_history file created on target to ~/.var/
 
 
 ;;;; Editor behavior
