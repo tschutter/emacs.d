@@ -73,6 +73,11 @@ Also returns nil if pid is nil."
 (global-set-key (kbd "<kp-3>") 'bookmark-jump)
 
 
+;;;; Yasnippet (templates)
+(require 'yasnippet)
+(yas-global-mode 1)
+
+
 ;;;; Web browsing
 ;;; http://www.emacswiki.org/emacs/emacs-w3m
 (when (require 'w3m-load nil t)
