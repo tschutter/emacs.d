@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: add_option
+# key: add_option
+# --
+option_parser.add_option(
+    "--$1",
+    action="${2::$$(yas/choose-value '("store" "store_true" "store_false" "append" "count"))}",
+    type="${3::$$(yas/choose-value '("string" "int" "float"))}",
+    default=$4,
+    help="$5"
+)

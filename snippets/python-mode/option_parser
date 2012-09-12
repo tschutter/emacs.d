@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: option_parser = OptionParser()
+# --
+option_parser = optparse.OptionParser(
+    usage="usage: %prog [options]$1\n" +
+        "  $2.",
+    version="%prog " + __version__
+)
