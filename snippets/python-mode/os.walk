@@ -1,0 +1,5 @@
+# name: os.walk
+# --
+for dirpath, dirnames, filenames in os.walk($1):
+    for filename in filenames:
+        os.path.join(dirpath, filename)
