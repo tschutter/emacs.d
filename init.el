@@ -554,16 +554,6 @@ User buffers are those not starting with *."
 
 ;;; Simplify insertion of debugging print statements.
 (load "pyp.el")
-(defun pdb-insert-break ()
-  "Insert the code necessary to drop into pdb at the current point."
-  (interactive)
-  (save-excursion
-    (beginning-of-line)
-    (insert "import pdb; pdb.set_trace()")
-    (newline)
-    (beginning-of-line 0)
-    (indent-for-tab-command)
-    ))
 
 ;;; Python editing.
 (add-hook 'python-mode-hook
@@ -573,7 +563,6 @@ User buffers are those not starting with *."
             (make-local-variable 'whitespace-style)
             (add-to-list 'whitespace-style 'lines-tail)  ;highlight cols beyond whitespace-line-column
             (define-key python-mode-map (kbd "C-c h") 'pylookup-lookup)  ;lookup in Python doc
-            (define-key python-mode-map (kbd "<f11>") 'pdb-insert-break)  ;insert debug break
             (define-key python-mode-map (kbd "<f12>") 'pyp)  ;insert debug print
             ))
 
