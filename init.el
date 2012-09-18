@@ -600,6 +600,10 @@ User buffers are those not starting with *."
       (append '(("CMakeLists\\.txt\\'" . cmake-mode)
                 ("\\.cmake\\'" . cmake-mode))
               auto-mode-alist))
+(add-hook 'cmake-mode-hook
+          (lambda ()
+            (setq-default cmake-tab-width 4)
+            ))
 
 
 ;;;; C++
