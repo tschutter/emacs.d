@@ -234,6 +234,7 @@ the indentation.  Otherwise it retains the same position on the line"
 (defvar cmake-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map "\C-ch" 'cmake-help-command)
+    (define-key map "\C-cl" 'cmake-help-list-commands)
     (define-key map "\C-cu" 'unscreamify-cmake-buffer)
     map)
   "Keymap used in cmake-mode buffers.")
