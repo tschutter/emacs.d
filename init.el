@@ -594,6 +594,18 @@ User buffers are those not starting with *."
 (global-set-key "\C-xpl" 'load-ropemacs)
 
 
+;; CMake
+(require 'cmake-mode)
+(setq auto-mode-alist
+      (append '(("CMakeLists\\.txt\\'" . cmake-mode)
+                ("\\.cmake\\'" . cmake-mode))
+              auto-mode-alist))
+;(add-hook 'cmake-mode-hook
+;          (lambda ()
+;            (define-key cmake-mode-map (kbd "C-c h") 'cmake-help-command)  ;lookup in CMake doc
+;            ))
+
+
 ;;;; C++
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 (add-hook 'c++-mode-hook
