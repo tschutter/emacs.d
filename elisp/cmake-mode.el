@@ -228,13 +228,25 @@ the indentation.  Otherwise it retains the same position on the line"
 ;;
 (defvar cmake-tab-width 2)
 
+;;
+;; Keymap.
+;;
+(defvar cmake-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map "\C-ch" 'cmake-help-command)
+    (define-key map "\C-cu" 'unscreamify-cmake-buffer)
+    map)
+  "Keymap used in cmake-mode buffers.")
+
 ;------------------------------------------------------------------------------
 
 ;;
 ;; CMake mode startup function.
 ;;
 (defun cmake-mode ()
-  "Major mode for editing CMake listfiles."
+  "Major mode for editing CMake listfiles.
+
+\\{cmake-mode-map}"
   (interactive)
   (kill-all-local-variables)
   (setq major-mode 'cmake-mode)
@@ -260,6 +272,9 @@ the indentation.  Otherwise it retains the same position on the line"
   ; Setup comment syntax.
   (make-local-variable 'comment-start)
   (setq comment-start "#")
+
+  ; Setup keymap.
+  (use-local-map cmake-mode-map)
 
   ; Run user hooks.
   (run-hooks 'cmake-mode-hook))
