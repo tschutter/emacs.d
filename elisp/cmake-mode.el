@@ -68,9 +68,9 @@ set the path with these commands:
                                        "\\|" "[ \t\r\n]"
                                        "\\)*"))
 (defconst cmake-regex-block-open
-  "^\\(IF\\|MACRO\\|FOREACH\\|ELSE\\|ELSEIF\\|WHILE\\|FUNCTION\\)$")
+  "^\\(if\\|macro\\|foreach\\|else\\|elseif\\|while\\|function\\)$")
 (defconst cmake-regex-block-close
-  "^[ \t]*\\(ENDIF\\|ENDFOREACH\\|ENDMACRO\\|ELSE\\|ELSEIF\\|ENDWHILE\\|ENDFUNCTION\\)[ \t]*(")
+  "^[ \t]*\\(endif\\|endforeach\\|endmacro\\|else\\|elseif\\|endwhile\\|endfunction\\)[ \t]*(")
 
 ;------------------------------------------------------------------------------
 
@@ -99,6 +99,7 @@ set the path with these commands:
     (setq region (buffer-substring-no-properties (point) point-start))
     (while (and (not (bobp))
                 (or (looking-at cmake-regex-blank)
+                    (cmake-line-starts-inside-string)
                     (not (and (string-match cmake-regex-indented region)
                               (= (length region) (match-end 0))))))
       (forward-line -1)
@@ -125,6 +126,7 @@ set the path with these commands:
           (beginning-of-line)
 
           (let ((point-start (point))
+                (case-fold-search t)  ;; case-insensitive
                 token)
 
             ; Search back for the last indented line.
