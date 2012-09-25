@@ -203,15 +203,6 @@ User buffers are those not starting with *."
     (setq browse-url-generic-program "/usr/bin/chromium-browser")
     (setq ffap-url-fetcher 'browse-url-generic)))
 (setq ffap-machine-p-known 'accept)  ;No pinging
-(setq ffap-c-path
-      (list
-       (getenv "SRC_TREE")
-       "~/src/pxpoint"
-       "~/src/webservices"
-       "/usr/include"
-       "/usr/local/include"
-       "C:/Program Files/Microsoft Visual Studio 10.0/VC/include"
-       "C:/Program Files/Java/jdk1.6.0_20/include"))
 
 ;;; Enable menu of recently opened files.
 ;;; See http://www.emacswiki.org/emacs/RecentFiles
@@ -607,6 +598,7 @@ User buffers are those not starting with *."
 
 
 ;;;; C++
+(require 'c-includes)
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 (add-hook 'c++-mode-hook
           (lambda ()
@@ -647,6 +639,11 @@ User buffers are those not starting with *."
 
 
 ;;;; Local config.
+;;; Suggested contents include:
+;;;   (add-to-list 'c-includes-path "~/src/myproj")
 ;;; This *must* be last so that it can override settings here.
 (if (file-exists-p "~/.emacs-local.el")
     (load-file "~/.emacs-local.el"))
+
+;;; Except for this line, which comes after the load of "~/.emacs-local.el".
+(setq ffap-c-path c-includes-path)
