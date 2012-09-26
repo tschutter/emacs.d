@@ -638,6 +638,18 @@ User buffers are those not starting with *."
 (add-to-list 'auto-mode-alist '("\\.scad$" . scad-mode))
 
 
+;;;; VC (version control).
+;;; Put list of files in default commit message.
+(require 'log-edit)
+(setq log-edit-setup-invert t)
+(add-hook 'log-edit-hook
+          (lambda ()
+            (erase-buffer)  ; SETUP inserts stuff we don't want.
+            (insert
+             (mapconcat 'identity (log-edit-files) ",")
+             ": ")))
+
+
 ;;;; Local config.
 ;;; Suggested contents include:
 ;;;   (add-to-list 'c-includes-path "~/src/myproj")
