@@ -1,14 +1,7 @@
 ;;;; Snippets from old .emacs files.
 
-;;;   (load-library "mydiary")
-;;;
-;;;   ;; crypt++
-;;;   ;(setq crypt-encryption-type 'gpg)
-;;;   ;(crypt-rebuild-tables)
-;;;
 ;;;   ;(quietly-read-abbrev-file)
 ;;;   ;(add-hook 'c-mode-hook '(lambda () (abbrev-mode 1)))
-;;;
 
 ;;;   ;; tell the default compile buffer to be n lines high
 ;;;   ;(setq compilation-window-height 11)
@@ -29,10 +22,6 @@
 ;;;   ;(require 'csharp-mode)
 ;;;   ;(setq auto-mode-alist
 ;;;   ;   (append '(("\\.cs$" . csharp-mode)) auto-mode-alist))
-
-;todo; ;;; Editor behavior: turn on word wrap in text-mode
-;todo; (add-hook 'text-mode-hook 'turn-on-auto-fill)
-;todo;
 
 ;todo; ;;; Editor behavior: highlight QWER keyword
 ;todo; (font-lock-add-keywords
@@ -68,19 +57,6 @@
 ;todo; (global-set-key "\C-he" 'describe-lint-message)
 ;todo; (define-key menu-bar-help-menu [describe-lint-message]
 ;todo;   '("Describe PC-lint Message" . describe-lint-message))
-;todo;
-;todo; ;;; Editor tools: find all header files included by a source file
-;todo; (require 'c-includes)
-;todo; (setq c-includes-path
-;todo;       (list
-;todo;        (getenv "SRC_TREE")
-;todo;        "/usr/include"
-;todo;        "/usr/include/sys"
-;todo;        "C:/Program Files/Microsoft Visual Studio .NET/Vc7/include"
-;todo;        "C:/Program Files/Microsoft Visual Studio .NET/Vc7/FrameworkSDK/include"
-;todo;        "C:/j2sdk1.4.0/include"))
-;todo; (define-key menu-bar-tools-menu [c-includes-current-file]
-;todo;   '("Show C Includes" . c-includes-current-file))
 ;todo;
 ;todo; ;;;; PRA source code style
 ;todo;
