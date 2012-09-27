@@ -611,6 +611,12 @@ User buffers are those not starting with *."
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 (add-hook 'c++-mode-hook
           (lambda ()
+            (define-key-after c++-mode-map
+              [menu-bar C++ List\ Included\ Files\ Sep]
+              '(menu-item "----"))
+            (define-key-after c++-mode-map
+              [menu-bar C++ List\ Included\ Files]
+              '(menu-item "List Included Files" c-includes-current-file))
             (if (not (eq system-type 'windows-nt))
                 (flyspell-prog-mode))
             (setq-default c-basic-offset 4)
