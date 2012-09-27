@@ -235,6 +235,9 @@ User buffers are those not starting with *."
             (mapconcat 'identity tramp-remote-process-environment "|"))
            "|")))  ; move ~/.tramp_history file created on target to ~/.var/
 
+;;; Alternate diary handling
+(load-library "mydiary")
+
 
 ;;;; Editor behavior
 
