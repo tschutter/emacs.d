@@ -99,7 +99,8 @@ Also returns nil if pid is nil."
               (w3m-find-file (substring url 7))
             (w3m-goto-url-new-session url))
           (current-buffer)))))
-  (add-to-list 'desktop-buffer-mode-handlers '(w3m-mode . w3m-restore-desktop-buffer)))
+  (add-to-list 'desktop-buffer-mode-handlers
+               '(w3m-mode . w3m-restore-desktop-buffer)))
 
 
 ;;;; Opening files and buffer manipulation
@@ -108,7 +109,8 @@ Also returns nil if pid is nil."
 
 Similar to (kill-buffer (current-buffer)) with the following additions:
 
-* Prompt user to save if the buffer has been modified even if the buffer is not associated with a file.
+* Prompt user to save if the buffer has been modified even if the
+  buffer is not associated with a file.
 * Make sure the buffer shown after closing is a user buffer.
 
 A special buffer is one who's name starts with *.
@@ -119,8 +121,9 @@ Else it is a user buffer."
         (setq special-buffer-p t)
       (setq special-buffer-p nil))
 
-    ;; Offer to save buffers that are non-empty and modified, even for non-file visiting buffer.
-    ;; Because kill-buffer does not offer to save buffers that are not associated with files.
+    ;; Offer to save buffers that are non-empty and modified, even for
+    ;; non-file visiting buffer.  Because kill-buffer does not offer
+    ;; to save buffers that are not associated with files.
     (when (and (buffer-modified-p)
                (not special-buffer-p)
                (not (string-equal major-mode "dired-mode"))
@@ -220,7 +223,7 @@ User buffers are those not starting with *."
 ;;; TRAMP remote file access
 ;;; http://www.gnu.org/software/tramp/
 ;;; To activate, open file of the form /machine:localname
-(require 'tramp)  ; required to correctly modify  tramp-remote-process-environment
+(require 'tramp)
 (setq tramp-default-method "ssh")
 (setq tramp-persistency-file-name (concat emacs-var-directory "tramp"))
 (if (< emacs-major-version 24) ; broken in emacs-24
@@ -250,11 +253,11 @@ User buffers are those not starting with *."
 ;;; work.
 (setq default-major-mode 'text-mode)
 
-;;; Display the size of the buffer, line number, and column number in the mode line.
+;;; Display the size of the buffer, line number, and column number in
+;;; the mode line.
 (size-indication-mode 1)
 (line-number-mode 1)
 (column-number-mode 1)
-;(which-function-mode 1)  ;if you can't tell what function you are in, your functions are too long
 
 ;;; Display line numbers on the left side of the window.
 ;;; See http://www.emacswiki.org/emacs/LineNumbers
@@ -263,15 +266,17 @@ User buffers are those not starting with *."
 (global-linum-mode)         ;all buffers
 (defun linum-on ()
   (unless (or
-           (minibufferp)    ;except the minibuffer
-           (string-match "^\\*\\|&" (buffer-name (current-buffer))))  ;except special buffers
+           ;except the minibuffer
+           (minibufferp)
+           ;except special buffers
+           (string-match "^\\*\\|&" (buffer-name (current-buffer))))
     (linum-mode 1)))
 
 ;;; On-the-fly spell checking.
 ;;; See http://www.emacswiki.org/emacs/FlySpell
 (if (not (eq system-type 'windows-nt))
     (add-hook 'text-mode-hook 'turn-on-flyspell))
-(setq ispell-silently-savep t)  ;save the personal dictionary without confirmation
+(setq ispell-silently-savep t)  ;save dictionary without confirmation
 
 ;;; Various key bindings.
 (global-set-key (kbd "C-z") 'undo)   ;overrides suspend-frame
@@ -480,7 +485,8 @@ User buffers are those not starting with *."
 ;;; Display and cleanup bogus whitespace.
 ;;; See http://www.emacswiki.org/emacs/WhiteSpace
 (require 'whitespace)
-(setq whitespace-style '(face trailing tabs empty indentation space-before-tab))
+(setq whitespace-style
+      '(face trailing tabs empty indentation space-before-tab))
 (global-whitespace-mode 1)
 (setq whitespace-action '(auto-cleanup))
 
