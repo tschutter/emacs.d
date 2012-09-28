@@ -62,24 +62,6 @@
 ;todo;
 ;todo; ;;; PRA source code style: C and C++
 ;todo; (require 'cc-vars)
-;todo; (setq c-basic-offset 2)
-;todo; (defun adjust-indentation-style ()
-;todo;   ;; use C-c C-s to determine the syntactic symbol
-;todo;   ;; use C-h v c-offsets-alist to see current setting for the syntactic symbol
-;todo;   ;; change it here
-;todo;   (c-set-offset 'arglist-intro '+)
-;todo;   (c-set-offset 'case-label '+)
-;todo;   (c-set-offset 'arglist-close '0)
-;todo; )
-;todo; (add-hook 'c-mode-hook 'adjust-indentation-style)
-;todo; (add-hook 'c++-mode-hook 'adjust-indentation-style)
-;todo; (add-hook 'java-mode-hook 'adjust-indentation-style)
-;todo;
-;todo; ;;; PRA source code style: IDL
-;todo; (setq auto-mode-alist (cons '("\\.idl\\'" . c-mode) auto-mode-alist))
-;todo;
-;todo; ;;; PRA source code style: DOC++
-;todo; (setq auto-mode-alist (cons '("\\.dxx\\'" . c-mode) auto-mode-alist))
 ;todo;
 ;todo; ;;; PRA source code style: code fixup
 ;todo; (require 'pra-code-fixup)

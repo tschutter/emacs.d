@@ -606,9 +606,21 @@ User buffers are those not starting with *."
             ))
 
 
+;;;; C
+(defun adjust-indentation-style ()
+  ;; use C-c C-s to determine the syntactic symbol
+  ;; use C-h v c-offsets-alist to see current setting for the
+  ;; syntactic symbol
+  (c-set-offset 'arglist-intro '+)  ; normal indent for first arg
+  (c-set-offset 'case-label '+)  ; indent case, not flush w/ switch
+  (c-set-offset 'arglist-close '0)  ; no indent for close paren
+  )
+(add-hook 'c-mode-hook 'adjust-indentation-style)
+
 ;;;; C++
 (require 'c-includes)
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+(add-hook 'c++-mode-hook 'adjust-indentation-style)
 (add-hook 'c++-mode-hook
           (lambda ()
             (define-key-after c++-mode-map
@@ -629,11 +641,16 @@ User buffers are those not starting with *."
 (autoload 'csharp-mode "csharp-mode" "Major mode for editing C# code." t)
 (setq auto-mode-alist
       (append '(("\\.cs$" . csharp-mode)) auto-mode-alist))
+(add-hook 'csharp-mode-hook 'adjust-indentation-style)
 (add-hook 'csharp-mode-hook
           (lambda ()
             (if (not (eq system-type 'windows-nt))
                 (flyspell-prog-mode))
             ))
+
+
+;;;; Java
+(add-hook 'java-mode-hook 'adjust-indentation-style)
 
 
 ;;;; reStructuredText documents.
