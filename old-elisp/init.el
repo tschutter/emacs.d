@@ -3,9 +3,6 @@
 ;;;   ;(quietly-read-abbrev-file)
 ;;;   ;(add-hook 'c-mode-hook '(lambda () (abbrev-mode 1)))
 
-;;;   ;; tell the default compile buffer to be n lines high
-;;;   ;(setq compilation-window-height 11)
-;;;
 ;;;   ;;(win32-select-font) ;C-x C-e this to select a font
 ;;;   ;; italic fonts follow
 ;;;   ;(set-default-font "-*-Courier New-normal-r-*-*-15-90-*-*-c-*-*-ansi-")

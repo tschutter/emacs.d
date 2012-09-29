@@ -546,6 +546,55 @@ User buffers are those not starting with *."
 ;(setq gud-tooltip-echo-area t)  ;use the echo area instead of frames for GUD tooltips
 
 
+;;;; Compiling.
+(require 'smart-compile)
+(add-to-list 'smart-compile-alist '(cmake-mode . "make -k"))
+(add-to-list 'smart-compile-alist '(python-mode . "pycheck %f -s"))
+(defun my-compile ()
+  "Run compile and resize the compile window"
+  (interactive)
+  (progn
+    (call-interactively 'smart-compile)
+    (setq cur (selected-window))
+    (setq w (get-buffer-window "*compilation*"))
+    (select-window w)
+    (setq h (window-height w))
+    (shrink-window (- h 10))
+    (select-window cur)
+    ))
+(defun my-compilation-hook ()
+  "Make sure that the compile window is splitting vertically"
+  (progn
+    (if (not (get-buffer-window "*compilation*"))
+        (progn
+          (split-window-vertically)
+          ))))
+(add-hook 'compilation-mode-hook 'my-compilation-hook)
+(global-set-key [f5] 'my-compile)
+(defun my-next-error ()
+  "Move point to next error and highlight it"
+  (interactive)
+  (progn
+    (next-error)
+    (deactivate-mark)
+    (end-of-line)
+    (activate-mark)
+    (beginning-of-line)
+    ))
+(defun my-previous-error ()
+  "Move point to previous error and highlight it"
+  (interactive)
+  (progn
+    (previous-error)
+    (deactivate-mark)
+    (end-of-line)
+    (activate-mark)
+    (beginning-of-line)
+    ))
+(global-set-key (kbd "C-n") 'my-next-error)
+(global-set-key (kbd "C-p") 'my-previous-error)
+
+
 ;;;; Python
 
 ;;; Static code checks (either ^C-^W or ^C-^V).
