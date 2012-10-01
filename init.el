@@ -492,6 +492,16 @@ User buffers are those not starting with *."
       '(face trailing tabs empty indentation space-before-tab))
 (global-whitespace-mode 1)
 (setq whitespace-action '(auto-cleanup))
+(defun whitespace-disable-for-some-files ()
+  "Disable whitespace mode for some files"
+  (let ((extension (file-name-extension buffer-file-name)))
+    (message extension)
+    (if (string-equal extension "sln")
+        (progn
+          (set (make-local-variable 'whitespace-style) '(nil))
+          (set (make-local-variable 'whitespace-action) '(nil))
+          ))))
+(add-hook 'find-file-hook 'whitespace-disable-for-some-files)
 
 ;;; Line wrap regions, function definitions, and function calls.
 (defun region-line-wrap ()
