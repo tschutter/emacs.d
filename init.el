@@ -495,7 +495,6 @@ User buffers are those not starting with *."
 (defun whitespace-disable-for-some-files ()
   "Disable whitespace mode for some files"
   (let ((extension (file-name-extension buffer-file-name)))
-    (message extension)
     (if (string-equal extension "sln")
         (progn
           (set (make-local-variable 'whitespace-style) '(nil))
@@ -549,6 +548,27 @@ User buffers are those not starting with *."
           (forward-list)
           (region-line-wrap))))))
 (define-key global-map (kbd "<f2>") '(lambda () (interactive) (function-line-wrap)))
+
+;;; Edit multiple regions with the same content simultaneously.
+(require 'iedit)
+(defun iedit-dwim (arg)
+  "Starts iedit but uses \\[narrow-to-defun] to limit its scope."
+  (interactive "P")
+  (if arg
+      (iedit-mode)
+    (save-excursion
+      (save-restriction
+        (widen)
+        ;; this function determines the scope of `iedit-start'.
+        (narrow-to-defun)
+        (if iedit-mode
+            (iedit-done)
+          ;; `current-word' can of course be replaced by other
+          ;; functions.
+          (iedit-start (current-word)))))))
+(define-key global-map (kbd "C-;") 'iedit-mode)
+(define-key isearch-mode-map (kbd "C-;") 'iedit-mode)
+(define-key global-map (kbd "C-:") 'iedit-dwim)
 
 
 ;;;; Common debugging config.
