@@ -1,7 +1,10 @@
 ;; mydiary.el -- Alternate diary handling
 
 ;; To use, add this to your .emacs:
-;; (load-library "mydiary")
+;;     (load-library "mydiary")
+;;
+;; Initially encrypt file with:
+;;     gpg --symmetric mydiary.txt
 
 ;; use time-stamp-format from time-stamp.el
 (require 'time-stamp)
@@ -16,7 +19,7 @@
 (defun mydiary-load ()
   "Load mydiary."
   (interactive)
-  (find-file "~/doc/diary/mydiary.gpg")
+  (find-file "~/private/secret/mydiary.txt.gpg")
   (mydiary-new-entry))
 
 (define-key global-map [f12] 'mydiary-load)
