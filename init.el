@@ -643,6 +643,7 @@ User buffers are those not starting with *."
             (add-to-list 'whitespace-style 'lines-tail)  ;highlight cols beyond whitespace-line-column
             (define-key python-mode-map (kbd "C-c h") 'pylookup-lookup)  ;lookup in Python doc
             (define-key python-mode-map (kbd "<f12>") 'pyp)  ;insert debug print
+            (define-key python-mode-map "\C-m" 'newline-and-indent)
             ))
 
 ;;; Python doc lookup.
