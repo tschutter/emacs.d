@@ -196,16 +196,22 @@ User buffers are those not starting with *."
 (add-hook 'dired-load-hook
           (function (lambda () (load "dired-x"))))
 
-;;; Default to filename at point for C-x C-f.
+;;; Find-file-at-point.  Used by ido below.
 ;;; See http://www.emacswiki.org/emacs/FindFileAtPoint
-(require 'ffap)
-(ffap-bindings)
 (if (featurep 'w3m-load)
     (setq ffap-url-fetcher 'w3m-browse-url)
   (progn
     (setq browse-url-generic-program "/usr/bin/chromium-browser")
     (setq ffap-url-fetcher 'browse-url-generic)))
 (setq ffap-machine-p-known 'accept)  ;No pinging
+
+;;; Interactively Do Things
+;;; Enable switching between buffers using substrings.
+(setq ido-enable-flex-matching t)
+(setq ido-use-filename-at-point 'guess)  ;use ffap-guesser
+(setq ido-use-url-at-point t)  ;if URL, call find-file-at-point to visit it
+(ido-mode 1)
+(ido-everywhere 1)
 
 ;;; Enable menu of recently opened files.
 ;;; See http://www.emacswiki.org/emacs/RecentFiles
@@ -324,9 +330,6 @@ User buffers are those not starting with *."
 (add-hook 'c-mode-common-hook
           (function (lambda ()
                       (paren-toggle-open-paren-context 1))))
-
-;;; Enable switching between buffers using substrings.
-(iswitchb-mode 1)
 
 ;;; Put all backups in one directory.
 ;;; See http://www.emacswiki.org/emacs/BackupDirectory
