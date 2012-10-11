@@ -196,8 +196,11 @@ User buffers are those not starting with *."
 (add-hook 'dired-load-hook
           (function (lambda () (load "dired-x"))))
 
-;;; Find-file-at-point.  Used by ido below.
+;;; Default to filename at point for C-x C-f.
 ;;; See http://www.emacswiki.org/emacs/FindFileAtPoint
+;;; I tried ido-mode, but I don't like the M-p, M-n behaviour.
+(require 'ffap)
+(ffap-bindings)
 (if (featurep 'w3m-load)
     (setq ffap-url-fetcher 'w3m-browse-url)
   (progn
@@ -205,13 +208,8 @@ User buffers are those not starting with *."
     (setq ffap-url-fetcher 'browse-url-generic)))
 (setq ffap-machine-p-known 'accept)  ;No pinging
 
-;;; Interactively Do Things
 ;;; Enable switching between buffers using substrings.
-(setq ido-enable-flex-matching t)
-(setq ido-use-filename-at-point 'guess)  ;use ffap-guesser
-(setq ido-use-url-at-point t)  ;if URL, call find-file-at-point to visit it
-(ido-mode 1)
-(ido-everywhere 1)
+(iswitchb-mode 1)
 
 ;;; Enable menu of recently opened files.
 ;;; See http://www.emacswiki.org/emacs/RecentFiles
