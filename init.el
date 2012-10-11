@@ -578,30 +578,23 @@ User buffers are those not starting with *."
 
 
 ;;;; Compiling.
+
+;;; Set compile command according to mode.
 (require 'smart-compile)
 (add-to-list 'smart-compile-alist '(cmake-mode . "make -k"))
 (add-to-list 'smart-compile-alist '(python-mode . "pycheck %f -s"))
-(defun my-compile ()
-  "Run compile and resize the compile window"
-  (interactive)
-  (progn
-    (call-interactively 'smart-compile)
-    (setq cur (selected-window))
-    (setq w (get-buffer-window "*compilation*"))
-    (select-window w)
-    (setq h (window-height w))
-    (shrink-window (- h 10))
-    (select-window cur)
-    ))
-(defun my-compilation-hook ()
-  "Make sure that the compile window is splitting vertically"
-  (progn
-    (if (not (get-buffer-window "*compilation*"))
-        (progn
-          (split-window-vertically)
-          ))))
-(add-hook 'compilation-mode-hook 'my-compilation-hook)
-(global-set-key [f5] 'my-compile)
+
+;;; Force a vertical window split.
+(defadvice smart-compile (around split-horizontally activate)
+  (let ((split-width-threshold nil)
+        (split-height-threshold 0))
+    ad-do-it))
+(setq compilation-window-height 10)
+
+;;; Bind to F5.
+(global-set-key [f5] 'smart-compile)
+
+;;; Globally enable C-n, C-p to cycle through errors.
 (defun my-next-error ()
   "Move point to next error and highlight it"
   (interactive)
