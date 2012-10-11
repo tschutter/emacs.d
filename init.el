@@ -78,6 +78,14 @@ Also returns nil if pid is nil."
 (yas-global-mode 1)
 
 
+;;;; Abbrev-mode
+;;; We don't use abbrev-mode explicitly, but elisp/python.el adds
+;;; stuff to python-mode-abbrev-table.  And then we are bothered about
+;;; saving the modified abbrevs.  So put the abbrev_defs file in var
+;;; until we figure it out.
+(setq abbrev-file-name (concat emacs-var-directory "abbrev_defs"))
+
+
 ;;;; Web browsing
 ;;; http://www.emacswiki.org/emacs/emacs-w3m
 (when (require 'w3m-load nil t)
