@@ -754,6 +754,9 @@ User buffers are those not starting with *."
 
 
 ;;;; VC (version control).
+;;; Display warning instead of asking when visiting VC file via simlink.
+(setq vc-follow-symlinks nil)
+
 ;;; Put list of files in default commit message.
 (require 'log-edit)
 (setq log-edit-setup-invert t)
