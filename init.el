@@ -737,13 +737,17 @@ User buffers are those not starting with *."
 
 ;;;; reStructuredText documents.
 ;;; See http://www.emacswiki.org/emacs/reStructuredText
-;;; Ubuntu drops the .py extensions on the rst programs in python-docutils.
-(setq rst-compile-toolsets
-  '((html . ("rst2html" ".html" nil))
-    (latex . ("rst2latex" ".tex" nil))
-    (newlatex . ("rst2newlatex" ".tex" nil))
-    (pseudoxml . ("rst2pseudoxml" ".xml" nil))
-    (xml . ("rst2xml" ".xml" nil))))
+(defun rst-compile-html-preview ()
+  "Compile a rst file to html and view in a browser."
+  (interactive)
+  (let*
+      ((bufname (file-name-nondirectory buffer-file-name))
+       (outname (concat "/tmp/" (file-name-sans-extension bufname) ".html")))
+    (set (make-local-variable 'compile-command)
+         (concat "rst2html --verbose " bufname " " outname))
+    (call-interactively 'compile)
+    (browse-url-of-file outname)))
+(add-to-list 'smart-compile-alist '(rst-mode rst-compile-html-preview))
 
 
 ;;;; OpenSCAD files.
