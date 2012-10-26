@@ -250,6 +250,20 @@ User buffers are those not starting with *."
 ;;; Alternate diary handling
 (load-library "mydiary")
 
+;;; Calendar and diary
+(require 'calendar)
+(add-hook 'today-visible-calendar-hook 'calendar-mark-today)
+(setq calendar-date-display-form
+      '((format "%s-%.2d-%.2d, %s %s %s" year
+                (string-to-number month)
+                (string-to-number day)
+                dayname
+                monthname
+                day)))  ; format displayed dates in diary
+(setq diary-number-of-entries 7)  ; number of days to display
+(setq diary-list-include-blanks t)  ; include empty days
+(add-hook 'list-diary-entries-hook 'sort-diary-entries t)  ; sort entries by time
+
 
 ;;;; Editor behavior
 
@@ -297,6 +311,8 @@ User buffers are those not starting with *."
 (global-set-key (kbd "C-z") 'undo)   ;overrides suspend-frame
 (global-set-key (kbd "C-S-z") 'redo)
 (global-set-key (kbd "<kp-7>") (lambda () "" (interactive) (find-file "~/.plan")))
+(global-set-key (kbd "<kp-8>") 'diary)
+(global-set-key (kbd "<kp-9>") 'calendar)
 (global-set-key (kbd "C-h n") 'man)  ;overrides view-emacs-news
 
 ;;; Mouse yank commands yank at point instead of at click.
