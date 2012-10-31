@@ -247,22 +247,23 @@ User buffers are those not starting with *."
             (mapconcat 'identity tramp-remote-process-environment "|"))
            "|")))  ; move ~/.tramp_history file created on target to ~/.var/
 
-;;; Alternate diary handling
-(load-library "mydiary")
 
-;;; Calendar and diary
+;;;; Calendar and diary
 (require 'calendar)
 (add-hook 'today-visible-calendar-hook 'calendar-mark-today)
+(calendar-set-date-style 'iso)  ; parse dates in ~/diary
 (setq calendar-date-display-form
-      '((format "%s-%.2d-%.2d, %s %s %s" year
+      '((format "%s-%.2d-%.2d, %s"
+                year
                 (string-to-number month)
                 (string-to-number day)
-                dayname
-                monthname
-                day)))  ; format displayed dates in diary
+                dayname)))  ; format displayed dates in diary
 (setq diary-number-of-entries 7)  ; number of days to display
 (setq diary-list-include-blanks t)  ; include empty days
 (add-hook 'list-diary-entries-hook 'sort-diary-entries t)  ; sort entries by time
+
+;;; Encrypted diary handling
+(load-library "mydiary")
 
 
 ;;;; Editor behavior
