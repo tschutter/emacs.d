@@ -204,18 +204,6 @@ User buffers are those not starting with *."
 (add-hook 'dired-load-hook
           (function (lambda () (load "dired-x"))))
 
-;;; Default to filename at point for C-x C-f.
-;;; See http://www.emacswiki.org/emacs/FindFileAtPoint
-;;; I tried ido-mode, but I don't like the M-p, M-n behaviour.
-(require 'ffap)
-(ffap-bindings)
-(if (featurep 'w3m-load)
-    (setq ffap-url-fetcher 'w3m-browse-url)
-  (progn
-    (setq browse-url-generic-program "/usr/bin/chromium-browser")
-    (setq ffap-url-fetcher 'browse-url-generic)))
-(setq ffap-machine-p-known 'accept)  ;No pinging
-
 ;;; Enable switching between buffers using substrings.
 (iswitchb-mode 1)
 
@@ -246,6 +234,38 @@ User buffers are those not starting with *."
             "HOME/.var/tramp_history"
             (mapconcat 'identity tramp-remote-process-environment "|"))
            "|")))  ; move ~/.tramp_history file created on target to ~/.var/
+
+
+;;;; Default to filename at point for C-x C-f.
+;;; See http://www.emacswiki.org/emacs/FindFileAtPoint
+;;; I tried ido-mode, but I don't like the M-p, M-n behaviour.
+(require 'ffap)
+(ffap-bindings)
+(if (featurep 'w3m-load)
+    (setq ffap-url-fetcher 'w3m-browse-url)
+  (progn
+    (setq browse-url-generic-program "/usr/bin/chromium-browser")
+    (setq ffap-url-fetcher 'browse-url-generic)))
+(setq ffap-machine-p-known 'accept)  ;No pinging
+
+;;; All strings starting with / are recognized as a path.
+;;; The following advice ignores / as a wrong result.
+(defadvice ffap-file-at-point (after ffap-file-at-point-after-advice ())
+  (if (string= ad-return-value "/")
+      (setq ad-return-value nil)))
+(ad-activate 'ffap-file-at-point)
+
+;;; Search certain paths to find files.
+;(require 'ff-paths)
+;(ff-paths-install)
+(setq ff-paths-list
+  '(("^\\." "~/")                       ; .* (dot) files in user's home
+    ("\\.el$" load-path)                ; el extension in load-path elisp var
+    ("\\.[h]+$" 'ffap-c-path)
+    ("\\.[cs]+$" 'ffap-c-path)
+    ("\\.[cc]+$" 'ffap-c-path)
+    ("\\.[in]+$" 'ffap-c-path)
+    ("CMakeLists\\.txt" "$SRC_TREE" "~/src")))
 
 
 ;;;; Calendar and diary
