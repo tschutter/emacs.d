@@ -203,6 +203,10 @@ User buffers are those not starting with *."
 (setq dired-x-hands-off-my-keys t)  ; don't bind C-x C-f
 (add-hook 'dired-load-hook
           (function (lambda () (load "dired-x"))))
+(add-hook 'dired-mode-hook
+          (function (lambda ()
+                      (hl-line-mode 1))  ; highlight entire line
+                    ))
 
 ;;; Enable switching between buffers using substrings.
 (iswitchb-mode 1)
