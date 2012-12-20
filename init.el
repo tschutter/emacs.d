@@ -1,5 +1,8 @@
 ;;;; emacs(1) config file.
 
+;;;; Turn off tool bar early in startup to avoid momentary display.
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+
 ;;;; Configure some standard directory names.
 ;;; Determine the location of the .emacs.d directory.
 (setq emacs-d-directory (file-name-directory load-file-name))
@@ -294,9 +297,6 @@ User buffers are those not starting with *."
 
 ;;; We don't need to see the startup message.
 (setq inhibit-startup-message t)
-
-;;; Turn off the toolbar.
-(tool-bar-mode -1)
 
 ;;; Turn off blinking cursor.
 (blink-cursor-mode 0)
