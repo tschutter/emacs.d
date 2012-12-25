@@ -812,6 +812,22 @@ User buffers are those not starting with *."
              ": ")))
 
 
+; WebJump is a programmable Web hotlist (or bookmark) facility that uses Emacs completion
+; Jump to a Web site from a programmable hotlist.
+(global-set-key [(super j)] 'webjump)
+(setq webjump-sites
+  '(
+    ("Emacs Wiki" .
+     [simple-query "www.emacswiki.org"
+           "www.emacswiki.org/cgi-bin/wiki/" ""])
+    ("Google" .
+     [simple-query "www.google.com"
+           "www.google.com/search?q=" ""])
+    ("Wikipedia" .
+     [simple-query "wikipedia.org" "wikipedia.org/wiki/" ""])
+    ("Interactive Weather Information Network" . webjump-to-iwin)
+    ))
+
 ;;;; Local config.
 ;;; Suggested contents include:
 ;;;   (add-to-list 'c-includes-path "~/src/myproj")
