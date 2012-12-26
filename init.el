@@ -386,6 +386,18 @@ User buffers are those not starting with *."
   (concat backup-directory (file-name-nondirectory file) "~"))
 (setq auto-save-list-file-prefix backup-directory)
 
+;;; When searching forward [Return] ends the search, but puts the
+;;; point at the end of the found text.  Define [Ctrl+Return] to put
+;;; point at the beginning.
+;; http://www.emacswiki.org/emacs/ZapToISearch
+(defun isearch-exit-other-end (rbeg rend)
+  "Exit isearch, but at the other end of the search string.
+This is useful when followed by an immediate kill."
+  (interactive "r")
+  (isearch-exit)
+  (goto-char isearch-other-end))
+(define-key isearch-mode-map [(control return)] 'isearch-exit-other-end)
+
 ;;; Provide an easy goto-line (^C-g).
 (global-set-key (kbd "C-c g") 'goto-line)
 
