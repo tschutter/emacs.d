@@ -360,8 +360,11 @@ User buffers are those not starting with *."
 ;;; Paging is what PgUp and PgDn are for.
 (setq scroll-conservatively 100)
 
-;;; Remember and restore point location after PgUp,PgDn
+;;; Remember and restore point location after PgUp,PgDn.
 (setq scroll-preserve-screen-position t)
+
+;;; Delete newlines as well as spaces and tabs around point.
+(global-set-key (kbd "M-SPC") '(lambda () (interactive) (just-one-space -1)))
 
 ;;; Identify variables that are safe to be set as file variables.
 (put 'whitespace-line-column 'safe-local-variable 'integerp)
