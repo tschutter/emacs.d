@@ -429,6 +429,12 @@ This is useful when followed by an immediate kill."
 (define-key global-map (kbd "C-<f4>") '(lambda () (interactive) (point-to-register 34)))  ;^F4 Save
 (define-key global-map (kbd "<f4>") '(lambda () (interactive) (jump-to-register 34)))      ;F4 Restore
 
+;;; Move between windows with Shift-arrow keys
+(global-set-key (kbd "S-<left>") 'windmove-left)
+(global-set-key (kbd "S-<right>") 'windmove-right)
+(global-set-key (kbd "S-<up>") 'windmove-up)
+(global-set-key (kbd "S-<down>") 'windmove-down)
+
 ;; http://hugoheden.wordpress.com/2009/03/08/copypaste-with-emacs-in-terminal/
 ;; Use the "clipboard" selection (the one typically is used by
 ;; C-c/C-v) instead of the X-Windows primary selection (which uses
