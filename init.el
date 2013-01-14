@@ -355,7 +355,7 @@ User buffers are those not starting with *."
 (global-set-key (kbd "C-z") 'undo)   ;overrides suspend-frame
 (global-set-key (kbd "C-S-z") 'redo)
 (global-set-key (kbd "<kp-7>") (lambda () "" (interactive) (find-file "~/.plan")))
-(global-set-key (kbd "<kp-8>") 'diary)
+(global-set-key (kbd "<kp-8>") (lambda () (interactive) (diary) (other-window 1)))
 (global-set-key (kbd "<kp-9>") 'calendar)
 (global-set-key (kbd "C-h n") 'man)  ;overrides view-emacs-news
 
