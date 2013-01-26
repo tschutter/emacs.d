@@ -358,6 +358,7 @@ User buffers are those not starting with *."
 (global-set-key (kbd "<kp-8>") (lambda () (interactive) (diary) (other-window 1)))
 (global-set-key (kbd "<kp-9>") 'calendar)
 (global-set-key (kbd "C-h n") 'man)  ;overrides view-emacs-news
+(global-set-key (kbd "C-j") (lambda () (interactive) (join-line -1)))
 
 ;;; Mouse yank commands yank at point instead of at click.
 (setq mouse-yank-at-point t)
