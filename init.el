@@ -553,7 +553,30 @@ This is useful when followed by an immediate kill."
 (setq eshell-directory-name (concat emacs-var-directory "eshell/"))
 
 
-;;;; BitlBee ERC InternetRelayChat.
+;;;; ERC InternetRelayChat.
+(require 'erc)
+(setq erc-nick "tschutter")
+(setq erc-prompt-for-password nil)
+(setq erc-autojoin-channels-alist
+      '(("freenode.net" "#sigrok")))
+(setq erc-hide-list '("JOIN" "PART" "QUIT"))
+(setq erc-foolish-content '("^\*\*\* Users on "
+                            "^\*\*\* .*: topic set by "
+                            "^\*\*\* .* modes: "
+                            "^\*\*\* .* was created on"))
+(defun erc-foolish-content (msg)
+  (erc-list-match erc-foolish-content msg))
+(add-hook 'erc-insert-pre-hook
+          (lambda (s)
+            (when (erc-foolish-content s)
+              (setq erc-insert-this nil))))
+(require 'erc-log)
+(setq erc-log-channels-directory "~/.var/irclog/")
+(erc-log-enable)
+(require 'easymenu)
+(easy-menu-add-item  nil '("tools") ["IRC with ERC" erc t])
+
+;;; BitlBee gateway to IM networks.
 ;;; sudo apt-get install bitlbee-libpurple
 ;;; http://emacs-fu.blogspot.com/search/label/erc
 ;;; http://wiki.bitlbee.org/quickstart
