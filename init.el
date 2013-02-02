@@ -628,7 +628,8 @@ This is useful when followed by an immediate kill."
 (defun whitespace-disable-for-some-files ()
   "Disable whitespace mode for some files"
   (let ((extension (file-name-extension buffer-file-name)))
-    (if (string-equal extension "sln")
+    (if (or (string-equal extension "sln")
+            (string-match "sigrok" buffer-file-name))
         (progn
           (set (make-local-variable 'whitespace-style) '(nil))
           (set (make-local-variable 'whitespace-action) '(nil))
