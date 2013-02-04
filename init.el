@@ -373,6 +373,25 @@ User buffers are those not starting with *."
 ;;; Indentation should insert spaces, not tabs.
 (setq-default indent-tabs-mode nil)
 
+;;; Display and cleanup bogus whitespace.
+;;; See http://www.emacswiki.org/emacs/WhiteSpace
+(require 'whitespace)
+(setq whitespace-style
+      '(face trailing tabs empty indentation space-before-tab))
+(global-whitespace-mode 1)
+(setq whitespace-action '(auto-cleanup))
+(defun whitespace-disable-for-some-files ()
+  "Disable whitespace mode for some files"
+  (let ((extension (file-name-extension buffer-file-name)))
+    (if (or (string-equal extension "sln")
+            (string-match "sigrok" buffer-file-name))
+        (progn
+          (set (make-local-variable 'whitespace-style) '(nil))
+          (set (make-local-variable 'whitespace-action) '(nil))
+          (set (make-local-variable 'indent-tabs-mode) t)
+          ))))
+(add-hook 'find-file-hook 'whitespace-disable-for-some-files)
+
 ;;; If we do see tabs, they are 4 chars wide.
 (setq default-tab-width 4)
 
@@ -617,24 +636,6 @@ This is useful when followed by an immediate kill."
     (move-to-column col)))
 (global-set-key (kbd "<C-S-down>") 'move-line-down)
 (global-set-key (kbd "<C-S-up>") 'move-line-up)
-
-;;; Display and cleanup bogus whitespace.
-;;; See http://www.emacswiki.org/emacs/WhiteSpace
-(require 'whitespace)
-(setq whitespace-style
-      '(face trailing tabs empty indentation space-before-tab))
-(global-whitespace-mode 1)
-(setq whitespace-action '(auto-cleanup))
-(defun whitespace-disable-for-some-files ()
-  "Disable whitespace mode for some files"
-  (let ((extension (file-name-extension buffer-file-name)))
-    (if (or (string-equal extension "sln")
-            (string-match "sigrok" buffer-file-name))
-        (progn
-          (set (make-local-variable 'whitespace-style) '(nil))
-          (set (make-local-variable 'whitespace-action) '(nil))
-          ))))
-(add-hook 'find-file-hook 'whitespace-disable-for-some-files)
 
 ;;; Line wrap regions, function definitions, and function calls.
 (defun region-line-wrap ()
