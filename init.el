@@ -579,8 +579,7 @@ This is useful when followed by an immediate kill."
 (setq erc-autojoin-channels-alist
       '(("freenode.net" "#sigrok")))
 (setq erc-hide-list '("JOIN" "PART" "QUIT"))
-(setq erc-foolish-content '("^\*\*\* Users on "
-                            "^\*\*\* .*: topic set by "
+(setq erc-foolish-content '("^\*\*\* .*: topic set by "
                             "^\*\*\* .* modes: "
                             "^\*\*\* .* was created on"))
 (defun erc-foolish-content (msg)
