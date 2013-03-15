@@ -345,6 +345,13 @@ User buffers are those not starting with *."
            (string-match "^\\*\\|&" (buffer-name (current-buffer))))
     (linum-mode 1)))
 
+;;; Highlight uncommitted changes.
+(require 'git-gutter-fringe)
+(global-git-gutter-mode t)
+; Alternative
+;(require 'diff-hl)
+;(global-diff-hl-mode)
+
 ;;; On-the-fly spell checking.
 ;;; See http://www.emacswiki.org/emacs/FlySpell
 (if (not (eq system-type 'windows-nt))
