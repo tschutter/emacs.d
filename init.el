@@ -503,7 +503,7 @@ This is useful when followed by an immediate kill."
 (defun insert-date ()
   "Inserts date time string into current buffer."
   (interactive)
-  (insert (format-time-string "%a %Y-%m-%d %H:%M:%S")))
+  (insert (format-time-string "%Y-%m-%d %H:%M:%S")))
 (global-set-key (kbd "C-c d") 'insert-date)
 
 ;;; If there is no newline at the end of the file, append one when
