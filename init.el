@@ -513,6 +513,9 @@ This is useful when followed by an immediate kill."
 ;;; file we might append a newline.
 (setq require-final-newline t)
 
+;;; Take the URL at point and make it human readable.
+(require 'url-humanify)
+
 
 ;;;; Printing
 ;;; See http://www.emacswiki.org/emacs/PrintingFromEmacs
