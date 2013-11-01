@@ -516,6 +516,11 @@ This is useful when followed by an immediate kill."
 ;;; Take the URL at point and make it human readable.
 (require 'url-humanify)
 
+;;; Jumps between other symbols found at point with M-n and M-p.
+;;; From https://github.com/mickeynp/smart-scan
+(require 'smartscan)
+(global-smartscan-mode 1)
+
 
 ;;;; Printing
 ;;; See http://www.emacswiki.org/emacs/PrintingFromEmacs
