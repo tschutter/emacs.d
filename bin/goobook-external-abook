@@ -1,0 +1,10 @@
+#!/bin/sh
+#
+# Run goobook, translating the output for external-abook.el.
+#
+# See http://www.emacswiki.org/emacs/ExternalAbook
+#
+
+# Run goobook with given args,
+# then strip all but first two fields from output.
+goobook "$@" | awk -F'\t' '/.+/ {print $1 "\t" "\""$2 "\""}'
