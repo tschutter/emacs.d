@@ -570,15 +570,21 @@ This is useful when followed by an immediate kill."
 (setq message-send-mail-function 'smtpmail-send-it)
 (add-hook 'message-mode-hook 'turn-on-auto-fill) ;word wrap
 
-;;; LBDB (abook) integration.
-(autoload 'lbdb "lbdb" "Query the Little Brother's Database" t)
-(autoload 'lbdb-region "lbdb" "Query the Little Brother's Database" t)
-(autoload 'lbdb-maybe-region "lbdb" "Query the Little Brother's Database" t)
-(add-hook 'message-setup-hook
-          (lambda ()
-            (require 'lbdb-complete)
-            (define-key message-mode-map (kbd "C-c TAB") 'lbdb-complete)
-            ))
+;;; ExternalAbook (goobook) integration.
+(require 'external-abook)
+(custom-set-variables '(external-abook-command
+                        (concat
+                         emacs-d-directory
+                         "bin/goobook-external-abook query '%s'"
+                         )))
+; Following is not working.
+(eval-after-load "message"
+  '(progn
+     (add-to-list 'message-mode-hook
+                  '(lambda ()
+                     (local-unset-key "\C-c TAB")
+                     (define-key message-mode-map "\C-c TAB" 'external-abook-try-expand
+                       )))))
 
 
 ;;;; Eshell
