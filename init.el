@@ -44,6 +44,10 @@
       (set-face-attribute 'default nil :font "Consolas-11")))
 
 
+;;;; Which function mode
+;;; Displays the current function name in the mode line.
+(which-function-mode 1)
+
 ;;;; Desktop
 ;;; See http://www.emacswiki.org/emacs/DeskTop
 (desktop-save-mode 1)
