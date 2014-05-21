@@ -350,8 +350,9 @@ User buffers are those not starting with *."
     (linum-mode 1)))
 
 ;;; Highlight uncommitted changes.
-(require 'git-gutter-fringe)
-(global-git-gutter-mode t)
+(when (display-graphic-p)
+  (require 'git-gutter-fringe)
+  (global-git-gutter-mode t))
 ; Alternative
 ;(require 'diff-hl)
 ;(global-diff-hl-mode)
