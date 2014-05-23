@@ -26,10 +26,43 @@
             (normal-top-level-add-subdirs-to-load-path)))
          load-path)))
 
+;;;; Emacs Lisp Packages
+;;; "M-x list-packages" to see available and installed list.
+;;; "M-x package-install" to install a new package.
+(when (require 'package nil :noerror)
+  ; Milkypostman’s Emacs Lisp Package Archive
+  (add-to-list 'package-archives
+               '("melpa" . "http://melpa.milkbox.net/packages/") t)
+
+  ;; Activate installed packages.
+  (package-initialize)
+
+  ;; Automatically install packages.
+  ;; http://stackoverflow.com/questions/10092322
+  (defun ensure-package-installed (&rest packages)
+    "Assure every package is installed, ask for installation if it’s not.
+
+     Return a list of installed packages or nil for every skipped package."
+    (mapcar
+     (lambda (package)
+       ;; (package-installed-p 'evil)
+       (if (package-installed-p package)
+           nil
+         (if (y-or-n-p (format "Package %s is missing. Install it? " package))
+             (package-install package)
+           package)))
+     packages))
+
+  ;; Make sure to have downloaded archive description.
+  ;; Or use package-archive-contents as suggested by Nicolas Dudebout
+  (or (file-exists-p package-user-dir)
+      (package-refresh-contents))
+
+  ;(ensure-package-installed 'flycheck 'another-package)
+  (ensure-package-installed 'flycheck))
 
 ;;;; Emacs window (frame)
 (setq frame-title-format (concat "%b@" system-name))  ;%b = buffer name
-
 
 ;;;; Default font
 ;;; Setting the font here is problematic because it triggers a window
