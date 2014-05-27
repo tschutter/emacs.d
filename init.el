@@ -390,6 +390,17 @@ User buffers are those not starting with *."
 ;(require 'diff-hl)
 ;(global-diff-hl-mode)
 
+
+;;; Flycheck mode.
+;;; See https://sourcegraph.com/github.com/robert-zaremba/flycheck
+
+;;; Most checkers have dependencies against external tools that
+;;; perform the checking. Use C-c ! ? to see what a checker needs,
+;;; e.g. C-c ! ? python-pylint.
+
+;;; Enable flycheck mode in all buffers.
+(add-hook 'after-init-hook #'global-flycheck-mode)
+
 ;;; On-the-fly spell checking.
 ;;; See http://www.emacswiki.org/emacs/FlySpell
 (if (not (eq system-type 'windows-nt))
