@@ -401,6 +401,10 @@ User buffers are those not starting with *."
 ;;; Enable flycheck mode in all buffers.
 (add-hook 'after-init-hook #'global-flycheck-mode)
 
+;;; Flycheck key bindings.
+(global-set-key (kbd "M-<up>") 'flycheck-previous-error)
+(global-set-key (kbd "M-<down>") 'flycheck-next-error)
+
 ;;; On-the-fly spell checking.
 ;;; See http://www.emacswiki.org/emacs/FlySpell
 (if (not (eq system-type 'windows-nt))
