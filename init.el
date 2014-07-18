@@ -58,8 +58,7 @@
   (or (file-exists-p package-user-dir)
       (package-refresh-contents))
 
-  ;(ensure-package-installed 'flycheck 'another-package)
-  (ensure-package-installed 'flycheck))
+  (ensure-package-installed 'flycheck 'yasnippet))
 
 ;;;; Emacs window (frame)
 (setq frame-title-format (concat "%b@" system-name))  ;%b = buffer name

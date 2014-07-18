@@ -1,6 +1,3 @@
-[submodule "elisp/yasnippet"]
-	path = elisp/yasnippet
-	url = git://github.com/capitaomorte/yasnippet.git
 [submodule "elisp/smart-scan"]
 	path = elisp/smart-scan
 	url = https://github.com/mickeynp/smart-scan.git
