@@ -58,7 +58,13 @@
   (or (file-exists-p package-user-dir)
       (package-refresh-contents))
 
-  (ensure-package-installed 'flycheck 'smartscan 'yasnippet))
+  (ensure-package-installed
+   'csharp-mode
+   'flycheck
+   'mic-paren
+   'scad-mode
+   'smartscan
+   'yasnippet))
 
 ;;;; Emacs window (frame)
 (setq frame-title-format (concat "%b@" system-name))  ;%b = buffer name
@@ -917,7 +923,6 @@ This is useful when followed by an immediate kill."
 
 ;;;; C#
 ;;; See http://www.emacswiki.org/emacs/CSharpMode
-;;; Downloaded 0.8.5 from http://code.google.com/p/csharpmode/
 (autoload 'csharp-mode "csharp-mode" "Major mode for editing C# code." t)
 (setq auto-mode-alist
       (append '(("\\.cs$" . csharp-mode)) auto-mode-alist))
@@ -949,7 +954,6 @@ This is useful when followed by an immediate kill."
 
 
 ;;;; OpenSCAD files.
-;;; Downloaded v88 from https://github.com/openscad/openscad/blob/master/contrib/scad.el
 (autoload 'scad-mode "scad" "Major mode for editing SCAD code." t)
 (add-to-list 'auto-mode-alist '("\\.scad$" . scad-mode))
 
