@@ -1,3 +1,0 @@
-[submodule "elisp/smart-scan"]
-	path = elisp/smart-scan
-	url = https://github.com/mickeynp/smart-scan.git
