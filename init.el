@@ -61,6 +61,7 @@
   (ensure-package-installed
    'csharp-mode
    'flycheck
+   'git-timemachine
    'mic-paren
    'scad-mode
    'smartscan
