@@ -61,6 +61,7 @@
   (ensure-package-installed
    'csharp-mode
    'flycheck
+   'git-gutter-fringe
    'git-timemachine
    'mic-paren
    'scad-mode
@@ -391,11 +392,8 @@ User buffers are those not starting with *."
 ;;; Highlight uncommitted changes.
 (when (display-graphic-p)
   (require 'git-gutter-fringe)
-  (global-git-gutter-mode t))
-; Alternative
-;(require 'diff-hl)
-;(global-diff-hl-mode)
-
+  (require 'git-gutter))
+(global-git-gutter-mode t)
 
 ;;; Flycheck mode.
 ;;; See https://sourcegraph.com/github.com/robert-zaremba/flycheck
