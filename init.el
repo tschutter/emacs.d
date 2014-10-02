@@ -65,6 +65,7 @@
    'git-timemachine
    'mic-paren
    'scad-mode
+   'smart-compile
    'smartscan
    'yasnippet))
 
@@ -944,7 +945,8 @@ This is useful when followed by an immediate kill."
   (interactive)
   (let*
       ((bufname (file-name-nondirectory buffer-file-name))
-       (outname (concat "/tmp/" (file-name-sans-extension bufname) ".html")))
+       (basename (file-name-sans-extension bufname))
+       (outname (concat temporary-file-directory basename ".html")))
     (set (make-local-variable 'compile-command)
          (concat "rst2html --verbose " bufname " " outname))
     (call-interactively 'compile)
