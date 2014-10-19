@@ -222,8 +222,8 @@ User buffers are those not starting with *."
     (while (and (string-match "^*" (buffer-name)) (< i 50))
       (setq i (1+ i)) (previous-buffer))))
 
-(global-set-key (kbd "<kp-divide>") 'previous-user-buffer)
-(global-set-key (kbd "<kp-multiply>") 'next-user-buffer)
+(global-set-key (kbd "<C-S-iso-lefttab>") 'previous-user-buffer)
+(global-set-key (kbd "<C-tab>") 'next-user-buffer)
 (global-set-key (kbd "<kp-subtract>") 'close-current-buffer)
 
 ;;; Respawn the scratch buffer if it is killed (C-x k).
