@@ -1,15 +1,8 @@
 emacs.d
 =======
 
-Emacs init files
+Emacs configuration files.
 
-This repository is intended to be a submodule of homefiles and AppData.
+This repository should be cloned to ~/.emacs.d::
 
-To get the latest version of this submodule within those projects::
-
-    cd ~/.homefiles/emacs.d
-    git checkout master
-    git pull
-    cd ..
-    git commit -m "emacs.d: updating to latest" emacs.d
-    git push
+    git clone https://github.com/tschutter/emacs.d.git ~/.emacs.d
