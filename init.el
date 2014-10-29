@@ -583,13 +583,16 @@ This is useful when followed by an immediate kill."
 ;;;; Printing
 ;;; See http://www.emacswiki.org/emacs/PrintingFromEmacs
 (require 'ps-print)
+(setq ps-lpr-command "lp")
 (setq ps-number-of-columns 2)
 (setq ps-landscape-mode t)
 (setq ps-line-number t)
 (setq ps-print-color-p nil)
 (setq ps-print-header nil)
-(setq lpr-page-header-switches '("-F" "--length=61" "--indent=4"))
-
+(setq lpr-command "lp")
+(setq lpr-printer-switch "-d ")
+(setq lpr-add-switches nil)
+(setq lpr-page-header-switches '("-h" "%s" "-F" "--length=61" "--indent=4"))
 
 ;;;; Email
 ;;; Outgoing mail
