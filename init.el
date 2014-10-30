@@ -402,6 +402,10 @@ User buffers are those not starting with *."
 ;;; Most checkers have dependencies against external tools that
 ;;; perform the checking. Use C-c ! ? to see what a checker needs,
 ;;; e.g. C-c ! ? python-pylint.
+;;;
+;;; JSON checking requires jsonlint.
+;;;   sudo apt-get install nodejs-legacy npm
+;;;   sudo npm install jsonlint --global
 
 ;;; Enable flycheck mode in all buffers.
 (add-hook 'after-init-hook #'global-flycheck-mode)
