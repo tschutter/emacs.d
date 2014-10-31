@@ -606,24 +606,18 @@ This is useful when followed by an immediate kill."
        (prefix (substring computername 0 prefixlen))
        (realm
         (cond
-         ((string-equal prefix "fdsvbld") "ISC")
-         ((string-equal prefix "fdsvdfw") "ISCP")
-         ((string-equal prefix "fdsvmad") "ISC")
-         ((string-equal prefix "fdsvsna") "ISCP")
+         ((string-equal prefix "fdsv") "ISC")
+         ((string-equal prefix "sps") "ISC")
          ((string-equal computername "apple") "ISC")
          ((string-equal computername "passion") "ISC")
          ((string-equal computername "wampi") "ISC")
          ((string-equal computername "wampi-win2003") "ISC")
          (t "HOME"))))
   (cond
-   ((string-equal realm "ISCP")
-    (setq user-mail-address "tschutter@corelogic.com")
-    (setq smtpmail-local-domain "corelogic.com")
-    (setq smtpmail-smtp-server "smtp.corelogic.com"))
    ((string-equal realm "ISC")
     (setq user-mail-address "tschutter@corelogic.com")
     (setq smtpmail-local-domain "corelogic.com")
-    (setq smtpmail-smtp-server "fdsvdfw01vxms01.infosolco.com"))
+    (setq smtpmail-smtp-server "smtp.corelogic.com"))
    (t
     (setq user-mail-address "t.schutter@comcast.net")
     (setq smtpmail-local-domain "schutter.home")
