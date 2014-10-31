@@ -491,11 +491,14 @@ User buffers are those not starting with *."
 
 ;;; Put all backups in one directory.
 ;;; See http://www.emacswiki.org/emacs/BackupDirectory
-(setq backup-directory (concat emacs-var-directory "backups/"))
-(setq backup-directory-alist `(("." . ,backup-directory)))
-(defun make-backup-file-name (file)
-  (concat backup-directory (file-name-nondirectory file) "~"))
-(setq auto-save-list-file-prefix backup-directory)
+(defvar backup-directory (concat emacs-var-directory "backups/"))
+(setq backup-directory-alist `((".*" . ,backup-directory)))
+
+;;; Put all auto-save files in one directory.
+;;; See http://www.emacswiki.org/emacs/AutoSave
+(defvar auto-save-directory (concat emacs-var-directory "auto-save/"))
+(setq auto-save-list-file-prefix auto-save-directory)
+(setq auto-save-file-name-transforms `((".*" ,auto-save-directory t)))
 
 ;;; When searching forward [Return] ends the search, but puts the
 ;;; point at the end of the found text.  Define [Ctrl+Return] to put
