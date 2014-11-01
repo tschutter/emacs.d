@@ -1,13 +1,17 @@
-;;;; emacs(1) config file.
+;;; init.el --- emacs(1) config file
+
+;;; Commentary:
+
+;;; Code:
 
 ;;;; Turn off tool bar early in startup to avoid momentary display.
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 
 ;;;; Configure some standard directory names.
 ;;; Determine the location of the .emacs.d directory.
-(setq emacs-d-directory (file-name-directory load-file-name))
+(defvar emacs-d-directory (file-name-directory load-file-name))
 ;;; Location for state and cache files.
-(setq emacs-var-directory (expand-file-name "~/.var/emacs/"))
+(defvar emacs-var-directory (expand-file-name "~/.var/emacs/"))
 (make-directory emacs-var-directory t)  ;create it if it does not exist
 (set-file-modes emacs-var-directory #o700)  ;and make it private
 
@@ -336,7 +340,7 @@ save it in `ffap-file-at-point-line-number' variable."
 ;;; Search certain paths to find files.
 (require 'ff-paths)
 (ff-paths-install)
-(defvar ff-paths-list-default `("$HOME/src//"))
+(defvar ff-paths-list-default `("~/src//"))
 (setq ff-paths-list
   '(("^\\." "~/")                       ; .* (dot) files in user's home
     ("\\.el$" load-path)                ; el extension in load-path elisp var
@@ -485,7 +489,7 @@ save it in `ffap-file-at-point-line-number' variable."
 (add-hook 'find-file-hook 'whitespace-disable-for-some-files)
 
 ;;; If we do see tabs, they are 4 chars wide.
-(setq default-tab-width 4)
+(setq tab-width 4)
 
 ;;; Scroll one line at a time instead of paging.
 ;;; Paging is what PgUp and PgDn are for.
@@ -1000,3 +1004,5 @@ This is useful when followed by an immediate kill."
 ;;; This *must* be last so that it can override settings in this file.
 (if (file-exists-p "~/.emacs-local.el")
     (load-file "~/.emacs-local.el"))
+
+;;; init.el ends here
