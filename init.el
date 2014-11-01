@@ -333,6 +333,15 @@ save it in `ffap-file-at-point-line-number' variable."
     (goto-line ffap-file-at-point-line-number)
     (setq ffap-file-at-point-line-number nil)))
 
+;;; Search certain paths to find files.
+(require 'ff-paths)
+(ff-paths-install)
+(defvar ff-paths-list-default `("$HOME/src//"))
+(setq ff-paths-list
+  '(("^\\." "~/")                       ; .* (dot) files in user's home
+    ("\\.el$" load-path)                ; el extension in load-path elisp var
+    ("." ff-paths-list-default)))       ; all other files
+
 ;;;; Rename buffer and the file it is visiting.
 (defun rename-current-buffer-file ()
   "Renames current buffer and file it is visiting."
@@ -988,11 +997,6 @@ This is useful when followed by an immediate kill."
     ))
 
 ;;;; Local config.
-;;; Suggested contents include:
-;;;   (add-to-list 'c-includes-path "~/src/myproj")
-;;; This *must* be last so that it can override settings here.
+;;; This *must* be last so that it can override settings in this file.
 (if (file-exists-p "~/.emacs-local.el")
     (load-file "~/.emacs-local.el"))
-
-;;; Except for this line, which comes after the load of "~/.emacs-local.el".
-(setq ffap-c-path c-includes-path)
