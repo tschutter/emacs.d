@@ -293,33 +293,47 @@ User buffers are those not starting with *."
 ;;; I tried ido-mode, but I don't like the M-p, M-n behaviour.
 (require 'ffap)
 (ffap-bindings)
-(if (featurep 'w3m-load)
-    (setq ffap-url-fetcher 'w3m-browse-url)
-  (progn
-    (setq browse-url-generic-program "/usr/bin/chromium-browser")
-    (setq ffap-url-fetcher 'browse-url-generic)))
-(setq ffap-machine-p-known 'accept)  ;No pinging
+(setq ffap-machine-p-known 'accept)   ; No pinging
+(setq ffap-ftp-regexp nil)            ; Disable FTP
+(setq ffap-ftp-sans-slash-regexp nil) ; Disable FTP
 
-;;; All strings starting with / are recognized as a path.
+;;; On UNIX, all strings starting with / are recognized as a path.
+;;; This is annoying especially on closing XML tags.
 ;;; The following advice ignores / as a wrong result.
 (defadvice ffap-file-at-point (after ffap-file-at-point-after-advice ())
   (if (string= ad-return-value "/")
       (setq ad-return-value nil)))
 (ad-activate 'ffap-file-at-point)
 
-;;; Search certain paths to find files.
-;(require 'ff-paths)
-;(ff-paths-install)
-(setq ff-paths-list
-  '(("^\\." "~/")                       ; .* (dot) files in user's home
-    ("\\.el$" load-path)                ; el extension in load-path elisp var
-    ("\\.[h]+$" 'ffap-c-path)
-    ("\\.[cs]+$" 'ffap-c-path)
-    ("\\.[cc]+$" 'ffap-c-path)
-    ("\\.[in]+$" 'ffap-c-path)
-    ("CMakeLists\\.txt" "$SRC_TREE" "~/src")))
+;;; Check ffap string for line-number and goto it.
+(defvar ffap-file-at-point-line-number nil
+  "Variable to hold line number from the last `ffap-file-at-point' call.")
+(defadvice ffap-file-at-point (after ffap-store-line-number activate)
+  "Search `ffap-string-at-point' for a line number pattern and
+save it in `ffap-file-at-point-line-number' variable."
+  (let* ((string (ffap-string-at-point)) ;; string/name definition copied from `ffap-string-at-point'
+         (name
+          (or (condition-case nil
+                  (and (not (string-match "//" string)) ; foo.com://bar
+                       (substitute-in-file-name string))
+                (error nil))
+              string))
+         (line-number-string
+          (and (string-match ":[0-9]+" name)
+               (substring name (1+ (match-beginning 0)) (match-end 0))))
+         (line-number
+          (and line-number-string
+               (string-to-number line-number-string))))
+    (if (and line-number (> line-number 0))
+        (setq ffap-file-at-point-line-number line-number)
+      (setq ffap-file-at-point-line-number nil))))
+(defadvice find-file-at-point (after ffap-goto-line-number activate)
+  "If `ffap-file-at-point-line-number' is non-nil goto this line."
+  (when ffap-file-at-point-line-number
+    (goto-line ffap-file-at-point-line-number)
+    (setq ffap-file-at-point-line-number nil)))
 
-;;; Rename buffer and the file it is visiting.
+;;;; Rename buffer and the file it is visiting.
 (defun rename-current-buffer-file ()
   "Renames current buffer and file it is visiting."
   (interactive)
