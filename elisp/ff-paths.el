@@ -1,7 +1,7 @@
 ;;; ff-paths.el --- searches certain paths to find files.
 
 ;; Copyright (C) 1994-2003 Peter S. Galbraith
- 
+
 ;; Author:    Peter S. Galbraith <psg@debian.org>
 ;; Created:   16 Sep 1994
 ;; Version:   3.21 (Aug 14 2003)
@@ -458,9 +458,8 @@ don't think it should.  ff-paths should deal with it anyway..."
   "Search for NAME in path specified in `ff-paths-list'."
   ;; This is called by ffap before it prompts.
   (setq ff-paths-in-ffap-name (expand-file-name name))
-  (let* ((the-name (file-name-nondirectory name))
-         (matches (psg-filename-in-directory-list
-                   the-name (ff-paths-from-list the-name))))
+  (let* ((matches (psg-filename-in-directory-list
+                   name (ff-paths-from-list name))))
     (cond
      ((null matches)                    ; No match, Return nil
       nil)
@@ -469,23 +468,23 @@ don't think it should.  ff-paths should deal with it anyway..."
      (t
       (setq matches (psg-convert-homedir-to-tilde matches))
       (condition-case nil
-	  (let ((minibuffer-setup-hook (cons 'minibuffer-completion-help
-					     minibuffer-setup-hook)))
-	    (setq the-name
-		  (or (and (string-equal "18" (substring emacs-version 0 2))
-			   (completing-read ff-paths-prompt
-					    (create-alist-from-list matches)
-					    nil t
-					    (psg-common-in-list matches)))
-		      (completing-read ff-paths-prompt
-				       (create-alist-from-list matches)
-				       nil t
-				       (psg-common-in-list matches)
-				       'file-name-history))))
-	(quit (setq the-name nil)))
-      (if (and the-name
-               (not (string-equal "" the-name)))
-          the-name
+          (let ((minibuffer-setup-hook (cons 'minibuffer-completion-help
+                                             minibuffer-setup-hook)))
+            (setq name
+                  (or (and (string-equal "18" (substring emacs-version 0 2))
+                           (completing-read ff-paths-prompt
+                                            (create-alist-from-list matches)
+                                            nil t
+                                            (psg-common-in-list matches)))
+                      (completing-read ff-paths-prompt
+                                       (create-alist-from-list matches)
+                                       nil t
+                                       (psg-common-in-list matches)
+                                       'file-name-history))))
+        (quit (setq name nil)))
+      (if (and name
+               (not (string-equal "" name)))
+          name
         nil)))))
 
 (defvar ffap-alist)
@@ -548,7 +547,7 @@ don't think it should.  ff-paths should deal with it anyway..."
           (setq result-list (cons (car work-list) result-list))))
       (setq work-list (cdr work-list)))
     (nreverse result-list)))
-    
+
 ;; Defined in bib-cite.el !
 (defun create-alist-from-list (the-list)
   (mapcar 'list the-list))
@@ -595,7 +594,7 @@ and return all matches."
                     nil))))
           (setq the-list (cdr the-list))))
       filespec-list)))
-      
+
 ;;; search-directory-tree is heavily based on TeX-search-files
 ;;  which recursively searches a list of directories for files
 ;;  matching a list of extensions.  This simplified version should
@@ -604,7 +603,7 @@ and return all matches."
 ;;  if they end in //).
 ;;  TeX-search-files is part of auc-tex:
 ;;    Maintainer: Per Abrahamsen <auc-tex@iesd.auc.dk>
-     
+
 ;;    Copyright (C) 1985, 1986 Free Software Foundation, Inc.
 ;;    Copyright (C) 1987 Lars Peter Fischer
 ;;    Copyright (C) 1991 Kresten Krab Thorup
@@ -620,15 +619,15 @@ If RECURSE is t, then we will recurse into the directory tree,
 If FIRST-FILE is t, stop after first file is found."
   (or (listp directories)
       (setq directories (list directories)))
-    
+
   (let ((match)
         (directories-done))
     (while directories
       (let* ((directory (file-name-as-directory (car directories)))
              (content (and directory
-			   (file-readable-p directory)
-			   (ff-paths-file-directory-p directory)
-			   (directory-files directory))))
+                           (file-readable-p directory)
+                           (ff-paths-file-directory-p directory)
+                           (directory-files directory))))
         (setq directories (cdr directories))
         (setq directories-done (cons directory directories-done))
         (while content
@@ -677,14 +676,14 @@ Examples:
 If REGEXP is nil, or \"\", an error will occur."
 
   (let ((start 0)
-	(result '()))
+        (result '()))
     (while (string-match regexp string start)
       (let ((match (string-match regexp string start)))
-	(setq result (cons (substring string start match) result))
-	(setq start (match-end 0))))
+        (setq result (cons (substring string start match) result))
+        (setq start (match-end 0))))
     (setq result (cons (substring string start nil) result))
     (nreverse result)))
-   
+
 ;; `ff-paths-from-list' and `ff-paths-expand-path' together replace
 ;; the old `psg-translate-ff-list'
 (defun ff-paths-from-list (filename)
@@ -699,7 +698,7 @@ NOTE: returned nil means no match, but nil as an element of the returned list
         (cond
          ((string-match (car the-pair) filename)
           (setq the-path
-                (append the-path (ff-paths-expand-path (cdr the-pair))))))
+                  (append the-path (ff-paths-expand-path (cdr the-pair))))))
         (setq local-ff-list (cdr local-ff-list))))
     the-path))
 
@@ -744,14 +743,14 @@ HOME or HOME/bin"
                     (getenv env)
                   (concat (getenv (substring env 0 slash-pos))
                           (substring env slash-pos))))
-	 (entries (and value (ff-paths-split-path value))))
+         (entries (and value (ff-paths-split-path value))))
     (loop for x in entries if (ff-paths-file-directory-p x) collect x)))
 
 (defun ff-paths-file-directory-p (file)
   "Like default `file-directory-p' but allow FILE to end in // for ms-windows."
   (save-match-data
     (if (string-match "\\(.*\\)//$" file)
-	(file-directory-p (match-string 1 file))
+        (file-directory-p (match-string 1 file))
       (file-directory-p file))))
 
 ;;; `locate' stuff
@@ -808,7 +807,7 @@ Return a string if a single match, or a list if many matches."
       t)
      ((ff-paths-locate "locate.exe")
       t)
-     (t      
+     (t
       nil))))
 
 ;;;###autoload

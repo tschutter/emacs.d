@@ -337,10 +337,15 @@ save it in `ffap-file-at-point-line-number' variable."
     (goto-line ffap-file-at-point-line-number)
     (setq ffap-file-at-point-line-number nil)))
 
-;;; Search certain paths to find files.
+;;; Search for files in directories other than the current.
+;;; Add root directories to ff-paths-list-default in "~/.emacs-local.el":
+;;;   (add-to-list 'ff-paths-list-default "~/src/myproj")
 (require 'ff-paths)
 (ff-paths-install)
-(defvar ff-paths-list-default `("~/src//"))
+(defvar ff-paths-list-default `("~/src")
+  "List of directories that ff-paths looks in when finding files.
+If a directory name ends with double slashes //, that indicates
+that all subdirectories beneath it should also be searched.")
 (setq ff-paths-list
   '(("^\\." "~/")                       ; .* (dot) files in user's home
     ("\\.el$" load-path)                ; el extension in load-path elisp var
