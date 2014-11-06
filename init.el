@@ -95,6 +95,7 @@
 
 ;;;; Desktop
 ;;; See http://www.emacswiki.org/emacs/DeskTop
+(require 'desktop)
 (desktop-save-mode 1)
 (setq desktop-base-file-name "desktop")  ;no need for leading dot
 (setq desktop-base-lock-name "desktop.lock")  ;no need for leading dot
@@ -104,7 +105,7 @@
 (add-to-list 'desktop-globals-to-save 'log-edit-comment-ring)  ;*VC-log*
 ;;; Clean stale desktop.lock file.
 (defun emacs-process-p (pid)
-  "If pid is the process ID of an emacs process, return t, else nil.
+  "If PID is the process ID of an Emacs process, return t, else nil.
 Also returns nil if pid is nil."
   (when pid
     (let ((attributes (process-attributes pid)) (cmd))
@@ -119,6 +120,7 @@ Also returns nil if pid is nil."
 
 
 ;;;; Bookmarks
+(require 'bookmark)
 (setq bookmark-default-file (concat emacs-var-directory "emacs.bmk"))
 (global-set-key (kbd "<kp-1>") 'bookmark-bmenu-list)
 (global-set-key (kbd "<kp-2>") 'bookmark-set)
@@ -209,7 +211,7 @@ Else it is a user buffer."
     ))
 
 (defun next-user-buffer ()
-  "Switch to the next user buffer in cyclic order.\n
+  "Switch to the next user buffer in cyclic order.
 User buffers are those not starting with *."
   (interactive)
   (next-buffer)
@@ -218,7 +220,7 @@ User buffers are those not starting with *."
       (setq i (1+ i)) (next-buffer))))
 
 (defun previous-user-buffer ()
-  "Switch to the previous user buffer in cyclic order.\n
+  "Switch to the previous user buffer in cyclic order.
 User buffers are those not starting with *."
   (interactive)
   (previous-buffer)
@@ -252,6 +254,7 @@ User buffers are those not starting with *."
 (kill-scratch-buffer)  ;install the hook
 
 ;;; Enable extra dired functionality such as virtual-dired.
+(require 'dired-x)
 (setq dired-x-hands-off-my-keys t)  ; don't bind C-x C-f
 (add-hook 'dired-load-hook
           (function (lambda () (load "dired-x"))))
@@ -280,6 +283,8 @@ User buffers are those not starting with *."
 ;;; http://www.gnu.org/software/tramp/
 ;;; To activate, open file of the form /machine:localname
 (require 'tramp)
+(require 'tramp-cache)
+(require 'tramp-sh)
 (setq tramp-default-method "ssh")
 (setq tramp-persistency-file-name (concat emacs-var-directory "tramp"))
 (if (< emacs-major-version 24) ; broken in emacs-24
@@ -305,6 +310,7 @@ User buffers are those not starting with *."
 ;;; This is annoying especially on closing XML tags.
 ;;; The following advice ignores / as a wrong result.
 (defadvice ffap-file-at-point (after ffap-file-at-point-after-advice ())
+  "Advise ffap to ignore files starting with /."
   (if (string= ad-return-value "/")
       (setq ad-return-value nil)))
 (ad-activate 'ffap-file-at-point)
@@ -414,13 +420,6 @@ that all subdirectories beneath it should also be searched.")
 (require 'linum)
 (setq linum-format "% 5d")  ;always 5 columns
 (global-linum-mode)         ;all buffers
-(defun linum-on ()
-  (unless (or
-           ;except the minibuffer
-           (minibufferp)
-           ;except special buffers
-           (string-match "^\\*\\|&" (buffer-name (current-buffer))))
-    (linum-mode 1)))
 
 ;;; Highlight uncommitted changes.
 (when (display-graphic-p)
@@ -482,7 +481,7 @@ that all subdirectories beneath it should also be searched.")
 (global-whitespace-mode 1)
 (setq whitespace-action '(auto-cleanup))
 (defun whitespace-disable-for-some-files ()
-  "Disable whitespace mode for some files"
+  "Disable whitespace mode for some files."
   (let ((extension (file-name-extension buffer-file-name)))
     (if (or (string-equal extension "sln")
             (string-match "sigrok" buffer-file-name))
@@ -537,7 +536,7 @@ that all subdirectories beneath it should also be searched.")
 ;;; point at the beginning.
 ;; http://www.emacswiki.org/emacs/ZapToISearch
 (defun isearch-exit-other-end (rbeg rend)
-  "Exit isearch, but at the other end of the search string.
+  "Exit isearch, but at the other end of the search string (RBEG REND).
 This is useful when followed by an immediate kill."
   (interactive "r")
   (isearch-exit)
@@ -598,7 +597,7 @@ This is useful when followed by an immediate kill."
 
 ;;; Insert datetime into current buffer (^C-d).
 (defun insert-date ()
-  "Inserts date time string into current buffer."
+  "Insert date time string into current buffer."
   (interactive)
   (insert (format-time-string "%Y-%m-%d %H:%M:%S")))
 (global-set-key (kbd "C-c d") 'insert-date)
@@ -698,6 +697,7 @@ This is useful when followed by an immediate kill."
                             "^\*\*\* .* modes: "
                             "^\*\*\* .* was created on"))
 (defun erc-foolish-content (msg)
+  "Determine if MSG is foolish."
   (erc-list-match erc-foolish-content msg))
 (add-hook 'erc-insert-pre-hook
           (lambda (s)
@@ -715,6 +715,7 @@ This is useful when followed by an immediate kill."
 ;;; http://wiki.bitlbee.org/quickstart
 ;;; http://wiki.bitlbee.org/bitlbee-sipe
 (defun bitlbee-identify ()
+  "Generate a message identifying ourself."
   (when (and (string= "localhost" erc-session-server)
              (string= "&bitlbee" (buffer-name)))
     (erc-message "PRIVMSG" (format "%s identify user %s"
@@ -734,6 +735,7 @@ This is useful when followed by an immediate kill."
 
 ;;; Move current line up or down.
 (defun move-line-down ()
+  "Move current line down."
   (interactive)
   (let ((col (current-column)))
     (save-excursion
@@ -742,6 +744,7 @@ This is useful when followed by an immediate kill."
     (forward-line)
     (move-to-column col)))
 (defun move-line-up ()
+  "Move current line up."
   (interactive)
   (let ((col (current-column)))
     (save-excursion
@@ -753,7 +756,7 @@ This is useful when followed by an immediate kill."
 
 ;;; Line wrap regions, function definitions, and function calls.
 (defun region-line-wrap ()
-  "Line wrap region, breaking at commas"
+  "Line wrap region, breaking at commas."
   (let ((newline (if (eq major-mode (quote vbnet-mode)) " _\n" "\n")))
     (save-excursion
       (save-restriction
@@ -775,7 +778,7 @@ This is useful when followed by an immediate kill."
               (insert newline)))))
     (indent-region (mark) (point) nil)))
 (defun function-line-wrap ()
-  "Line wrap function call or function definition"
+  "Line wrap function call or function definition."
   (interactive)
   (let ((original-point (point)))
     (save-excursion
@@ -813,6 +816,7 @@ This is useful when followed by an immediate kill."
 
 ;;; Force a vertical window split.
 (defadvice smart-compile (around split-horizontally activate)
+  "Split window vertically when smart-compile is called."
   (let ((split-width-threshold nil)
         (split-height-threshold 0))
     ad-do-it))
@@ -823,7 +827,7 @@ This is useful when followed by an immediate kill."
 
 ;;; Globally enable C-n, C-p to cycle through errors.
 (defun my-next-error ()
-  "Move point to next error and highlight it"
+  "Move point to next error and highlight it."
   (interactive)
   (progn
     (next-error)
@@ -833,7 +837,7 @@ This is useful when followed by an immediate kill."
     (beginning-of-line)
     ))
 (defun my-previous-error ()
-  "Move point to previous error and highlight it"
+  "Move point to previous error and highlight it."
   (interactive)
   (progn
     (previous-error)
@@ -881,7 +885,7 @@ This is useful when followed by an immediate kill."
 ;;; Currently this is too expensive to do for all Python files, so we
 ;;; load ropemacs only if requested.
 (defun load-ropemacs ()
-  "Load pymacs and ropemacs"
+  "Load pymacs and ropemacs."
   (interactive)
   (require 'pymacs)
   (setq ropemacs-enable-shortcuts nil)
@@ -909,6 +913,7 @@ This is useful when followed by an immediate kill."
 
 ;;;; C
 (defun adjust-indentation-style ()
+  "Adjust C indentation style."
   ;; use C-c C-s to determine the syntactic symbol
   ;; use C-h v c-offsets-alist to see current setting for the
   ;; syntactic symbol
