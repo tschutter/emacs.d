@@ -59,12 +59,28 @@ Notation: What's the difference between "<return>" and "RET"?
     ============= ======
     Key Sequence  Action
     ============= ======
+    M-n           Jump to next instance of symbol at point
+    M-p           Jump to previous instance of symbol at point
     M-<up>        Jump to previous flycheck error
     M-<down>      Jump to next flycheck error
     <f5>          Compile current buffer
     C-p           Move point to previous error and highlight it
     C-n           Move point to next error and highlight it
     C-x p l       Load pymacs and ropemacs
+    ============= ======
+
+**Python**
+    ============= ======
+    Key Sequence  Action
+    ============= ======
+    C-c C-v       Run pycheck on current buffer
+    C-c h         Lookup symbol in the Python HTML indexes
+    C-x p l       Load ropemacs
+    ropemacs-mode Enable ropemacs
+    C-c C-f       Find the occurrences of a the symbol at point (ropemacs)
+    C-c C-g       Goto the definition of the symbol at point (ropemacs)
+    C-c C-d       Show the documentation of the symbol at point (ropemacs)
+    M-/           Select from a list of completions (ropemacs)
     ============= ======
 
 **Other**
@@ -78,5 +94,22 @@ Notation: What's the difference between "<return>" and "RET"?
     <kp-7>        Generate the diary window
     <kp-8>        Open diary
     <kp-9>        Display a three-month calendar
+    C-h n         Display man page
     super-j       Jump to a Web site from a programmable hotlist
     ============= ======
+
+Functions Not Bound to Keys
+===========================
+
+``url-humanify``
+    Take the URL at point and make it human readable.
+
+``git-timemachine``
+    Enable git timemachine for file of current buffer.  Use 'n' and
+    'p' keys to move between different versions.
+
+``list-packages``
+    List available and installed MELPA packages.
+
+``package-install``
+    Install a new MELPA package.
