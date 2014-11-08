@@ -319,8 +319,7 @@ User buffers are those not starting with *."
 (defvar ffap-file-at-point-line-number nil
   "Variable to hold line number from the last `ffap-file-at-point' call.")
 (defadvice ffap-file-at-point (after ffap-store-line-number activate)
-  "Search `ffap-string-at-point' for a line number pattern and
-save it in `ffap-file-at-point-line-number' variable."
+  "Search `ffap-string-at-point' for a line number pattern and save it in `ffap-file-at-point-line-number' variable."
   (let* ((string (ffap-string-at-point)) ;; string/name definition copied from `ffap-string-at-point'
          (name
           (or (condition-case nil
@@ -344,18 +343,15 @@ save it in `ffap-file-at-point-line-number' variable."
     (setq ffap-file-at-point-line-number nil)))
 
 ;;; Search for files in directories other than the current.
-;;; Add root directories to ff-paths-list-default in "~/.emacs-local.el":
-;;;   (add-to-list 'ff-paths-list-default "~/src/myproj")
-(require 'ff-paths)
-(ff-paths-install)
-(defvar ff-paths-list-default `("~/src")
-  "List of directories that ff-paths looks in when finding files.
-If a directory name ends with double slashes //, that indicates
-that all subdirectories beneath it should also be searched.")
-(setq ff-paths-list
-  '(("^\\." "~/")                       ; .* (dot) files in user's home
-    ("\\.el$" load-path)                ; el extension in load-path elisp var
-    ("." ff-paths-list-default)))       ; all other files
+;;;
+;;; I was using ff-paths for this, but it breaks {svn,git} checkins,
+;;; opening files that don't exist yet, TRAMP, and other things I have
+;;; already forgotten.
+;;;
+;;; Add root directories to ffap-c-path in "~/.emacs-local.el":
+;;;   (add-to-list 'ffap-c-path "~/src/myproj")
+(add-to-list 'ffap-c-path "~/src")
+(setq ffap-alist (append ffap-alist '(("\\.py\\'" . ffap-c-mode))))
 
 ;;;; Rename buffer and the file it is visiting.
 (defun rename-current-buffer-file ()
