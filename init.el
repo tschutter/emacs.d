@@ -264,7 +264,9 @@ User buffers are those not starting with *."
                     ))
 
 ;;; Enable switching between buffers using substrings.
-(iswitchb-mode 1)
+;;; http://www.emacswiki.org/emacs/InteractivelyDoThings
+(require 'ido)
+(ido-mode t)
 
 ;;; Enable menu of recently opened files.
 ;;; See http://www.emacswiki.org/emacs/RecentFiles
