@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: arg_parser = ArgParser()
+# --
+arg_parser = argparse.ArgumentParser(
+    description="$1",
+    version="%prog " + __version__
+)
+$0
+
+# Parse command line arguments.
+args = arg_parser.parse_args()

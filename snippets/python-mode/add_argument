@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: arg_parser.add_argument
+# key: add_argument
+# --
+arg_parser.add_argument(
+    "--$1",
+    default=$2,
+    help="$3"
+)
