@@ -7,6 +7,17 @@ This repository should be cloned to ``~/.emacs.d``::
 
     git clone https://github.com/tschutter/emacs.d.git ~/.emacs.d
 
+Packages
+========
+
+To update packages, display the package list with ``M-x
+list-packages``, mark the packages needing updates with ``U``, and
+update those packages with ``x``.
+
+In ``init.el`` search for ``(ensure-package-installed`` to see the
+list of packages that is checked for installation every time Emacs is
+started.
+
 Keybindings
 ===========
 
