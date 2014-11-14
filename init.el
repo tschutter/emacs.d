@@ -36,7 +36,7 @@
 (when (require 'package nil :noerror)
   ; Milkypostman’s Emacs Lisp Package Archive
   (add-to-list 'package-archives
-               '("melpa" . "http://melpa.milkbox.net/packages/") t)
+               '("melpa" . "http://melpa.org/packages/") t)
 
   ;; Activate installed packages.
   (package-initialize)
