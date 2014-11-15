@@ -72,6 +72,7 @@ Notation: What's the difference between "<return>" and "RET"?
     ============= ======
     M-n           Jump to next instance of symbol at point
     M-p           Jump to previous instance of symbol at point
+    M-;           Comment region
     M-<up>        Jump to previous flycheck error
     M-<down>      Jump to next flycheck error
     <f5>          Compile current buffer
