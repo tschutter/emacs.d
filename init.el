@@ -13,11 +13,9 @@
 ;;; Location for state and cache files.
 (defvar emacs-cache-dir
   (concat
-   (expand-file-name
-    (file-name-as-directory
-     (if (getenv "XDG_CACHE_DIR")
-         (getenv "XDG_CACHE_DIR")
-       "~/.cache/")))
+   (file-name-as-directory
+    (or (getenv "XDG_CACHE_HOME")
+        (expand-file-name "~/.cache/")))
    "emacs/"))
 (make-directory emacs-cache-dir t)  ;create it if it does not exist
 (set-file-modes emacs-cache-dir #o700)  ;and make it private
