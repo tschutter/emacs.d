@@ -11,9 +11,16 @@
 ;;; Determine the location of the .emacs.d directory.
 (defvar emacs-d-directory (file-name-directory load-file-name))
 ;;; Location for state and cache files.
-(defvar emacs-var-directory (expand-file-name "~/.var/emacs/"))
-(make-directory emacs-var-directory t)  ;create it if it does not exist
-(set-file-modes emacs-var-directory #o700)  ;and make it private
+(defvar emacs-cache-dir
+  (concat
+   (expand-file-name
+    (file-name-as-directory
+     (if (getenv "XDG_CACHE_DIR")
+         (getenv "XDG_CACHE_DIR")
+       "~/.cache/")))
+   "emacs/"))
+(make-directory emacs-cache-dir t)  ;create it if it does not exist
+(set-file-modes emacs-cache-dir #o700)  ;and make it private
 
 ;;;; emacs-d-directory/elisp/
 ;;; Some packages installed in emacs-d-directory/elisp/ are single
@@ -99,7 +106,7 @@
 (desktop-save-mode 1)
 (setq desktop-base-file-name "desktop")  ;no need for leading dot
 (setq desktop-base-lock-name "desktop.lock")  ;no need for leading dot
-(setq desktop-path (list emacs-var-directory))
+(setq desktop-path (list emacs-cache-dir))
 (setq desktop-load-locked-desktop nil)  ;do not load desktop if locked
 (add-to-list 'desktop-globals-to-save 'query-replace-history)  ;C-%
 (add-to-list 'desktop-globals-to-save 'log-edit-comment-ring)  ;*VC-log*
@@ -121,7 +128,7 @@ Also returns nil if pid is nil."
 
 ;;;; Bookmarks
 (require 'bookmark)
-(setq bookmark-default-file (concat emacs-var-directory "emacs.bmk"))
+(setq bookmark-default-file (concat emacs-cache-dir "emacs.bmk"))
 (global-set-key (kbd "<kp-1>") 'bookmark-bmenu-list)
 (global-set-key (kbd "<kp-2>") 'bookmark-set)
 (global-set-key (kbd "<kp-3>") 'bookmark-jump)
@@ -137,7 +144,7 @@ Also returns nil if pid is nil."
 ;;; stuff to python-mode-abbrev-table.  And then we are bothered about
 ;;; saving the modified abbrevs.  So put the abbrev_defs file in var
 ;;; until we figure it out.
-(setq abbrev-file-name (concat emacs-var-directory "abbrev_defs"))
+(setq abbrev-file-name (concat emacs-cache-dir "abbrev_defs"))
 
 
 ;;;; Web browsing
@@ -271,7 +278,7 @@ User buffers are those not starting with *."
 ;;; Enable menu of recently opened files.
 ;;; See http://www.emacswiki.org/emacs/RecentFiles
 (require 'recentf)
-(setq recentf-save-file (concat emacs-var-directory "recentf"))
+(setq recentf-save-file (concat emacs-cache-dir "recentf"))
 (recentf-mode 1)
 (global-set-key (kbd "<kp-4>") 'recentf-open-files)
 
@@ -288,15 +295,15 @@ User buffers are those not starting with *."
 (require 'tramp-cache)
 (require 'tramp-sh)
 (setq tramp-default-method "ssh")
-(setq tramp-persistency-file-name (concat emacs-var-directory "tramp"))
+(setq tramp-persistency-file-name (concat emacs-cache-dir "tramp"))
 (if (< emacs-major-version 24) ; broken in emacs-24
     (setq tramp-remote-process-environment
           (split-string
            (replace-regexp-in-string
             "HOME/\.tramp_history"
-            "HOME/.var/tramp_history"
+            "HOME/.cache/emacs/tramp_history"
             (mapconcat 'identity tramp-remote-process-environment "|"))
-           "|")))  ; move ~/.tramp_history file created on target to ~/.var/
+           "|")))  ; move ~/.tramp_history file created on target to ~/.cache/emacs
 
 
 ;;;; Default to filename at point for C-x C-f.
@@ -520,12 +527,12 @@ User buffers are those not starting with *."
 
 ;;; Put all backups in one directory.
 ;;; See http://www.emacswiki.org/emacs/BackupDirectory
-(defvar backup-directory (concat emacs-var-directory "backups/"))
+(defvar backup-directory (concat emacs-cache-dir "backups/"))
 (setq backup-directory-alist `((".*" . ,backup-directory)))
 
 ;;; Put all auto-save files in one directory.
 ;;; See http://www.emacswiki.org/emacs/AutoSave
-(defvar auto-save-directory (concat emacs-var-directory "auto-save/"))
+(defvar auto-save-directory (concat emacs-cache-dir "auto-save/"))
 (setq auto-save-list-file-prefix auto-save-directory)
 (setq auto-save-file-name-transforms `((".*" ,auto-save-directory t)))
 
@@ -681,7 +688,7 @@ This is useful when followed by an immediate kill."
 ;;;; Eshell
 ;;; See http://www.emacswiki.org/emacs/CategoryEshell
 (require 'eshell)
-(setq eshell-directory-name (concat emacs-var-directory "eshell/"))
+(setq eshell-directory-name (concat emacs-cache-dir "eshell/"))
 
 
 ;;;; ERC InternetRelayChat.
@@ -702,7 +709,7 @@ This is useful when followed by an immediate kill."
             (when (erc-foolish-content s)
               (setq erc-insert-this nil))))
 (require 'erc-log)
-(setq erc-log-channels-directory "~/.var/irclog/")
+(setq erc-log-channels-directory (concat emacs-cache-dir "irclog/"))
 (erc-log-enable)
 (require 'easymenu)
 (easy-menu-add-item  nil '("tools") ["IRC with ERC" erc t])
@@ -874,7 +881,7 @@ This is useful when followed by an immediate kill."
 ;; Run "M-x pylookup-update-all" to update database.
 (require 'pylookup)
 (setq pylookup-program (concat emacs-d-directory "pylookup.py"))  ;executable
-(setq pylookup-db-file (concat emacs-var-directory "pylookup.db"))  ;database
+(setq pylookup-db-file (concat emacs-cache-dir "pylookup.db"))  ;database
 (setq pylookup-html-locations '("/usr/share/doc/python2.7/html"))  ;doc source
 (autoload 'pylookup-lookup "pylookup"
   "Lookup SEARCH-TERM in the Python HTML indexes." t)
