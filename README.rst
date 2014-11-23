@@ -64,6 +64,8 @@ Notation: What's the difference between "<return>" and "RET"?
     C-S-<up>      Move current line up one line
     C-S-<down>    Move current line down one line
     C-c d         Insert date time string at point
+    C-=           Expand region
+    C-x C-x       Exchange point and mark
     ============= ======
 
 **Programming**

@@ -69,6 +69,7 @@
 
   (ensure-package-installed
    'csharp-mode
+   'expand-region
    'flycheck
    'git-gutter-fringe
    'git-timemachine
@@ -803,6 +804,10 @@ This is useful when followed by an immediate kill."
           (forward-list)
           (region-line-wrap))))))
 (define-key global-map (kbd "<f2>") '(lambda () (interactive) (function-line-wrap)))
+
+;;; Expand region.
+(require 'expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
 
 
 ;;;; Common debugging config.
