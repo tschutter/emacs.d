@@ -951,15 +951,17 @@ This is useful when followed by an immediate kill."
 
 ;;;; C#
 ;;; See http://www.emacswiki.org/emacs/CSharpMode
-(autoload 'csharp-mode "csharp-mode" "Major mode for editing C# code." t)
-(setq auto-mode-alist
-      (append '(("\\.cs$" . csharp-mode)) auto-mode-alist))
-(add-hook 'csharp-mode-hook 'adjust-indentation-style)
-(add-hook 'csharp-mode-hook
-          (lambda ()
-            (if (not (eq system-type 'windows-nt))
-                (flyspell-prog-mode))
-            ))
+;;; 20130824 version has a bug which causes flymake problems.
+;;; http://code.google.com/p/csharpmode/issues/detail?id=8
+;(autoload 'csharp-mode "csharp-mode" "Major mode for editing C# code." t)
+;(setq auto-mode-alist
+;      (append '(("\\.cs$" . csharp-mode)) auto-mode-alist))
+;(add-hook 'csharp-mode-hook 'adjust-indentation-style)
+;(add-hook 'csharp-mode-hook
+;          (lambda ()
+;            (if (not (eq system-type 'windows-nt))
+;                (flyspell-prog-mode))
+;            ))
 
 
 ;;;; Java
