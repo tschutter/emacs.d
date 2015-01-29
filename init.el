@@ -497,7 +497,7 @@ User buffers are those not starting with *."
 (add-hook 'find-file-hook 'whitespace-disable-for-some-files)
 
 ;;; If we do see tabs, they are 4 chars wide.
-(setq tab-width 4)
+(setq-default tab-width 4)
 
 ;;; Scroll one line at a time instead of paging.
 ;;; Paging is what PgUp and PgDn are for.
