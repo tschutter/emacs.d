@@ -72,6 +72,7 @@ Notation: What's the difference between "<return>" and "RET"?
     ============= ======
     Key Sequence  Action
     ============= ======
+    M-;           Comment region (DWIM)
     M-n           Jump to next instance of symbol at point
     M-p           Jump to previous instance of symbol at point
     M-;           Comment region
