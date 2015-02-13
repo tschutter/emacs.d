@@ -790,7 +790,9 @@ This is useful when followed by an immediate kill."
       (let ((defun-begin (point)) (defun-end (mark)))
         ;; Try the sexp that we are inside of.
         (goto-char original-point)
-        (backward-up-list)
+        ;; Move backward out of one level of parentheses (or blocks)
+        ;; according to the mode.
+        (funcall (key-binding (kbd "C-M-u")))
         (if (looking-at "(")
             (progn
               (set-mark (point))
