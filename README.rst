@@ -88,6 +88,8 @@ Notation: What's the difference between "<return>" and "RET"?
     ============= ======
     Key Sequence  Action
     ============= ======
+    C-c >         Shift lines in region 4 columns to the right
+    C-c <         Shift lines in region 4 columns to the left
     C-c C-v       Run pycheck on current buffer
     C-c h         Lookup symbol in the Python HTML indexes
     C-x p l       Load ropemacs
