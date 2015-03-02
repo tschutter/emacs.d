@@ -130,3 +130,11 @@ Functions Not Bound to Keys
 
 ``package-install``
     Install a new MELPA package.
+
+Interesting Minor Modes
+=======================
+
+``auto-revert-tail-mode``
+    Tail a file such as a system log, so that changes made to that
+    file by other programs are continuously displayed.  Replaces the
+    older non-standard ``live-mode``.
