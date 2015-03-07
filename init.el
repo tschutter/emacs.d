@@ -76,8 +76,7 @@
    'mic-paren
    'scad-mode
    'smart-compile
-   'smartscan
-   'yasnippet))
+   'smartscan))
 
 ;;;; Emacs window (frame)
 (setq frame-title-format (concat "%b@" system-name))  ;%b = buffer name
@@ -131,11 +130,6 @@ Also returns nil if pid is nil."
 (global-set-key (kbd "<kp-1>") 'bookmark-bmenu-list)
 (global-set-key (kbd "<kp-2>") 'bookmark-set)
 (global-set-key (kbd "<kp-3>") 'bookmark-jump)
-
-
-;;;; Yasnippet (templates)
-(require 'yasnippet)
-(yas-global-mode 1)
 
 
 ;;;; Abbrev-mode
