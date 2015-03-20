@@ -856,6 +856,11 @@ This is useful when followed by an immediate kill."
 
 ;;;; Python
 
+;;; When filling docstrings, put the initial triple quotes are on
+;;; their own line, and do not put a blank line before the closing
+;;; triple quotes.  If the docstring can fit on one line, do so.
+(setq python-fill-docstring-style 'symmetric)
+
 ;;; Static code checks (either ^C-^W or ^C-^V).
 (setq py-pychecker-command "pycheck")
 (setq python-check-command "pycheck")
