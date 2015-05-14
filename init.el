@@ -57,7 +57,7 @@
        ;; (package-installed-p 'evil)
        (if (package-installed-p package)
            nil
-         (if (y-or-n-p (format "Package %s is missing. Install it? " package))
+         (if (y-or-n-p (format "Package %s is missing.  Install it? " package))
              (package-install package)
            package)))
      packages))
@@ -80,6 +80,23 @@
 
 ;;;; Emacs window (frame)
 (setq frame-title-format (concat "%b@" system-name))  ;%b = buffer name
+
+;;;; Org mode
+(require 'org)
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-cc" 'org-capture)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cb" 'org-iswitchb)
+(setq org-agenda-files '())
+(if (file-directory-p "~/org/")
+    (add-to-list 'org-agenda-files "~/org/"))
+(if (file-directory-p "~/Dropbox/org/")
+    (add-to-list 'org-agenda-files "~/Dropbox/org/"))
+(setq org-agenda-custom-commands
+       `(;; match those that are not scheduled.
+         ;; from http://stackoverflow.com/questions/17003338
+         ("u" "Unscheduled tasks" tags "-SCHEDULED={.+}/!+TODO|+STARTED|+WAITING")
+         ("n" "Agenda and all TODO's" ((agenda "") (alltodo)))))
 
 ;;;; Default font
 ;;; Setting the font here is problematic because it triggers a window
