@@ -85,7 +85,7 @@
       (setq org-directory "~/Dropbox/org")
       (setq org-mobile-inbox-for-pull "~/Dropbox/org/inbox.org")
       (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
-      (setq org-mobile-files '("~/Dropbox/org")))
+      (setq org-mobile-files '("~/Dropbox/org"))))
 
 ;;;; Emacs window (frame)
 (setq frame-title-format (concat "%b@" system-name))  ;%b = buffer name
