@@ -78,6 +78,15 @@
    'smart-compile
    'smartscan))
 
+;;;; MobileOrg
+;; http://www.jontourage.com/2013/07/10/org-mode-mobileorg-setup/
+(if (file-directory-p "~/Dropbox/org")
+    (progn
+      (setq org-directory "~/Dropbox/org")
+      (setq org-mobile-inbox-for-pull "~/Dropbox/org/inbox.org")
+      (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+      (setq org-mobile-files '("~/Dropbox/org")))
+
 ;;;; Emacs window (frame)
 (setq frame-title-format (concat "%b@" system-name))  ;%b = buffer name
 
