@@ -510,7 +510,11 @@ User buffers are those not starting with *."
 (setq scroll-preserve-screen-position t)
 
 ;;; Delete newlines as well as spaces and tabs around point.
-(global-set-key (kbd "M-SPC") '(lambda () (interactive) (just-one-space -1)))
+(if (and (>= emacs-major-version 24)
+         (>= emacs-minor-version 4))
+                                        ; or cycle between 1, 0, or original spaces
+    (global-set-key (kbd "M-SPC") 'cycle-spacing)
+  (global-set-key (kbd "M-SPC") '(lambda () (interactive) (just-one-space -1))))
 
 ;;; Identify variables that are safe to be set as file variables.
 (put 'whitespace-line-column 'safe-local-variable 'integerp)
