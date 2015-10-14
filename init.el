@@ -1015,7 +1015,9 @@ This is useful when followed by an immediate kill."
 
 ;;; Put list of files in default commit message.
 (require 'log-edit)
-(setq log-edit-setup-invert t)
+(if (string-equal system-name "takifugu") ; or should this be a 23.4 test?
+    (setq log-edit-setup-invert nil)
+  (setq log-edit-setup-invert t))
 (add-hook 'log-edit-hook
           (lambda ()
             (erase-buffer)  ; SETUP inserts stuff we don't want.
