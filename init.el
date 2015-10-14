@@ -90,8 +90,6 @@
 (setq org-agenda-files '())
 (if (file-directory-p "~/org/")
     (add-to-list 'org-agenda-files "~/org/"))
-(if (file-directory-p "~/Dropbox/org/")
-    (add-to-list 'org-agenda-files "~/Dropbox/org/"))
 (setq org-agenda-custom-commands
        `(;; match those that are not scheduled.
          ;; from http://stackoverflow.com/questions/17003338
