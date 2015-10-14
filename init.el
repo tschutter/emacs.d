@@ -97,6 +97,9 @@
          ;; from http://stackoverflow.com/questions/17003338
          ("u" "Unscheduled tasks" tags "-SCHEDULED={.+}/!+TODO|+STARTED|+WAITING")
          ("n" "Agenda and all TODO's" ((agenda "") (alltodo)))))
+(setq org-agenda-span 14)  ; display two weeks in agenda
+(setq org-agenda-start-on-weekday nil)  ; start agenda on today, not Monday
+(add-hook 'org-agenda-finalize-hook (lambda () (hl-line-mode)))  ; highlight entire agenda line
 
 ;;;; Default font
 ;;; Setting the font here is problematic because it triggers a window
