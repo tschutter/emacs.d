@@ -551,6 +551,16 @@ User buffers are those not starting with *."
 (setq auto-save-list-file-prefix auto-save-directory)
 (setq auto-save-file-name-transforms `((".*" ,auto-save-directory t)))
 
+;;; Swiper search
+(global-set-key (kbd "C-s") 'swiper)
+(global-set-key (kbd "C-r") 'swiper)
+(setq ivy-display-style 'fancy)
+;(defun bjm-swiper-recenter (&rest args)
+;  "recenter display after swiper"
+;  (recenter)
+;  )
+;(advice-add 'swiper :after #'bjm-swiper-recenter)
+
 ;;; When searching forward [Return] ends the search, but puts the
 ;;; point at the end of the found text.  Define [Ctrl+Return] to put
 ;;; point at the beginning.
