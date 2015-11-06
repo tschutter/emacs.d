@@ -650,52 +650,52 @@ Key binding?
 ** Whitespace
 
 *** Indentation should insert spaces, not tabs
-  *
-#+*BEGIN_SRC emacs-lisp
-  *(setq-default indent-tabs-mode nil)
-#+*END_SRC
-  *
+
+#+BEGIN_SRC emacs-lisp
+  (setq-default indent-tabs-mode nil)
+#+END_SRC
+
 *** Display and cleanup bogus whitespace
-  *
-Se*e http://www.emacswiki.org/emacs/WhiteSpace
-  *
-#+*BEGIN_SRC emacs-lisp
-  *(use-package whitespace
-  *  :config
-  *  (setq whitespace-style
-  *        '(face trailing tabs empty indentation space-before-tab))
-  *  (global-whitespace-mode 1)
-  *  (setq whitespace-action '(auto-cleanup))
-  *  (defun whitespace-disable-for-some-files ()
-  *    "Disable whitespace mode for some files."
-  *    (let ((extension (file-name-extension buffer-file-name)))
-  *      (if (or (string-equal extension "sln")
-  *              (string-match "sigrok" buffer-file-name))
-  *          (progn
-  *            (set (make-local-variable 'whitespace-style) '(nil))
-  *            (set (make-local-variable 'whitespace-action) '(nil))
-  *            (set (make-local-variable 'indent-tabs-mode) t)))))
-  *  (add-hook 'find-file-hook 'whitespace-disable-for-some-files))
-#+*END_SRC
-  *
+
+See http://www.emacswiki.org/emacs/WhiteSpace
+
+#+BEGIN_SRC emacs-lisp
+  (use-package whitespace
+    :config
+    (setq whitespace-style
+          '(face trailing tabs empty indentation space-before-tab))
+    (global-whitespace-mode 1)
+    (setq whitespace-action '(auto-cleanup))
+    (defun whitespace-disable-for-some-files ()
+      "Disable whitespace mode for some files."
+      (let ((extension (file-name-extension buffer-file-name)))
+        (if (or (string-equal extension "sln")
+                (string-match "sigrok" buffer-file-name))
+            (progn
+              (set (make-local-variable 'whitespace-style) '(nil))
+              (set (make-local-variable 'whitespace-action) '(nil))
+              (set (make-local-variable 'indent-tabs-mode) t)))))
+    (add-hook 'find-file-hook 'whitespace-disable-for-some-files))
+#+END_SRC
+
 *** If we do see tabs, they are 4 chars wide
-  *
-#+*BEGIN_SRC emacs-lisp
-  *(setq-default tab-width 4)
-#+*END_SRC
-  *
+
+#+BEGIN_SRC emacs-lisp
+  (setq-default tab-width 4)
+#+END_SRC
+
 *** Require final newline
-  *
-If* there is no newline at the end of the file, append one when saving.
-Th*is should not be necessary because most modes should set
-re*quire-final-newline to mode-require-final-newline, but most do not
-(E*macs-Lisp for one).  The risk here is if we open a binary file we
-mi*ght append a newline.
-  *
-#+*BEGIN_SRC emacs-lisp
-  *(setq require-final-newline t)
-#+*END_SRC
-  *
+
+If there is no newline at the end of the file, append one when saving.
+This should not be necessary because most modes should set
+require-final-newline to mode-require-final-newline, but most do not
+(Emacs-Lisp for one).  The risk here is if we open a binary file we
+might append a newline.
+
+#+BEGIN_SRC emacs-lisp
+  (setq require-final-newline t)
+#+END_SRC
+
 *** Identify variables that are safe to be set as file variables ??
 
 #+BEGIN_SRC emacs-lisp
