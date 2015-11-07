@@ -47,8 +47,6 @@ See http://www.emacswiki.org/emacs/LoadPath#AddSubDirectories
 #+BEGIN_SRC emacs-lispx
 (ensure-package-installed
  'csharp-mode
- 'git-gutter-fringe
- 'git-timemachine
  'mic-paren
  'scad-mode
  'smart-compile
@@ -148,8 +146,8 @@ http://www.emacswiki.org/emacs/LineNumbers
 
 #+BEGIN_SRC emacs-lisp
   (when (display-graphic-p)
-    (require 'git-gutter-fringe)
-    (require 'git-gutter))
+    (use-package git-gutter-fringe)
+    (use-package git-gutter))
   (global-git-gutter-mode t)
 #+END_SRC
 
@@ -1131,6 +1129,22 @@ http://wiki.bitlbee.org/bitlbee-sipe
               (insert
                (mapconcat 'identity (log-edit-files) ",")
                ": ")))
+#+END_SRC
+
+*** Navigate previous versions of a git controlled file
+
+Visit a git-controlled file and issue ~M-x git-timemachine~.
+
+Use the following keys to navigate historic version of the file:
+  - ~p~ Visit previous historic version
+  - ~n~ Visit next historic version
+  - ~w~ Copy the abbreviated hash of the current historic version
+  - ~W~ Copy the full hash of the current historic version
+  - ~g~ Goto nth revision
+  - ~q~ Exit the time machine.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package git-timemachine)
 #+END_SRC
 
 ** Compiling
