@@ -19,6 +19,9 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+;; Ensure packages are installed automatically if not already present.
+(setq use-package-always-ensure t)
+
 ;; Reduce use-package load time.
 ;; From the end of https://github.com/jwiegley/use-package/blob/master/README.md
 (eval-when-compile
