@@ -20,6 +20,7 @@
   (package-install 'use-package))
 
 ;; Ensure packages are installed automatically if not already present.
+;; This means that ":ensure t" is not necessary in any use-package form.
 (setq use-package-always-ensure t)
 
 ;; Reduce use-package load time.
