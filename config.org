@@ -42,17 +42,6 @@ See http://www.emacswiki.org/emacs/LoadPath#AddSubDirectories
          load-path)))
 #+END_SRC
 
-* Obsolete Package Installation
-
-#+BEGIN_SRC emacs-lispx
-(ensure-package-installed
- 'csharp-mode
- 'mic-paren
- 'scad-mode
- 'smart-compile
- 'smartscan)
-#+END_SRC
-
 * General Configuration
 
 ** Various key bindings
@@ -153,17 +142,22 @@ http://www.emacswiki.org/emacs/LineNumbers
 
 ** Advanced highlighting of matching parenthesis
 
+Display highlighting on whatever parenthesis (and paired delimiter if
+you like this) matches the one before or after point.
+
 #+BEGIN_SRC emacs-lisp
-  (require 'mic-paren)
-  (paren-activate)
-  (setq paren-sexp-mode t)  ; Always highlight the whole s-expression.
-  (add-hook 'LaTeX-mode-hook
-            (function (lambda ()
-                        (paren-toggle-matching-quoted-paren 1)
-                        (paren-toggle-matching-paired-delimiter 1))))
-  (add-hook 'c-mode-common-hook
-            (function (lambda ()
-                        (paren-toggle-open-paren-context 1))))
+  (use-package mic-paren
+    :init
+    (setq paren-sexp-mode t)  ; Always highlight the whole s-expression.
+    :config
+    (add-hook 'prog-mode-hook 'paren-activate)
+    (add-hook 'LaTeX-mode-hook
+              (function (lambda ()
+                          (paren-toggle-matching-quoted-paren 1)
+                          (paren-toggle-matching-paired-delimiter 1))))
+    (add-hook 'c-mode-common-hook
+              (function (lambda ()
+                          (paren-toggle-open-paren-context 1)))))
 #+END_SRC
 
 * Files
@@ -268,14 +262,11 @@ Buffer manipulation.
 
 ** Uniquely indentify buffers
 
-Make two buffers with the same file name open distinguishable.  See
-[[http://www.emacswiki.org/emacs/uniquify][emacswiki Uniquify]].
+Make two buffers with the same file name open distinguishable.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package uniquify
-    :init
-    (setq-default uniquify-buffer-name-style 'forward)
-    (setq uniquify-ignore-buffers-re "^\\*")) ; don't muck with special buffers
+  (setq-default uniquify-buffer-name-style 'forward)
+  ;(setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special buffers
 #+END_SRC
 
 ** Enable switching between buffers using substrings.
@@ -496,7 +487,12 @@ See [[http://emacswiki.org/emacs/BookMarks][emacswiki Book Marks]].
   (define-key global-map (kbd "<f4>") '(lambda () (interactive) (jump-to-register 34)))     ; F4 Restore
 #+END_SRC
 
-** Jump between other symbols found at point with M-n and M-p
+** Jump between symbols
+
+Jump between symbols in your buffer, based on the initial symbol your point was on when you started the search.
+
+- ~M-n~ = jump to next symbol
+- ~M-p~ = jump to previous symbol
 
 See https://github.com/mickeynp/smart-scan.
 
@@ -532,22 +528,6 @@ quote "abc def", then to the contents of the sexp setq alphabet-start
 #+BEGIN_SRC emacs-lisp
   (use-package expand-region
     :bind ("C-=" . er/expand-region))
-#+END_SRC
-
-* Dired
-
-Enable extra dired functionality such as virtual-dired.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package dired-x
-    :config
-    (setq dired-x-hands-off-my-keys t)  ; don't bind C-x C-f
-    (add-hook 'dired-load-hook
-              (function (lambda () (load "dired-x"))))
-    (add-hook 'dired-mode-hook
-              (function (lambda ()
-                          (hl-line-mode 1))  ; highlight entire line
-                        )))
 #+END_SRC
 
 * Writing
@@ -873,7 +853,6 @@ See https://sourcegraph.com/github.com/robert-zaremba/flycheck
 
 #+BEGIN_SRC emacs-lisp
    (use-package flycheck
-     :ensure t
 
      :bind
      (("<M-up>"   . flycheck-previous-error)
@@ -1155,9 +1134,10 @@ smart-compile-alist which is updated by per-language sections.
 *** Set compile command according to mode
 
 #+BEGIN_SRC emacs-lisp
-  (require 'smart-compile)
-  (add-to-list 'smart-compile-alist '(cmake-mode . "make -k"))
-  (add-to-list 'smart-compile-alist '(python-mode . "pycheck %f -s"))
+  (use-package smart-compile
+    :init
+    (add-to-list 'smart-compile-alist '(cmake-mode . "make -k"))
+    (add-to-list 'smart-compile-alist '(python-mode . "pycheck %f -s")))
 #+END_SRC
 
 *** Force a vertical window split
@@ -1445,15 +1425,14 @@ it out.
 See http://www.emacswiki.org/emacs/CSharpMode
 
 #+BEGIN_SRC emacs-lisp
-  (autoload 'csharp-mode "csharp-mode" "Major mode for editing C# code." t)
-  (setq auto-mode-alist
-        (append '(("\\.cs$" . csharp-mode)) auto-mode-alist))
-  (add-hook 'csharp-mode-hook 'adjust-indentation-style)
-  (add-hook 'csharp-mode-hook
-            (lambda ()
-              (if (not (eq system-type 'windows-nt))
-                  (flyspell-prog-mode))
-              ))
+  (use-package csharp-mode
+    :mode ("\\.cs\\'" . csharp-mode)
+    :config
+    (add-hook 'csharp-mode-hook 'adjust-indentation-style)
+    (add-hook 'csharp-mode-hook
+              (lambda ()
+                (if (not (eq system-type 'windows-nt))
+                    (flyspell-prog-mode)))))
 #+END_SRC
 
 ** Java
@@ -1482,9 +1461,12 @@ See http://www.emacswiki.org/emacs/reStructuredText
 #+END_SRC
 
 ** OpenSCAD
+
+[[http://www.openscad.org/][OpenSCAD]] is software for creating solid 3D CAD objects.
+
 #+BEGIN_SRC emacs-lisp
-  (autoload 'scad-mode "scad" "Major mode for editing SCAD code." t)
-  (add-to-list 'auto-mode-alist '("\\.scad$" . scad-mode))
+  (use-package scad-mode
+    :mode ("\\.scad\\'" . scad-mode))
 #+END_SRC
 
 * Configuration Documentation
