@@ -53,7 +53,15 @@ See http://www.emacswiki.org/emacs/LoadPath#AddSubDirectories
   (global-set-key (kbd "<kp-8>") (lambda () (interactive) (diary) (other-window 1)))
   (global-set-key (kbd "<kp-9>") 'calendar)
   (global-set-key (kbd "C-h n") 'man)  ;overrides view-emacs-news
-  (global-set-key (kbd "C-j") (lambda () (interactive) (join-line -1)))
+#+END_SRC
+
+Join lines.
+
+- ~M-^~ = join current line to one above
+- ~M-j~ = join current line to one below
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "M-j") (lambda () (interactive) (join-line -1)))
 #+END_SRC
 
 ** Turn off blinking cursor.
