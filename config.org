@@ -178,10 +178,13 @@ across Emacs sessions.
 See http://www.emacswiki.org/emacs/RecentFiles
 
 #+BEGIN_SRC emacs-lisp
-  (require 'recentf)
-  (setq recentf-save-file (concat emacs-cache-dir "recentf"))
-  (recentf-mode 1)
-  (global-set-key (kbd "<kp-4>") 'recentf-open-files)
+  (use-package recentf
+    :demand
+    :init
+    (setq recentf-save-file (concat emacs-cache-dir "recentf"))
+    (recentf-mode 1)
+    :bind
+    ("<kp-4>" . recentf-open-files))
 #+END_SRC
 
 ** TRAMP remote file access
@@ -851,8 +854,9 @@ clutter.
 See http://www.emacswiki.org/emacs/CategoryEshell
 
 #+BEGIN_SRC emacs-lisp
-  (require 'eshell)
-  (setq eshell-directory-name (concat emacs-cache-dir "eshell/"))
+  (use-package eshell
+    :config
+    (setq eshell-directory-name (concat emacs-cache-dir "eshell/")))
 #+END_SRC
 
 * Flycheck
@@ -962,17 +966,18 @@ We don't need to see the startup message.
 See http://www.emacswiki.org/emacs/PrintingFromEmacs
 
 #+BEGIN_SRC emacs-lisp
-  (require 'ps-print)
-  (setq ps-lpr-command "lp")
-  (setq ps-number-of-columns 2)
-  (setq ps-landscape-mode t)
-  (setq ps-line-number t)
-  (setq ps-print-color-p nil)
-  (setq ps-print-header nil)
-  (setq lpr-command "lp")
-  (setq lpr-printer-switch "-d ")
-  (setq lpr-add-switches nil)
-  (setq lpr-page-header-switches '("-h" "%s" "-F" "--length=61" "--indent=4"))
+  (use-package ps-print
+    :config
+    (setq ps-lpr-command "lp")
+    (setq ps-number-of-columns 2)
+    (setq ps-landscape-mode t)
+    (setq ps-line-number t)
+    (setq ps-print-color-p nil)
+    (setq ps-print-header nil)
+    (setq lpr-command "lp")
+    (setq lpr-printer-switch "-d ")
+    (setq lpr-add-switches nil)
+    (setq lpr-page-header-switches '("-h" "%s" "-F" "--length=61" "--indent=4")))
 #+END_SRC
 
 ** Email
