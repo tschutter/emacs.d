@@ -633,7 +633,10 @@ use putclip/getclip instead or xsel.
 Key binding?
 
 #+BEGIN_SRC emacs-lisp
-  (require 'url-humanify)
+  (require 'url-humanify)  ; in ./elisp/
+  ;theoretically the following should work, but it does not
+  ;(use-package url-humanify
+  ;  :load-path "./elisp/")
 #+END_SRC
 
 ** Whitespace
@@ -1025,7 +1028,7 @@ Use Message to compose mail.
 Integration with Google contacts.
 
 #+BEGIN_SRC emacs-lisp
-  (require 'external-abook)
+  (require 'external-abook)  ; in ./elisp/
   (custom-set-variables '(external-abook-command
                           (concat
                            emacs-d-directory
@@ -1050,27 +1053,37 @@ Following is not working.
 *** ERC InternetRelayChat
 
 #+BEGIN_SRC emacs-lisp
-  (require 'erc)
-  (setq erc-nick "tschutter")
-  (setq erc-prompt-for-password nil)
-  (setq erc-autojoin-channels-alist
-        '(("freenode.net" "#sigrok")))
-  (setq erc-hide-list '("JOIN" "PART" "QUIT"))
-  (setq erc-foolish-content '("^\*\*\* .*: topic set by "
-                              "^\*\*\* .* modes: "
-                              "^\*\*\* .* was created on"))
-  (defun erc-foolish-content (msg)
-    "Determine if MSG is foolish."
-    (erc-list-match erc-foolish-content msg))
-  (add-hook 'erc-insert-pre-hook
-            (lambda (s)
-              (when (erc-foolish-content s)
-                (setq erc-insert-this nil))))
-  (require 'erc-log)
-  (setq erc-log-channels-directory (concat emacs-cache-dir "irclog/"))
-  (erc-log-enable)
-  (require 'easymenu)
-  (easy-menu-add-item  nil '("tools") ["IRC with ERC" erc t])
+  (use-package erc
+    :config
+    (setq erc-nick "tschutter")
+    (setq erc-prompt-for-password nil)
+    (setq erc-autojoin-channels-alist
+          '(("freenode.net" "#sigrok")))
+    (setq erc-hide-list '("JOIN" "PART" "QUIT"))
+    (setq erc-foolish-content '("^\*\*\* .*: topic set by "
+                                "^\*\*\* .* modes: "
+                                "^\*\*\* .* was created on"))
+
+    (defun erc-foolish-content (msg)
+      "Determine if MSG is foolish."
+      (erc-list-match erc-foolish-content msg))
+    (add-hook 'erc-insert-pre-hook
+              (lambda (s)
+                (when (erc-foolish-content s)
+                  (setq erc-insert-this nil))))
+
+    ; no erc-log package in melpa
+    ;(use-package erc-log
+    ;  :init
+    ;  (erc-log-enable)
+    ;  :config
+    ;  (setq erc-log-channels-directory (concat emacs-cache-dir "irclog/")))
+
+    ; no easymenu package in melpa
+    ;(use-package easymenu
+    ;  :init
+    ;  (easy-menu-add-item  nil '("tools") ["IRC with ERC" erc t]))
+    )
 #+END_SRC
 
 *** BitlBee gateway to IM networks.
@@ -1092,7 +1105,7 @@ http://wiki.bitlbee.org/bitlbee-sipe
   (defun chat ()
     "Connect to IM networks using bitlbee."
     (interactive)
-    (require 'secrets "secrets.el.gpg")
+    (require 'secrets "secrets.el.gpg")  ; in ./elisp/
     (erc :server "localhost" :port 6667 :nick bitlbee-nick))
   ; register user BITLBEE-PASSWORD
   ; account add yahoo tom.schutter YAHOO-PASSWORD
@@ -1111,16 +1124,17 @@ http://wiki.bitlbee.org/bitlbee-sipe
 *** Put list of files in default commit message
 
 #+BEGIN_SRC emacs-lisp
-  (require 'log-edit)
-  (if (string-equal system-name "takifugu") ; or should this be a 23.4 test?
-      (setq log-edit-setup-invert nil)
-    (setq log-edit-setup-invert t))
-  (add-hook 'log-edit-hook
-            (lambda ()
-              (erase-buffer)  ; SETUP inserts stuff we don't want.
-              (insert
-               (mapconcat 'identity (log-edit-files) ",")
-               ": ")))
+  (use-package log-edit
+    :config
+    (if (string-equal system-name "takifugu") ; or should this be a 23.4 test?
+        (setq log-edit-setup-invert nil)
+      (setq log-edit-setup-invert t))
+    (add-hook 'log-edit-hook
+              (lambda ()
+                (erase-buffer)  ; SETUP inserts stuff we don't want.
+                (insert
+                 (mapconcat 'identity (log-edit-files) ",")
+                 ": "))))
 #+END_SRC
 
 *** Navigate previous versions of a git controlled file
@@ -1148,6 +1162,7 @@ smart-compile-alist which is updated by per-language sections.
 
 #+BEGIN_SRC emacs-lisp
   (use-package smart-compile
+    :demand  ; force loading immediately
     :init
     (add-to-list 'smart-compile-alist '(cmake-mode . "make -k"))
     (add-to-list 'smart-compile-alist '(python-mode . "pycheck %f -s")))
@@ -1344,7 +1359,7 @@ See https://github.com/tsgates/pylookup
 Run "M-x pylookup-update-all" to update database.
 
 #+BEGIN_SRC emacs-lisp
-  (require 'pylookup)
+  (require 'pylookup)  ; in ./elisp/
   (setq pylookup-program (concat emacs-d-directory "pylookup.py"))  ;executable
   (setq pylookup-db-file (concat emacs-cache-dir "pylookup.db"))  ;database
   (setq pylookup-html-locations '("/usr/share/doc/python2.7/html"))  ;doc source
@@ -1387,15 +1402,14 @@ it out.
 ** CMake
 
 #+BEGIN_SRC emacs-lisp
-  (require 'cmake-mode)
-  (setq auto-mode-alist
-        (append '(("CMakeLists\\.txt\\'" . cmake-mode)
-                  ("\\.cmake\\'" . cmake-mode))
-                auto-mode-alist))
-  (add-hook 'cmake-mode-hook
-            (lambda ()
-              (setq-default cmake-tab-width 4)
-              ))
+  (use-package cmake-mode
+    :mode (("\\.cmake\\'" . cmake-mode)
+           ("CMakeLists\\.txt\\'" . cmake-mode))
+    :config
+    (add-hook 'cmake-mode-hook
+              (lambda ()
+                (setq-default cmake-tab-width 4)
+                )))
 #+END_SRC
 
 ** C
