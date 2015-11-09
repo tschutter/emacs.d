@@ -1163,7 +1163,7 @@ smart-compile-alist which is updated by per-language sections.
 #+BEGIN_SRC emacs-lisp
   (use-package smart-compile
     :demand  ; force loading immediately
-    :init
+    :config
     (add-to-list 'smart-compile-alist '(cmake-mode . "make -k"))
     (add-to-list 'smart-compile-alist '(python-mode . "pycheck %f -s")))
 #+END_SRC
