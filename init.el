@@ -34,6 +34,7 @@
 ;(setq use-package-verbose t)
 
 ;;; Load the config.
+(require 'org)
 (org-babel-load-file (concat user-emacs-directory "config.org"))
 
 ;;; Load the local config.
