@@ -708,6 +708,16 @@ might append a newline.
   (put 'whitespace-line-column 'safe-local-variable 'integerp)
 #+END_SRC
 
+** Wrap region with punctuation
+
+Select a region and then press ~"~, ~'~, ~(~, ~{~, or ~[~.  See [[https://github.com/rejeep/wrap-region.el][wrap-region package]].
+
+#+BEGIN_SRC emacs-lisp
+  (use-package wrap-region
+    :config
+    (add-hook 'org-mode-hook 'wrap-region-mode))
+#+END_SRC
+
 * Frame (window)
 
 ** Window title
@@ -785,6 +795,21 @@ See http://www.emacswiki.org/emacs/DeskTop
   (global-set-key "\C-cc" 'org-capture)
   (global-set-key "\C-ca" 'org-agenda)
   (global-set-key "\C-cb" 'org-iswitchb)
+#+END_SRC
+
+Wrap region.
+
+- * = *bold*
+- ~ = ~code~
+- + = +strike-through+
+
+#+BEGIN_SRC emacs-lisp
+  (wrap-region-add-wrapper "*" "*" nil 'org-mode)
+  (wrap-region-add-wrapper "~" "~" nil 'org-mode)
+  (wrap-region-add-wrapper "+" "+" nil 'org-mode)
+  (wrap-region-add-wrapper "#+BEGIN_SRC emacs-lisp\n" "#+END_SRC\n" "l" 'org-mode)
+  (wrap-region-add-wrapper "#+BEGIN_SRC python\n" "#+END_SRC\n" "p" 'org-mode)
+  (wrap-region-add-wrapper "#+BEGIN_SRC sh\n" "#+END_SRC\n" "s" 'org-mode)
 #+END_SRC
 
 ** Visualization
