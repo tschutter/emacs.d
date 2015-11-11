@@ -513,6 +513,20 @@ See https://github.com/mickeynp/smart-scan.
     (global-smartscan-mode 1))
 #+END_SRC
 
+** Goto last change in current buffer
+
+Move through points at which you made edits in a buffer.
+
+- ~C-c C-,~ = goto last change
+- ~C-c C-.~ = goto next change
+
+#+BEGIN_SRC emacs-lisp
+   (use-package goto-chg
+     :bind
+     (("C-c C-," . goto-last-change)
+      ("C-c C-." . goto-last-change-reverse)))
+#+END_SRC
+
 ** Move between windows with shift-arrow keys
 
 #+BEGIN_SRC emacs-lisp
