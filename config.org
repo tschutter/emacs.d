@@ -802,6 +802,9 @@ Wrap region.
 - * = *bold*
 - ~ = ~code~
 - + = +strike-through+
+- l = BEGIN_SRC emacs_lisp
+- p = BEGIN_SRC python
+- s = BEGIN_SRC sh (shell)
 
 #+BEGIN_SRC emacs-lisp
   (wrap-region-add-wrapper "*" "*" nil 'org-mode)
