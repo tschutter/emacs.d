@@ -870,6 +870,37 @@ clutter.
 (add-hook 'org-agenda-finalize-hook (lambda () (hl-line-mode)))
 #+END_SRC
 
+** Org Babel BEGIN_SRC code blocks
+
+Enable languages for #+BEGIN_SRC blocks.
+
+#+BEGIN_SRC emacs-lisp
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)
+     (sh . t)))
+#+END_SRC
+
+Do not ask for confirmation when evaluating code blocks with ~C-c
+C-c~.  Disabling confirmation may result in accidental evaluation of
+potentially harmful code.  But I never evaluate code blocks from
+external sources.
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-confirm-babel-evaluate nil)
+#+END_SRC
+
+Replace results verbatim instead of replacing results with a table.
+To restore the default for a specific code block, use ~#+BEGIN_SRC
+<lang> :results verbatim~
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-babel-default-header-args
+        (cons '(:results . "replace verbatim")
+              (assq-delete-all :results org-babel-default-header-args)))
+#+END_SRC
+
 * Calendar and Diary
 
 #+BEGIN_SRC emacs-lisp
