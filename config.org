@@ -969,66 +969,6 @@ JSON checking requires jsonlint.
   sudo npm install jsonlint --global
 #+END_SRC
 
-* Web Browsing
-
-** Browse URLs in a real browser; nothing against W3C
-
-Needs work
-
-#+BEGIN_SRC emacs-lisp
-  ;(setq browse-url-browser-function 'browse-url-generic)
-  ;(setq browse-url-generic-program "chromium-browser")
-#+END_SRC
-
-** Web bookmarks
-
-WebJump is a programmable Web hotlist (or bookmark) facility that uses
-Emacs completion.  Jump to a Web site from a programmable hotlist.
-
-#+BEGIN_SRC emacs-lisp
-  (global-set-key [(super j)] 'webjump)
-  (setq webjump-sites
-    '(
-      ("Emacs Wiki" .
-       [simple-query "www.emacswiki.org"
-             "www.emacswiki.org/cgi-bin/wiki/" ""])
-      ("Google" .
-       [simple-query "www.google.com"
-             "www.google.com/search?q=" ""])
-      ("Wikipedia" .
-       [simple-query "wikipedia.org" "wikipedia.org/wiki/" ""])
-      ("Interactive Weather Information Network" . webjump-to-iwin)
-      ))
-#+END_SRC
-
-** W3M
-
-See http://www.emacswiki.org/emacs/emacs-w3m
-
-#+BEGIN_SRC emacs-lisp
-  (when (require 'w3m-load nil t)
-    (require 'w3m-load)
-    (setq browse-url-browser-function 'w3m-browse-url)
-    (autoload 'w3m-browse-url "w3m" "Ask a WWW browser to show a URL." t)
-    ;;; Save the w3m buffers between sessions with desktop.el.
-    (defun w3m-register-desktop-save ()
-      "Set `desktop-save-buffer' to a function returning the current URL."
-      (setq desktop-save-buffer (lambda (desktop-dirname) w3m-current-url)))
-    (add-hook 'w3m-mode-hook 'w3m-register-desktop-save)
-    (defun w3m-restore-desktop-buffer (d-b-file-name d-b-name d-b-misc)
-      "Restore a `w3m' buffer on `desktop' load."
-      (when (eq 'w3m-mode desktop-buffer-major-mode)
-        (let ((url d-b-misc))
-          (when url
-            (require 'w3m)
-            (if (string-match "^file" url)
-                (w3m-find-file (substring url 7))
-              (w3m-goto-url-new-session url))
-            (current-buffer)))))
-    (add-to-list 'desktop-buffer-mode-handlers
-                 '(w3m-mode . w3m-restore-desktop-buffer)))
-#+END_SRC
-
 * Miscellaneous
 
 We don't need to see the startup message.
