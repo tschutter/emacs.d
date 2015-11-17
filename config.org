@@ -815,7 +815,29 @@ Wrap region.
   (wrap-region-add-wrapper "#+BEGIN_SRC sh\n" "#+END_SRC\n" "s" 'org-mode)
 #+END_SRC
 
+** Navigation
+
+When M-RET is pressed, go to the end of the line before making a new
+entry.  The default is to split the line at cursor position, which I
+rarely want to do.
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-M-RET-may-split-line nil)
+#+END_SRC
+
+Pressing RET on a link will follow the link.
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-return-follows-link t)
+#+END_SRC
+
 ** Visualization
+
+*** Indent text according to outline structure
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-startup-indented t)
+#+END_SRC
 
 *** Ellipsis
 
@@ -1519,3 +1541,4 @@ Use "M-x package-install" to install a new package.
 ** Example Configurations
   - [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha Chua]]
   - [[https://github.com/danielmai/.emacs.d/blob/master/config.org][Daniel Mai]]
+  - [[http://www.howardism.org/Technical/Emacs/literate-devops.html][Literate devops at howardism.org]]
