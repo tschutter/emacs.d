@@ -141,11 +141,15 @@ http://www.emacswiki.org/emacs/LineNumbers
 
 ** Highlight uncommitted git changes
 
+~git-gutter-fringe.el~ does not work in a tty frame(~emacs -nw~).
+~git-gutter.el~ does work in a tty frame, but it does not work with
+~linum-mode~ (which we use).
+
 #+BEGIN_SRC emacs-lisp
   (when (display-graphic-p)
-    (use-package git-gutter-fringe)
-    (use-package git-gutter))
-  (global-git-gutter-mode t)
+    (use-package git-gutter-fringe
+      :init
+      (global-git-gutter-mode t)))
 #+END_SRC
 
 ** Advanced highlighting of matching parenthesis
