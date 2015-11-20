@@ -3,9 +3,9 @@ emacs.d
 
 Emacs configuration files.
 
-The configuration in [config.org](./config.org) uses [Org
-mode](http://orgmode.org) and
-[use-package](https://github.com/jwiegley/use-package).
+The configuration in `config.org <config.org>`_ uses `Org mode
+<http://orgmode.org>`_ and `use-package
+<https://github.com/jwiegley/use-package>`_.
 
 Initialization
 ==============
