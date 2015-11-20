@@ -3,6 +3,13 @@ emacs.d
 
 Emacs configuration files.
 
+The configuration in [config.org](./config.org) uses [Org
+mode](http://orgmode.org) and
+[use-package](https://github.com/jwiegley/use-package).
+
+Initialization
+==============
+
 This repository should be cloned to ``~/.emacs.d``::
 
     git clone https://github.com/tschutter/emacs.d.git ~/.emacs.d
