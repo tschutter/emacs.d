@@ -5,41 +5,50 @@
 
 Where Emacs stores and finds various files.
 
-** Determine the location of the .emacs.d directory.
+** Determine the location of the ~.emacs.d~ directory
 
 #+BEGIN_SRC emacs-lisp
 (defvar emacs-d-directory (file-name-directory load-file-name))
 #+END_SRC
 
-** Location for state and cache files.
+** Define Python-like ~os-path-join~ function
+
+See [[http://stackoverflow.com/questions/3964715/what-is-the-correct-way-to-join-multiple-path-components-into-a-single-complete][stackoverflow.com]].
 
 #+BEGIN_SRC emacs-lisp
-(defvar emacs-cache-dir
-  (concat
-   (file-name-as-directory
-    (or (getenv "XDG_CACHE_HOME")
-        (expand-file-name "~/.cache/")))
-   "emacs/"))
-(make-directory emacs-cache-dir t)  ;create it if it does not exist
-(set-file-modes emacs-cache-dir #o700)  ;and make it private
+  (defun os-path-join (root &rest dirs)
+    "Joins a series of directories together, like Python's os.path.join,
+    (os-path-join \"/tmp\" \"a\" \"b\" \"c\") => /tmp/a/b/c"
+
+    (if (not dirs)
+        root
+      (apply 'os-path-join
+             (expand-file-name (car dirs) root)
+             (cdr dirs))))
 #+END_SRC
 
-** emacs-d-directory/elisp/
-
-Some packages installed in emacs-d-directory/elisp/ are single files
-while others are placed inside their own sub-directories.  Prepend
-emacs-d-directory/elisp/ and all of it's subdirectories to load-path.
-See http://www.emacswiki.org/emacs/LoadPath#AddSubDirectories
+** Define ~emacs-cache-dir~ for location of state and cache files
 
 #+BEGIN_SRC emacs-lisp
-(let ((default-directory (concat emacs-d-directory "elisp/")))
-  (setq load-path
-        (append
-         (let ((load-path (copy-sequence load-path))) ;; Shadow
-           (append
-            (copy-sequence (normal-top-level-add-to-load-path '(".")))
-            (normal-top-level-add-subdirs-to-load-path)))
-         load-path)))
+  (defvar emacs-cache-dir
+    (file-name-as-directory
+     (os-path-join
+      (or (getenv "XDG_CACHE_HOME")
+          (expand-file-name "~/.cache/"))
+      "emacs")))
+  (make-directory emacs-cache-dir t)  ; create it if it does not exist
+  (set-file-modes emacs-cache-dir #o700)  ; and make it private
+#+END_SRC
+
+** Add ~.emacs.d/elisp/~ to ~load-path~
+
+Prepend ~.emacs.d/elisp/~ to ~load-path~.  We used to append all of
+its subdirectories as well, but they no longer exist.
+
+#+BEGIN_SRC emacs-lisp
+  (add-to-list
+   'load-path
+   (file-name-as-directory (os-path-join emacs-d-directory "elisp")))
 #+END_SRC
 
 * General Configuration
@@ -64,7 +73,7 @@ Join lines.
   (global-set-key (kbd "M-j") (lambda () (interactive) (join-line -1)))
 #+END_SRC
 
-** Turn off blinking cursor.
+** Turn off blinking cursor
 
 #+BEGIN_SRC emacs-lisp
   (blink-cursor-mode 0)
@@ -86,7 +95,7 @@ and to use major-mode instead, setting major-mode doesn't work.
   (setq mouse-yank-at-point t)
 #+END_SRC
 
-** Delete selected text when typing.
+** Delete selected text when typing
 
 #+BEGIN_SRC emacs-lisp
   (require 'delsel)  ;required for OpenSUSE-12.1 emacs-23.3-6.1.2
@@ -99,7 +108,7 @@ By default, Emacs saves backup files in the current directory.  See
 http://www.emacswiki.org/emacs/BackupDirectory
 
 #+BEGIN_SRC emacs-lisp
-  (defvar backup-directory (concat emacs-cache-dir "backups/"))
+  (defvar backup-directory (file-name-as-directory (os-path-join emacs-cache-dir "backups")))
   (setq backup-directory-alist `((".*" . ,backup-directory)))
 #+END_SRC
 
@@ -108,7 +117,7 @@ http://www.emacswiki.org/emacs/BackupDirectory
 See http://www.emacswiki.org/emacs/AutoSave
 
 #+BEGIN_SRC emacs-lisp
-  (defvar auto-save-directory (concat emacs-cache-dir "auto-save/"))
+  (defvar auto-save-directory (file-name-as-directory (os-path-join emacs-cache-dir "auto-save")))
   (setq auto-save-list-file-prefix auto-save-directory)
   (setq auto-save-file-name-transforms `((".*" ,auto-save-directory t)))
 #+END_SRC
@@ -185,7 +194,7 @@ See http://www.emacswiki.org/emacs/RecentFiles
   (use-package recentf
     :demand
     :init
-    (setq recentf-save-file (concat emacs-cache-dir "recentf"))
+    (setq recentf-save-file (os-path-join emacs-cache-dir "recentf"))
     (recentf-mode 1)
     :bind
     ("<kp-4>" . recentf-open-files))
@@ -201,7 +210,7 @@ See http://www.gnu.org/software/tramp/
   (require 'tramp-cache)
   (require 'tramp-sh)
   (setq tramp-default-method "ssh")
-  (setq tramp-persistency-file-name (concat emacs-cache-dir "tramp"))
+  (setq tramp-persistency-file-name (os-path-join emacs-cache-dir "tramp"))
   (if (< emacs-major-version 24) ; broken in emacs-24
       (setq tramp-remote-process-environment
             (split-string
@@ -284,7 +293,7 @@ Make two buffers with the same file name open distinguishable.
   ;(setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special buffers
 #+END_SRC
 
-** Enable switching between buffers using substrings.
+** Enable switching between buffers using substrings
 
 See [[http://www.emacswiki.org/emacs/InteractivelyDoThings][emacswiki IDO]].
 
@@ -398,7 +407,7 @@ See [[http://www.emacswiki.org/emacs/InteractivelyDoThings][emacswiki IDO]].
   (setq initial-scratch-message nil)
 #+END_SRC
 
-*** Respawn the scratch buffer if it is killed (C-x k).
+*** Respawn the scratch buffer if it is killed (C-x k)
 
 #+BEGIN_SRC emacs-lisp
   (defun kill-scratch-buffer ()
@@ -485,7 +494,7 @@ See [[http://emacswiki.org/emacs/BookMarks][emacswiki Book Marks]].
 #+BEGIN_SRC emacs-lisp
   (use-package bookmark
     :config
-    (setq bookmark-default-file (concat emacs-cache-dir "emacs.bmk"))
+    (setq bookmark-default-file (os-path-join emacs-cache-dir "emacs.bmk"))
 
     :bind
     (("<kp-1>" . bookmark-bmenu-list)
@@ -746,7 +755,7 @@ resize, which may push the window off of the screen.
       (set-face-attribute 'default nil :font "Consolas-11")))
 #+END_SRC
 
-** Display the current function name in the mode line.
+** Display the current function name in the mode line
 
 #+BEGIN_SRC emacs-lisp
 (which-function-mode 1)
@@ -958,7 +967,7 @@ See http://www.emacswiki.org/emacs/CategoryEshell
 #+BEGIN_SRC emacs-lisp
   (use-package eshell
     :config
-    (setq eshell-directory-name (concat emacs-cache-dir "eshell/")))
+    (setq eshell-directory-name (file-name-as-directory (os-path-join emacs-cache-dir "eshell"))))
 #+END_SRC
 
 * Flycheck
@@ -1070,8 +1079,8 @@ Integration with Google contacts.
   (require 'external-abook)  ; in ./elisp/
   (custom-set-variables '(external-abook-command
                           (concat
-                           emacs-d-directory
-                           "bin/goobook-external-abook query '%s'"
+                           (os.path.join emacs-d-directory "bin" "goobook-external-abook")
+                           "query '%s'"
                            )))
 #+END_SRC
 
@@ -1116,7 +1125,7 @@ Following is not working.
     ;  :init
     ;  (erc-log-enable)
     ;  :config
-    ;  (setq erc-log-channels-directory (concat emacs-cache-dir "irclog/")))
+    ;  (setq erc-log-channels-directory (file-name-as-directory (os-path-join emacs-cache-dir "irclog"))))
 
     ; no easymenu package in melpa
     ;(use-package easymenu
@@ -1125,7 +1134,7 @@ Following is not working.
     )
 #+END_SRC
 
-*** BitlBee gateway to IM networks.
+*** BitlBee gateway to IM networks
 
 sudo apt-get install bitlbee-libpurple
 http://emacs-fu.blogspot.com/search/label/erc
@@ -1268,7 +1277,7 @@ Needs work.
 
 ** Common Source Code Manipulation
 
-*** Move current line up or down.
+*** Move current line up or down
 
 <C-S-down> to move current line down.
 <C-S-up> to move current line up.
@@ -1391,7 +1400,7 @@ quotes.  If the docstring can fit on one line, do so.
               ))
 #+END_SRC
 
-*** Python doc lookup.
+*** Python doc lookup
 
 See https://github.com/tsgates/pylookup
 
@@ -1399,14 +1408,14 @@ Run "M-x pylookup-update-all" to update database.
 
 #+BEGIN_SRC emacs-lisp
   (require 'pylookup)  ; in ./elisp/
-  (setq pylookup-program (concat emacs-d-directory "pylookup.py"))  ;executable
-  (setq pylookup-db-file (concat emacs-cache-dir "pylookup.db"))  ;database
+  (setq pylookup-program (os-path-join emacs-d-directory "bin" "pylookup.py"))  ;executable
+  (setq pylookup-db-file (os-path-join emacs-cache-dir "pylookup.db"))  ;database
   (setq pylookup-html-locations '("/usr/share/doc/python2.7/html"))  ;doc source
   (autoload 'pylookup-lookup "pylookup"
     "Lookup SEARCH-TERM in the Python HTML indexes." t)
 #+END_SRC
 
-*** Python ropemacs refactoring.
+*** Python ropemacs refactoring
 
 Currently this is too expensive to do for all Python files, so we load
 ropemacs only if requested.
@@ -1435,7 +1444,7 @@ modified abbrevs.  So put the abbrev_defs file in var until we figure
 it out.
 
 #+BEGIN_SRC emacs-lisp
-  (setq abbrev-file-name (concat emacs-cache-dir "abbrev_defs"))
+  (setq abbrev-file-name (os-path-join emacs-cache-dir "abbrev_defs"))
 #+END_SRC
 
 ** CMake
@@ -1518,7 +1527,7 @@ See http://www.emacswiki.org/emacs/reStructuredText
     (let*
         ((bufname (file-name-nondirectory buffer-file-name))
          (basename (file-name-sans-extension bufname))
-         (outname (concat temporary-file-directory basename ".html")))
+         (outname (os-path-join temporary-file-directory (concat basename ".html"))))
       (set (make-local-variable 'compile-command)
            (concat "rst2html --verbose " bufname " " outname))
       (call-interactively 'compile)
