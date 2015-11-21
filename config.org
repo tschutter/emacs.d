@@ -3,13 +3,7 @@
 
 * Standard Directories
 
-Where Emacs stores and finds various files.
-
-** Determine the location of the ~.emacs.d~ directory
-
-#+BEGIN_SRC emacs-lisp
-(defvar emacs-d-directory (file-name-directory load-file-name))
-#+END_SRC
+Configure where Emacs stores and finds various files.
 
 ** Define Python-like ~os-path-join~ function
 
@@ -27,17 +21,10 @@ See [[http://stackoverflow.com/questions/3964715/what-is-the-correct-way-to-join
              (cdr dirs))))
 #+END_SRC
 
-** Define ~emacs-cache-dir~ for location of state and cache files
+** Determine the location of the ~.emacs.d~ directory
 
 #+BEGIN_SRC emacs-lisp
-  (defvar emacs-cache-dir
-    (file-name-as-directory
-     (os-path-join
-      (or (getenv "XDG_CACHE_HOME")
-          (expand-file-name "~/.cache/"))
-      "emacs")))
-  (make-directory emacs-cache-dir t)  ; create it if it does not exist
-  (set-file-modes emacs-cache-dir #o700)  ; and make it private
+(defvar emacs-d-directory (file-name-directory load-file-name))
 #+END_SRC
 
 ** Add ~.emacs.d/elisp/~ to ~load-path~
@@ -51,9 +38,42 @@ its subdirectories as well, but they no longer exist.
    (file-name-as-directory (os-path-join emacs-d-directory "elisp")))
 #+END_SRC
 
+** Define ~emacs-cache-dir~ for location of state and cache files
+
+#+BEGIN_SRC emacs-lisp
+  (defvar emacs-cache-dir
+    (file-name-as-directory
+     (os-path-join
+      (or (getenv "XDG_CACHE_HOME")
+          (expand-file-name "~/.cache/"))
+      "emacs")))
+  (make-directory emacs-cache-dir t)  ; create it if it does not exist
+  (set-file-modes emacs-cache-dir #o700)  ; and make it private
+#+END_SRC
+
+** Put all backups in ~$HOME/.cache/emacs/backups/~
+
+By default, Emacs saves backup files in the current directory.  See
+http://www.emacswiki.org/emacs/BackupDirectory
+
+#+BEGIN_SRC emacs-lisp
+  (defvar backup-directory (file-name-as-directory (os-path-join emacs-cache-dir "backups")))
+  (setq backup-directory-alist `((".*" . ,backup-directory)))
+#+END_SRC
+
+** Put all auto-save files in ~$HOME/.cache/emacs/auto-save/~
+
+See http://www.emacswiki.org/emacs/AutoSave
+
+#+BEGIN_SRC emacs-lisp
+  (defvar auto-save-directory (file-name-as-directory (os-path-join emacs-cache-dir "auto-save")))
+  (setq auto-save-list-file-prefix auto-save-directory)
+  (setq auto-save-file-name-transforms `((".*" ,auto-save-directory t)))
+#+END_SRC
+
 * General Configuration
 
-** Various key bindings
+** Define various key bindings
 
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-z") 'undo)   ;overrides suspend-frame
@@ -64,67 +84,39 @@ its subdirectories as well, but they no longer exist.
   (global-set-key (kbd "C-h n") 'man)  ;overrides view-emacs-news
 #+END_SRC
 
-Join lines.
+* Display
 
-- ~M-^~ = join current line to one above
-- ~M-j~ = join current line to one below
+** Configure window title
 
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "M-j") (lambda () (interactive) (join-line -1)))
+(setq frame-title-format (concat "%b@" system-name))  ;%b = buffer name
+#+END_SRC
+
+** Set default font
+
+Setting the font here is problematic because it triggers a window
+resize, which may push the window off of the screen.
+
+#+BEGIN_SRC emacs-lisp
+  (if (and window-system (eq system-type 'windows-nt))
+      (if (string-equal system-name "FDSVBLD01W70027")
+          (progn
+            ;; Rick, Ashish, and Adam prefer light on dark.
+            ;; colorscheme desert
+            ;; Rick prefers a larger font.
+            (set-face-attribute 'default nil :font "Consolas-13"))
+        (set-face-attribute 'default nil :font "Consolas-11")))
 #+END_SRC
 
 ** Turn off blinking cursor
+
+Blinking cursors are obnoxious.
 
 #+BEGIN_SRC emacs-lisp
   (blink-cursor-mode 0)
 #+END_SRC
 
-** Set default major mode to text-mode
-
-Set default major mode to be text-mode instead of fundamental-mode.
-Although the doc says that default-major-mode is obsolete since 23.2
-and to use major-mode instead, setting major-mode doesn't work.
-
-#+BEGIN_SRC emacs-lisp
-  (setq default-major-mode 'text-mode)
-#+END_SRC
-
-** Mouse yank commands yank at point instead of at click
-
-#+BEGIN_SRC emacs-lisp
-  (setq mouse-yank-at-point t)
-#+END_SRC
-
-** Delete selected text when typing
-
-#+BEGIN_SRC emacs-lisp
-  (require 'delsel)  ;required for OpenSUSE-12.1 emacs-23.3-6.1.2
-  (delete-selection-mode 1)
-#+END_SRC
-
-** Put all backups in one directory
-
-By default, Emacs saves backup files in the current directory.  See
-http://www.emacswiki.org/emacs/BackupDirectory
-
-#+BEGIN_SRC emacs-lisp
-  (defvar backup-directory (file-name-as-directory (os-path-join emacs-cache-dir "backups")))
-  (setq backup-directory-alist `((".*" . ,backup-directory)))
-#+END_SRC
-
-** Put all auto-save files in one directory
-
-See http://www.emacswiki.org/emacs/AutoSave
-
-#+BEGIN_SRC emacs-lisp
-  (defvar auto-save-directory (file-name-as-directory (os-path-join emacs-cache-dir "auto-save")))
-  (setq auto-save-list-file-prefix auto-save-directory)
-  (setq auto-save-file-name-transforms `((".*" ,auto-save-directory t)))
-#+END_SRC
-
-* Display
-
-** Mode line
+** Configure the mode line
 
 Display the size of the buffer, line number, and column number in the
 mode line.
@@ -133,6 +125,12 @@ mode line.
   (size-indication-mode 1)
   (line-number-mode 1)
   (column-number-mode 1)
+#+END_SRC
+
+Display the current function name in the mode line.
+
+#+BEGIN_SRC emacs-lisp
+  (which-function-mode 1)
 #+END_SRC
 
 ** Display line numbers
@@ -161,7 +159,7 @@ http://www.emacswiki.org/emacs/LineNumbers
       (global-git-gutter-mode t)))
 #+END_SRC
 
-** Advanced highlighting of matching parenthesis
+** Enable advanced highlighting of matching parenthesis
 
 Display highlighting on whatever parenthesis (and paired delimiter if
 you like this) matches the one before or after point.
@@ -183,6 +181,8 @@ you like this) matches the one before or after point.
 
 * Files
 
+Configure how files are selected and found.
+
 ** Recent files
 
 Enable File -> Open Recent.  This list is is automatically saved
@@ -200,29 +200,10 @@ See http://www.emacswiki.org/emacs/RecentFiles
     ("<kp-4>" . recentf-open-files))
 #+END_SRC
 
-** TRAMP remote file access
+** Default to filename at point for ~C-x C-f~.
 
-To activate, open file of the form /machine:localname
-See http://www.gnu.org/software/tramp/
-
-#+BEGIN_SRC emacs-lisp
-  (require 'tramp)
-  (require 'tramp-cache)
-  (require 'tramp-sh)
-  (setq tramp-default-method "ssh")
-  (setq tramp-persistency-file-name (os-path-join emacs-cache-dir "tramp"))
-  (if (< emacs-major-version 24) ; broken in emacs-24
-      (setq tramp-remote-process-environment
-            (split-string
-             (replace-regexp-in-string
-              "HOME/\.tramp_history"
-              "HOME/.cache/emacs/tramp_history"
-              (mapconcat 'identity tramp-remote-process-environment "|"))
-             "|")))  ; move ~/.tramp_history file created on target to ~/.cache/emacs
-#+END_SRC
-
-Default to filename at point for C-x C-f.  I tried ido-mode, but I
-don't like the M-p, M-n behaviour.  See
+When opening a file using ~C-x C-f~, suggest the filename at point.  I
+tried ido-mode, but I don't like the M-p, M-n behaviour.  See
 http://www.emacswiki.org/emacs/FindFileAtPoint
 
 #+BEGIN_SRC emacs-lisp
@@ -278,6 +259,27 @@ http://www.emacswiki.org/emacs/FindFileAtPoint
   ;;;   (add-to-list 'ffap-c-path "~/src/myproj")
   (add-to-list 'ffap-c-path "~/src")
   (setq ffap-alist (append ffap-alist '(("\\.py\\'" . ffap-c-mode))))
+#+END_SRC
+
+** TRAMP remote file access
+
+To activate, open file of the form /machine:localname
+See http://www.gnu.org/software/tramp/
+
+#+BEGIN_SRC emacs-lisp
+  (require 'tramp)
+  (require 'tramp-cache)
+  (require 'tramp-sh)
+  (setq tramp-default-method "ssh")
+  (setq tramp-persistency-file-name (os-path-join emacs-cache-dir "tramp"))
+  (if (< emacs-major-version 24) ; broken in emacs-24
+      (setq tramp-remote-process-environment
+            (split-string
+             (replace-regexp-in-string
+              "HOME/\.tramp_history"
+              "HOME/.cache/emacs/tramp_history"
+              (mapconcat 'identity tramp-remote-process-environment "|"))
+             "|")))  ; move ~/.tramp_history file created on target to ~/.cache/emacs
 #+END_SRC
 
 * Buffers
@@ -570,6 +572,44 @@ quote "abc def", then to the contents of the sexp setq alphabet-start
 
 * Writing
 
+** Set default major mode to text-mode
+
+Set default major mode to be text-mode instead of fundamental-mode.
+Although the doc says that default-major-mode is obsolete since 23.2
+and to use major-mode instead, setting major-mode doesn't work.
+
+#+BEGIN_SRC emacs-lisp
+  (setq default-major-mode 'text-mode)
+#+END_SRC
+
+** Configure ~Mouse-2~ to yank at point instead of at click
+
+Do not move point on ~Mouse-2~; just insert the text at point,
+regardless of where ~Mouse-2~ was clicked.  This is especially
+important when using a touchpad.
+
+#+BEGIN_SRC emacs-lisp
+  (setq mouse-yank-at-point t)
+#+END_SRC
+
+** Delete selected text when typing
+
+All other editors work this way, so let's not confuse ourselves.
+
+#+BEGIN_SRC emacs-lisp
+  (require 'delsel)  ;required for OpenSUSE-12.1 emacs-23.3-6.1.2
+  (delete-selection-mode 1)
+#+END_SRC
+
+** Join lines
+
+- ~M-^~ = join current line to one above
+- ~M-j~ = join current line to one below
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "M-j") (lambda () (interactive) (join-line -1)))
+#+END_SRC
+
 ** Clean up spaces
 
 Cycle between 1, 0, or original spaces around point where spaces
@@ -609,7 +649,7 @@ Press "M-Q" to perform the inverse of fill-paragraph ("M-q").  From
   (global-set-key (kbd "C-c d") 'insert-date)
 #+END_SRC
 
-** Clipboard
+** Configure clipboard interactions
 
 Use the "clipboard" selection (the one typically is used by C-c/C-v)
 instead of the X-Windows primary selection (which uses
@@ -729,36 +769,6 @@ Select a region and then press ~"~, ~'~, ~(~, ~{~, or ~[~.  See [[https://github
   (use-package wrap-region
     :config
     (add-hook 'org-mode-hook 'wrap-region-mode))
-#+END_SRC
-
-* Frame (window)
-
-** Window title
-
-#+BEGIN_SRC emacs-lisp
-(setq frame-title-format (concat "%b@" system-name))  ;%b = buffer name
-#+END_SRC
-
-** Default font
-
-Setting the font here is problematic because it triggers a window
-resize, which may push the window off of the screen.
-
-#+BEGIN_SRC emacs-lisp
-(if (and window-system (eq system-type 'windows-nt))
-    (if (string-equal system-name "FDSVBLD01W70027")
-        (progn
-          ;; Rick, Ashish, and Adam prefer light on dark.
-          ;; colorscheme desert
-          ;; Rick prefers a larger font.
-          (set-face-attribute 'default nil :font "Consolas-13"))
-      (set-face-attribute 'default nil :font "Consolas-11")))
-#+END_SRC
-
-** Display the current function name in the mode line
-
-#+BEGIN_SRC emacs-lisp
-(which-function-mode 1)
 #+END_SRC
 
 * Desktop
