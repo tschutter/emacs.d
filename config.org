@@ -84,6 +84,14 @@ See http://www.emacswiki.org/emacs/AutoSave
   (global-set-key (kbd "C-h n") 'man)  ;overrides view-emacs-news
 #+END_SRC
 
+** Display unfinished key chords
+
+Show unfinished keystrokes in 0.4 seconds instead of the default 1 second.
+
+#+BEGIN_SRC emacs-lisp
+  (setq echo-keystrokes 0.4)
+#+END_SRC
+
 * Display
 
 ** Configure window title
