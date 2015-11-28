@@ -71,6 +71,16 @@ See http://www.emacswiki.org/emacs/AutoSave
   (setq auto-save-file-name-transforms `((".*" ,auto-save-directory t)))
 #+END_SRC
 
+* Server Mode
+
+Start an Emacs server if it is not already running.
+
+#+BEGIN_SRC emacs-lisp
+  (require 'server)
+  (unless (server-running-p)
+    (server-start))
+#+END_SRC
+
 * Display
 
 ** Configure window title
