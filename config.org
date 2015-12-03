@@ -96,13 +96,7 @@ resize, which may push the window off of the screen.
 
 #+BEGIN_SRC emacs-lisp
   (if (and window-system (eq system-type 'windows-nt))
-      (if (string-equal system-name "FDSVBLD01W70027")
-          (progn
-            ;; Rick, Ashish, and Adam prefer light on dark.
-            ;; colorscheme desert
-            ;; Rick prefers a larger font.
-            (set-face-attribute 'default nil :font "Consolas-13"))
-        (set-face-attribute 'default nil :font "Consolas-11")))
+        (set-face-attribute 'default nil :font "Consolas-11"))
 #+END_SRC
 
 ** Turn off blinking cursor
