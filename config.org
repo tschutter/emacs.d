@@ -174,6 +174,22 @@ you like this) matches the one before or after point.
 
 Configure how files are selected and found.
 
+** Selecting files in the minibuffer
+
+Ignore case.
+
+#+BEGIN_SRC emacs-lisp
+(setq read-file-name-completion-ignore-case t)
+#+END_SRC
+
+Ignore files with certain extensions.
+
+#+BEGIN_SRC emacs-lisp
+(mapc (lambda (x)
+        (add-to-list 'completion-ignored-extensions x))
+      '(".exe" ".pdf"))
+#+END_SRC
+
 ** Recent files
 
 Enable File -> Open Recent.  This list is is automatically saved
@@ -392,7 +408,7 @@ See [[http://www.emacswiki.org/emacs/InteractivelyDoThings][emacswiki IDO]].
   (global-set-key (kbd "C-x C-r") 'rename-current-buffer-file)
 #+END_SRC
 
-** Scratch Buffer
+** Scratch buffer
 
 *** Suppress initial message in scratch buffer; we know what it is for
 
