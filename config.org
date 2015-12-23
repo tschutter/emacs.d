@@ -77,6 +77,11 @@ Start an Emacs server if it is not already running.
 
 #+BEGIN_SRC emacs-lisp
   (require 'server)
+  ;; Move server-auth-dir from .emacs.d to %TMP%.  If Emacs complains
+  ;; that the directory is unsafe, change the ownership from
+  ;; Administrators to yourself.
+  (if (eq system-type 'windows-nt)
+      (setq server-auth-dir (file-name-as-directory (os-path-join (getenv "TMP") "emacs"))))
   (unless (server-running-p)
     (server-start))
 #+END_SRC
