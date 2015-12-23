@@ -75,6 +75,24 @@ Notation: What's the difference between "<return>" and "RET"?
     C-x C-x       Exchange point and mark
     ============= ======
 
+**Macros**
+    ============= ======
+    Key Sequence  Action
+    ============= ======
+    C-x (         Start recording macro
+    C-x )         End recording macro
+    C-x e         Execute last macro
+    C-x C-k C-n   Cycle forwards through macro ring
+    C-x C-k C-b   Cycle backwards through macro ring
+    C-x C-k C-k   Execute last macro
+    C-x C-k n     Name last macro
+    C-x C-k b     Bind last macro to a key
+    C-x C-k r     Apply last macro to current region
+    C-x C-k C-c   Set value of counter (use before applying macro)
+    C-x C-k C-i   Insert value of counter (use in macro)
+    C-x C-k C-e   Edit last macro
+    ============= ======
+
 **Programming**
     ============= ======
     Key Sequence  Action
