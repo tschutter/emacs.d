@@ -1060,6 +1060,13 @@ We don't need to see the startup message.
   (setq inhibit-startup-message t)
 #+END_SRC
 
+And [[http://yann.hodique.info/blog/rant-obfuscation-in-emacs/][suppress the startup message in the echo area]] as well.
+
+#+BEGIN_SRC emacs-lisp
+  (put 'inhibit-startup-echo-area-message 'saved-value
+       (setq inhibit-startup-echo-area-message (user-login-name)))
+#+END_SRC
+
 ** Printing
 
 See http://www.emacswiki.org/emacs/PrintingFromEmacs
