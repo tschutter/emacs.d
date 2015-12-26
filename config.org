@@ -1308,6 +1308,27 @@ smart-compile-alist which is updated by per-language sections.
   (global-set-key (kbd "C-p") 'my-previous-error)
 #+END_SRC
 
+** CEDET
+
+[[http://cedet.sourceforge.net/][CEDET]] is a Collection of Emacs Development Environment Tools written
+with the end goal of creating an advanced development environment in
+Emacs.
+
+;#+BEGIN_SRC emacs-lisp
+;  (use-package cedet
+;    :init
+;    (progn
+;      ;; Add further minor-modes to be enabled by semantic-mode.  See
+;      ;; doc-string of `semantic-default-submodes' for other things you can
+;      ;; use here.
+;      (dolist (submodes '(global-semantic-idle-summary-mode
+;                          ))
+;        (add-to-list 'semantic-default-submodes submodes t))
+;
+;      ;; Enable Semantic
+;      (semantic-mode 1)))
+;#+END_SRC
+
 ** Common debugging
 
 *** Display a variable's value in a tooltip
@@ -1494,6 +1515,18 @@ it out.
 #+BEGIN_SRC emacs-lisp
   (setq abbrev-file-name (os-path-join emacs-cache-dir "abbrev_defs"))
 #+END_SRC
+
+** Arduino
+
+Major mode for arduino sketch (.ino) files.
+
+#+BEGIN_SRC emacs-lisp
+    (use-package arduino-mode
+      :mode
+      ("\\.ino\\'" . arduino-mode))
+#+END_SRC
+
+Compilation and uploading sketches to Arduino microcontrollers is handled by CEDET.
 
 ** CMake
 
