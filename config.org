@@ -848,14 +848,25 @@ See http://www.emacswiki.org/emacs/DeskTop
 
 * Org Mode
 
+#+BEGIN_SRC emacs-lisp
+  (require 'org)
+#+END_SRC
+
+** Files
+
+The value of org-directory is "~/org" by default.
+
+*** Default file for notes
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-default-notes-file (concat org-directory "/notes.org"))
+#+END_SRC
+
 ** Global key bindings
 
 #+BEGIN_SRC emacs-lisp
-  (require 'org)
+  (global-set-key "\C-co" (lambda () (interactive) (find-file org-default-notes-file)))
   (global-set-key "\C-cl" 'org-store-link)
-  (global-set-key "\C-cc" 'org-capture)
-  (global-set-key "\C-ca" 'org-agenda)
-  (global-set-key "\C-cb" 'org-iswitchb)
 #+END_SRC
 
 Wrap region.
@@ -876,7 +887,46 @@ Wrap region.
   (wrap-region-add-wrapper "#+BEGIN_SRC sh\n" "#+END_SRC\n" "s" 'org-mode)
 #+END_SRC
 
+** Capturing
+
+Globally bind org-capture to "C-c c".
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key "\C-cc" 'org-capture)
+#+END_SRC
+
+Define a standard task template.
+
+See http://orgmode.org/manual/Template-expansion.html#Template-expansion
+
+#+BEGIN_SRC emacs-lisp
+  (defvar my/org-basic-task-template "* TODO %^{Task}\n%?%i\nCaptured %<%Y-%m-%d %H:%M>")
+#+END_SRC
+
+Define templates used by org-capture ("C-c c").
+
+#+BEGIN_SRC emacs-lisp
+    (setq org-capture-templates
+          `(("t" "Task" entry
+             (file+headline (concat org-directory "/notes.org") "Inbox")
+             ,my/org-basic-task-template
+             :empty-lines 1)))
+#+END_SRC
+
 ** Navigation
+
+Globally bind org-iswitchb to "C-c b".
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key "\C-cb" 'org-iswitchb)
+#+END_SRC
+
+Configure org-refile ("C-c C-w") to use top three heading levels from
+all org agenda files.
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-refile-targets '((org-agenda-files . (:maxlevel . 3))))
+#+END_SRC
 
 When M-RET is pressed, go to the end of the line before making a new
 entry.  The default is to split the line at cursor position, which I
@@ -915,7 +965,22 @@ clutter.
   (setq org-ellipsis "\u2026")
 #+END_SRC
 
+** Journal and Archiving
+
+Archive a task with org-archive-subtree ("C-c C-x C-s"), by appending
+it to the journal.
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-archive-location (concat org-directory "/journal.org" "::"))
+#+END_SRC
+
 ** Org agenda
+
+Globally bind org-agenda to "C-c a".
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key "\C-ca" 'org-agenda)
+#+END_SRC
 
 *** Specify where to look for agenda files
 
@@ -950,7 +1015,15 @@ clutter.
 *** Highlight entire selected agenda line
 
 #+BEGIN_SRC emacs-lisp
-(add-hook 'org-agenda-finalize-hook (lambda () (hl-line-mode)))
+  (add-hook 'org-agenda-finalize-hook (lambda () (hl-line-mode)))
+#+END_SRC
+
+*** Warn of any deadlines in next 7 days
+
+Default is 14 days.  I can't think about things due next week.
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-deadline-warning-days 7)
 #+END_SRC
 
 ** Org Babel BEGIN_SRC code blocks
@@ -1134,7 +1207,7 @@ Integration with Google contacts.
   (require 'external-abook)  ; in ./elisp/
   (custom-set-variables '(external-abook-command
                           (concat
-                           (os.path.join emacs-d-directory "bin" "goobook-external-abook")
+                           (os-path-join emacs-d-directory "bin" "goobook-external-abook")
                            "query '%s'"
                            )))
 #+END_SRC
@@ -1256,7 +1329,7 @@ Use the following keys to navigate historic version of the file:
   (use-package git-timemachine)
 #+END_SRC
 
-** Compiling
+** Compiling (F5)
 
 The compiling section must come first, because it defines
 smart-compile-alist which is updated by per-language sections.
@@ -1282,7 +1355,7 @@ smart-compile-alist which is updated by per-language sections.
   (setq compilation-window-height 10)
 #+END_SRC
 
-;;; Bind smart-compile to F5
+*** Bind smart-compile to F5
 
 #+BEGIN_SRC emacs-lisp
   (global-set-key [f5] 'smart-compile)
@@ -1528,12 +1601,16 @@ it out.
 Major mode for arduino sketch (.ino) files.
 
 #+BEGIN_SRC emacs-lisp
-    (use-package arduino-mode
-      :mode
-      ("\\.ino\\'" . arduino-mode))
+  (use-package arduino-mode
+    :mode
+    ("\\.ino\\'" . arduino-mode))
 #+END_SRC
 
-Compilation and uploading sketches to Arduino microcontrollers is handled by CEDET.
+Reduce noise when compiling, and upload to Arduino by default.
+
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'smart-compile-alist '(arduino-mode . "make -k -s upload"))
+#+END_SRC
 
 ** CMake
 
