@@ -136,10 +136,10 @@ columns and display in all buffers.  See
 http://www.emacswiki.org/emacs/LineNumbers
 
 #+BEGIN_SRC emacs-lisp
-  (use-package linum
+  (use-package nlinum
     :init
-    (setq linum-format "% 5d")
-    (global-linum-mode))
+    (setq nlinum-format "% 5d")
+    (global-nlinum-mode))
 #+END_SRC
 
 ** Highlight uncommitted git changes
