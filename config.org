@@ -950,6 +950,15 @@ Pressing RET on a link will follow the link.
   (setq org-startup-indented t)
 #+END_SRC
 
+*** Disable "/" as indicating italics
+
+As I type path names, I don't want the text to bounce between italics
+and normal typefaces.  I rarely use italics anyways.
+
+#+BEGIN_SRC emacs-lisp
+  (delete '("/" italic) org-emphasis-alist)
+#+END_SRC
+
 *** Ellipsis
 
 Change the ellipsis "..." to something shorter to reduce visual
