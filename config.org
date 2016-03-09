@@ -566,7 +566,7 @@ Move through points at which you made edits in a buffer.
 ** Expand Region
 
 Increases the selected region by semantic units. Just keep pressing
-the key until it selects what you want.
+the C-= until it selects what you want.
 
 An example:
 
@@ -580,6 +580,27 @@ quote "abc def", then to the contents of the sexp setq alphabet-start
 #+BEGIN_SRC emacs-lisp
   (use-package expand-region
     :bind ("C-=" . er/expand-region))
+#+END_SRC
+
+** Dired
+
+Show the file from point in the other window.  Use down/up or C-n/C-p
+to display a different file.  Use SPC to scroll the peeped file down,
+and C-SPC or backspace to scroll it up.
+
+#+BEGIN_SRC emacs-lisp
+      (use-package peep-dired
+        :ensure t
+        :defer t ; don't access `dired-mode-map' until `peep-dired' is loaded
+        :config
+        ;; kill peep buffers when peep mode is disabled
+        (setq peep-dired-cleanup-on-disable t)
+        ;; enable peeping when visiting directories from a peep-enabled directory
+        (setq peep-dired-enable-on-directories t)
+        ;; ignore certain files
+        (setq peep-dired-ignored-extensions '("iso"))
+        :bind (:map dired-mode-map
+                    ("P" . peep-dired)))
 #+END_SRC
 
 * Keyboard and Mouse
