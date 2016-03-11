@@ -144,15 +144,14 @@ http://www.emacswiki.org/emacs/LineNumbers
 
 ** Highlight uncommitted git changes
 
-~git-gutter-fringe.el~ does not work in a tty frame(~emacs -nw~).
-~git-gutter.el~ does work in a tty frame, but it does not work with
-~linum-mode~ (which we use).
-
 #+BEGIN_SRC emacs-lisp
   (when (display-graphic-p)
-    (use-package git-gutter-fringe
-      :init
-      (global-git-gutter-mode t)))
+    (use-package git-gutter+
+      :diminish git-gutter+-mode  ;; do not display in mode-line
+      :config
+      (progn
+        (use-package git-gutter-fringe+)
+        (global-git-gutter+-mode 1))))
 #+END_SRC
 
 ** Enable advanced highlighting of matching parenthesis
@@ -966,6 +965,8 @@ Pressing RET on a link will follow the link.
 ** Visualization
 
 *** Indent text according to outline structure
+
+See [[https://github.com/syl20bnr/spacemacs/issues/1833][Weird org + git gutter indentation bug #1833]].
 
 #+BEGIN_SRC emacs-lisp
   (setq org-startup-indented t)
