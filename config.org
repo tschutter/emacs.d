@@ -174,6 +174,108 @@ you like this) matches the one before or after point.
                           (paren-toggle-open-paren-context 1)))))
 #+END_SRC
 
+* Keyboard and Mouse
+
+** Map pairs of simultaneously pressed keys to commands
+
+Load key-chord mode.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package key-chord
+    :init
+    (key-chord-mode 1))
+#+END_SRC
+
+Press "--" to insert "_".  No shift key required.
+
+#+BEGIN_SRC emacs-lisp
+  (key-chord-define-global
+   "--"
+   (lambda () (interactive) (insert "_")))
+#+END_SRC
+
+** Define various key bindings
+
+See [[http://ergoemacs.org/emacs/keystroke_rep.html][Emacs's Key Syntax Explained]].
+
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-z") 'undo)   ;overrides suspend-frame
+  (global-set-key (kbd "C-S-z") 'redo)
+  (global-set-key (kbd "<kp-7>") (lambda () "" (interactive) (find-file "~/.plan")))
+  (global-set-key (kbd "<kp-8>") (lambda () (interactive) (diary) (other-window 1)))
+  (global-set-key (kbd "<kp-9>") 'calendar)
+  (global-set-key (kbd "C-h n") 'man)  ;overrides view-emacs-news
+#+END_SRC
+
+** Display incomplete key commands
+
+Display the key bindings following your currently entered incomplete
+command (prefix) in a popup.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package which-key
+    :init
+    (which-key-mode)
+    (which-key-setup-side-window-right-bottom)
+    (setq which-key-idle-delay 1.0))
+#+END_SRC
+
+** Configure ~Mouse-2~ to yank at point instead of at click
+
+Do not move point on ~Mouse-2~; just insert the text at point,
+regardless of where ~Mouse-2~ was clicked.  This is especially
+important when using a touchpad.
+
+#+BEGIN_SRC emacs-lisp
+  (setq mouse-yank-at-point t)
+#+END_SRC
+
+** Configure clipboard interactions
+
+Use the "clipboard" selection (the one typically is used by C-c/C-v)
+instead of the X-Windows primary selection (which uses
+mouse-select/middle-button-click).
+
+See http://hugoheden.wordpress.com/2009/03/08/copypaste-with-emacs-in-terminal/
+
+#+BEGIN_SRC emacs-lisp
+  (setq x-select-enable-clipboard t)
+#+END_SRC
+
+If emacs is run in a terminal, the clipboard functions have no effect.
+We use xsel instead.  If running under cygwin, we need to modify to
+use putclip/getclip instead or xsel.
+
+#+BEGIN_SRC emacs-lisp
+  (unless window-system
+    (when (getenv "DISPLAY")
+      ;; Callback for when user cuts
+      (defun xsel-cut-function (text &optional push)
+        ;; Insert text to temp-buffer, and "send" content to xsel stdin
+        (with-temp-buffer
+          (insert text)
+          ;; I prefer using the "clipboard" selection (the one the
+          ;; typically is used by c-c/c-v) before the primary selection
+          ;; (that uses mouse-select/middle-button-click)
+          (call-process-region (point-min) (point-max) "xsel" nil 0 nil "--clipboard" "--input")))
+      ;; Call back for when user pastes
+      (defun xsel-paste-function ()
+        ;; Find out what is current selection by xsel. If it is different
+        ;; from the top of the kill-ring (car kill-ring), then return
+        ;; it. Else, nil is returned, so whatever is in the top of the
+        ;; kill-ring will be used.
+        (let ((xsel-output (shell-command-to-string "xsel --clipboard --output")))
+          (unless (string= (car kill-ring) xsel-output)
+            xsel-output )))
+      ;; Attach callbacks to hooks
+      (setq interprogram-cut-function 'xsel-cut-function)
+      (setq interprogram-paste-function 'xsel-paste-function)
+      ;; Idea from
+      ;; http://shreevatsa.wordpress.com/2006/10/22/emacs-copypaste-and-x/
+      ;; http://www.mail-archive.com/help-gnu-emacs@gnu.org/msg03577.html
+      ))
+#+END_SRC
+
 * Files
 
 Configure how files are selected and found.
@@ -602,88 +704,6 @@ and C-SPC or backspace to scroll it up.
                     ("P" . peep-dired)))
 #+END_SRC
 
-* Keyboard and Mouse
-
-** Define various key bindings
-
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-z") 'undo)   ;overrides suspend-frame
-  (global-set-key (kbd "C-S-z") 'redo)
-  (global-set-key (kbd "<kp-7>") (lambda () "" (interactive) (find-file "~/.plan")))
-  (global-set-key (kbd "<kp-8>") (lambda () (interactive) (diary) (other-window 1)))
-  (global-set-key (kbd "<kp-9>") 'calendar)
-  (global-set-key (kbd "C-h n") 'man)  ;overrides view-emacs-news
-#+END_SRC
-
-** Display incomplete key commands
-
-Display the key bindings following your currently entered incomplete
-command (prefix) in a popup.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package which-key
-    :init
-    (which-key-mode)
-    (which-key-setup-side-window-right-bottom)
-    (setq which-key-idle-delay 1.0))
-#+END_SRC
-
-** Configure ~Mouse-2~ to yank at point instead of at click
-
-Do not move point on ~Mouse-2~; just insert the text at point,
-regardless of where ~Mouse-2~ was clicked.  This is especially
-important when using a touchpad.
-
-#+BEGIN_SRC emacs-lisp
-  (setq mouse-yank-at-point t)
-#+END_SRC
-
-** Configure clipboard interactions
-
-Use the "clipboard" selection (the one typically is used by C-c/C-v)
-instead of the X-Windows primary selection (which uses
-mouse-select/middle-button-click).
-
-See http://hugoheden.wordpress.com/2009/03/08/copypaste-with-emacs-in-terminal/
-
-#+BEGIN_SRC emacs-lisp
-  (setq x-select-enable-clipboard t)
-#+END_SRC
-
-If emacs is run in a terminal, the clipboard functions have no effect.
-We use xsel instead.  If running under cygwin, we need to modify to
-use putclip/getclip instead or xsel.
-
-#+BEGIN_SRC emacs-lisp
-  (unless window-system
-    (when (getenv "DISPLAY")
-      ;; Callback for when user cuts
-      (defun xsel-cut-function (text &optional push)
-        ;; Insert text to temp-buffer, and "send" content to xsel stdin
-        (with-temp-buffer
-          (insert text)
-          ;; I prefer using the "clipboard" selection (the one the
-          ;; typically is used by c-c/c-v) before the primary selection
-          ;; (that uses mouse-select/middle-button-click)
-          (call-process-region (point-min) (point-max) "xsel" nil 0 nil "--clipboard" "--input")))
-      ;; Call back for when user pastes
-      (defun xsel-paste-function ()
-        ;; Find out what is current selection by xsel. If it is different
-        ;; from the top of the kill-ring (car kill-ring), then return
-        ;; it. Else, nil is returned, so whatever is in the top of the
-        ;; kill-ring will be used.
-        (let ((xsel-output (shell-command-to-string "xsel --clipboard --output")))
-          (unless (string= (car kill-ring) xsel-output)
-            xsel-output )))
-      ;; Attach callbacks to hooks
-      (setq interprogram-cut-function 'xsel-cut-function)
-      (setq interprogram-paste-function 'xsel-paste-function)
-      ;; Idea from
-      ;; http://shreevatsa.wordpress.com/2006/10/22/emacs-copypaste-and-x/
-      ;; http://www.mail-archive.com/help-gnu-emacs@gnu.org/msg03577.html
-      ))
-#+END_SRC
-
 * Writing
 
 ** Set default major mode to text-mode
@@ -905,6 +925,17 @@ Wrap region.
   (wrap-region-add-wrapper "#+BEGIN_SRC emacs-lisp\n" "#+END_SRC\n" "l" 'org-mode)
   (wrap-region-add-wrapper "#+BEGIN_SRC python\n" "#+END_SRC\n" "p" 'org-mode)
   (wrap-region-add-wrapper "#+BEGIN_SRC sh\n" "#+END_SRC\n" "s" 'org-mode)
+#+END_SRC
+
+Insert a TODO item before the current item, no matter where we are in
+the current item.
+
+#+BEGIN_SRC emacs-lisp
+  (key-chord-define
+   org-mode-map "TT"
+   (lambda () (interactive)
+     (org-forward-heading-same-level 0)
+     (org-insert-todo-heading t)))
 #+END_SRC
 
 ** Capturing
