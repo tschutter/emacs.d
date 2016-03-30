@@ -868,6 +868,7 @@ See http://www.emacswiki.org/emacs/DeskTop
     (setq desktop-load-locked-desktop nil)  ;do not load desktop if locked
     (add-to-list 'desktop-globals-to-save 'query-replace-history)  ; C-%
     (add-to-list 'desktop-globals-to-save 'log-edit-comment-ring)  ; *VC-log*
+    (add-to-list 'desktop-globals-to-save 'bookmark-history)       ; C-x r b
 
     ;; Clean stale desktop.lock file.
     (defun emacs-process-p (pid)
