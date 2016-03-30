@@ -1209,6 +1209,17 @@ And [[http://yann.hodique.info/blog/rant-obfuscation-in-emacs/][suppress the sta
        (setq inhibit-startup-echo-area-message (user-login-name)))
 #+END_SRC
 
+Get a definition of the word at point or from the minibuffer.
+
+#+BEGIN_SRC emacs-lisp
+    (use-package define-word
+      :ensure t
+      :config
+      (setq define-word-limit 20)
+      :bind (("s-d" . define-word-at-point)
+             ("s-D" . define-word)))
+#+END_SRC
+
 ** Printing
 
 See http://www.emacswiki.org/emacs/PrintingFromEmacs
