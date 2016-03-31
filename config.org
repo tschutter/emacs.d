@@ -1052,6 +1052,19 @@ clutter.
   (setq org-ellipsis "\u2026")
 #+END_SRC
 
+*** Fine tune characters are allowed before and after the markup characters
+
+By default, commas are now allowed next to markup characters.  For
+example, ~code,~ is not rendered as code.  This is a problem in this
+very file when doing markup of key bindings like ~C-c C-,~.  See
+[[http://stackoverflow.com/a/24173780][stackoverflow: How can I emphasize or verbatim quote a comma in org
+mode?]].
+
+#+BEGIN_SRC emacs-lisp
+  (setcar (nthcdr 2 org-emphasis-regexp-components) " \t\r\n\"'")
+  (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
+#+END_SRC
+
 ** Journal and Archiving
 
 Archive a task with org-archive-subtree ("C-c C-x C-s"), by appending
