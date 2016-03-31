@@ -220,6 +220,31 @@ command (prefix) in a popup.
     (setq which-key-idle-delay 1.0))
 #+END_SRC
 
+** Change M-w to copy current line if region not selected
+
+[[https://github.com/leoliu/easy-kill][easy-kill]] provides commands to let users kill or mark things easily.
+
+~M-w~ alone saves in the order of active region, url, email and
+finally the current line.
+
+~M-w~ can also be used as a prefix key:
+1) ~M-w w~: save word at point
+2) ~M-w s~: save sexp at point
+3) ~M-w l~: save list at point (enclosing sexp)
+4) ~M-w d~: save defun at point
+5) ~M-w D~: save current defun name
+6) ~M-w f~: save file at point
+7) ~M-w b~: save buffer-file-name
+
+For example, ~M-w w~ saves the current word, and repeating ~w~ expands
+the kill to include the next word.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package easy-kill
+    :config
+    (global-set-key [remap kill-ring-save] 'easy-kill))
+#+END_SRC
+
 ** Configure ~Mouse-2~ to yank at point instead of at click
 
 Do not move point on ~Mouse-2~; just insert the text at point,
