@@ -54,7 +54,7 @@ its subdirectories as well, but they no longer exist.
 ** Put all backups in ~$HOME/.cache/emacs/backups/~
 
 By default, Emacs saves backup files in the current directory.  See
-http://www.emacswiki.org/emacs/BackupDirectory
+[[http://www.emacswiki.org/emacs/BackupDirectory][emacswiki BackupDirectory]].
 
 #+BEGIN_SRC emacs-lisp
   (defvar backup-directory (file-name-as-directory (os-path-join emacs-cache-dir "backups")))
@@ -63,7 +63,7 @@ http://www.emacswiki.org/emacs/BackupDirectory
 
 ** Put all auto-save files in ~$HOME/.cache/emacs/auto-save/~
 
-See http://www.emacswiki.org/emacs/AutoSave
+See [[http://www.emacswiki.org/emacs/AutoSave][emacswiki AutoSave]].
 
 #+BEGIN_SRC emacs-lisp
   (defvar auto-save-directory (file-name-as-directory (os-path-join emacs-cache-dir "auto-save")))
@@ -132,8 +132,7 @@ Display the current function name in the mode line.
 ** Display line numbers
 
 Display line numbers on the left side of the window.  Always use 5
-columns and display in all buffers.  See
-http://www.emacswiki.org/emacs/LineNumbers
+columns and display in all buffers.  See [[http://www.emacswiki.org/emacs/LineNumbers][emacswiki LineNumbers]].
 
 #+BEGIN_SRC emacs-lisp
   (use-package nlinum
@@ -228,13 +227,13 @@ command (prefix) in a popup.
 finally the current line.
 
 ~M-w~ can also be used as a prefix key:
-1) ~M-w w~: save word at point
-2) ~M-w s~: save sexp at point
-3) ~M-w l~: save list at point (enclosing sexp)
-4) ~M-w d~: save defun at point
-5) ~M-w D~: save current defun name
-6) ~M-w f~: save file at point
-7) ~M-w b~: save buffer-file-name
++ ~M-w w~ - save word at point
++ ~M-w s~ - save sexp at point
++ ~M-w l~ - save list at point (enclosing sexp)
++ ~M-w d~ - save defun at point
++ ~M-w D~ - save current defun name
++ ~M-w f~ - save file at point
++ ~M-w b~ - save buffer-file-name
 
 For example, ~M-w w~ saves the current word, and repeating ~w~ expands
 the kill to include the next word.
@@ -326,7 +325,7 @@ Ignore files with certain extensions.
 Enable File -> Open Recent.  This list is is automatically saved
 across Emacs sessions.
 
-See http://www.emacswiki.org/emacs/RecentFiles
+See [[http://www.emacswiki.org/emacs/RecentFiles][emacswiki RecentFiles]].
 
 #+BEGIN_SRC emacs-lisp
   (use-package recentf
@@ -342,7 +341,7 @@ See http://www.emacswiki.org/emacs/RecentFiles
 
 When opening a file using ~C-x C-f~, suggest the filename at point.  I
 tried ido-mode, but I don't like the M-p, M-n behaviour.  See
-http://www.emacswiki.org/emacs/FindFileAtPoint
+[[http://www.emacswiki.org/emacs/FindFileAtPoint][emacswiki FindFileAtPoint]].
 
 #+BEGIN_SRC emacs-lisp
   (require 'ffap)
@@ -435,7 +434,7 @@ Make two buffers with the same file name open distinguishable.
 
 ** Enable switching between buffers using substrings
 
-See [[http://www.emacswiki.org/emacs/InteractivelyDoThings][emacswiki IDO]].
+See [[http://www.emacswiki.org/emacs/InteractivelyDoThings][emacswiki InteractivelyDoThings (ido)]].
 
 #+BEGIN_SRC emacs-lisp
   (use-package ido
@@ -446,7 +445,7 @@ See [[http://www.emacswiki.org/emacs/InteractivelyDoThings][emacswiki IDO]].
 ** Switch between buffers
 
 - ~C-S-tab~ - previous user buffer
-- ~C-tab - next user buffer
+- ~C-tab~ - next user buffer
 - ~kp-subtract~ - close current buffer
 
 #+BEGIN_SRC emacs-lisp
@@ -576,7 +575,7 @@ See [[http://www.emacswiki.org/emacs/InteractivelyDoThings][emacswiki IDO]].
 
 When searching forward [Return] ends the search, but puts the point at
 the end of the found text.  Define [Ctrl+Return] to put point at the
-beginning.  See http://www.emacswiki.org/emacs/ZapToISearch
+beginning.  See [[http://www.emacswiki.org/emacs/ZapToISearch][emacswiki ZapToISearch]].
 
 #+BEGIN_SRC emacs-lisp
   (defun isearch-exit-other-end (rbeg rend)
@@ -590,7 +589,7 @@ beginning.  See http://www.emacswiki.org/emacs/ZapToISearch
 
 ** Goto line
 
-Provide an easy goto-line (^C-g).
+Provide an easy goto-line (~C-c g~).
 
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-c g") 'goto-line)
@@ -606,7 +605,7 @@ Vertical motion starting at EOL keeps to EOL.
 
 ** Scroll one line at a time instead of paging
 
-Paging is what PgUp and PgDn are for.
+Paging is what ~PgUp~ and ~PgDn~ are for.
 
 #+BEGIN_SRC emacs-lisp
   (setq scroll-conservatively 100)
@@ -614,7 +613,7 @@ Paging is what PgUp and PgDn are for.
 
 ** PgUp and PgDn as inverse functions
 
-Remember and restore point location after PgUp and PgDn.
+Remember and restore point location after ~PgUp~ and ~PgDn~.
 
 #+BEGIN_SRC emacs-lisp
 (setq scroll-preserve-screen-position t)
@@ -629,7 +628,7 @@ Bookmarking commands:
 - ~C-x r l~ - list your bookmarks
 - ~M-x bookmark-delete~ - delete a bookmark by name
 
-See [[http://emacswiki.org/emacs/BookMarks][emacswiki Book Marks]].
+See [[http://emacswiki.org/emacs/BookMarks][emacswiki BookMarks]].
 
 #+BEGIN_SRC emacs-lisp
   (use-package bookmark
@@ -655,8 +654,8 @@ See [[http://emacswiki.org/emacs/BookMarks][emacswiki Book Marks]].
 
 Jump between symbols in your buffer, based on the initial symbol your point was on when you started the search.
 
-- ~M-n~ = jump to next symbol
-- ~M-p~ = jump to previous symbol
+- ~M-n~ - jump to next symbol
+- ~M-p~ - jump to previous symbol
 
 See https://github.com/mickeynp/smart-scan.
 
@@ -670,8 +669,8 @@ See https://github.com/mickeynp/smart-scan.
 
 Move through points at which you made edits in a buffer.
 
-- ~C-c C-,~ = goto last change
-- ~C-c C-.~ = goto next change
+- ~C-c C-,~ - goto last change
+- ~C-c C-.~ - goto next change
 
 #+BEGIN_SRC emacs-lisp
    (use-package goto-chg
@@ -752,8 +751,8 @@ All other editors work this way, so let's not confuse ourselves.
 
 ** Join lines
 
-- ~M-^~ = join current line to one above
-- ~M-j~ = join current line to one below
+- ~M-^~ - join current line to one above
+- ~M-j~ - join current line to one below
 
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "M-j") (lambda () (interactive) (join-line -1)))
@@ -819,7 +818,7 @@ Key binding?
 
 *** Display and cleanup bogus whitespace
 
-See http://www.emacswiki.org/emacs/WhiteSpace
+See [[http://www.emacswiki.org/emacs/WhiteSpace][emacswiki WhiteSpace]].
 
 #+BEGIN_SRC emacs-lisp
   (use-package whitespace
@@ -879,7 +878,7 @@ Select a region and then press ~"~, ~'~, ~(~, ~{~, or ~[~.  See [[https://github
 Saves the state of Emacs from one session to another. The buffers,
 their file names, major modes, buffer positions, and so on are saved.
 
-See http://www.emacswiki.org/emacs/DeskTop
+See [[http://www.emacswiki.org/emacs/DeskTop][emacswiki DeskTop]].
 
 #+BEGIN_SRC emacs-lisp
   (use-package desktop
@@ -1178,7 +1177,7 @@ To restore the default for a specific code block, use ~#+BEGIN_SRC
 
 * Eshell
 
-See http://www.emacswiki.org/emacs/CategoryEshell
+See [[http://www.emacswiki.org/emacs/CategoryEshell][emacswiki CategoryEshell]].
 
 #+BEGIN_SRC emacs-lisp
   (use-package eshell
@@ -1248,7 +1247,7 @@ Get a definition of the word at point or from the minibuffer.
 
 ** Printing
 
-See http://www.emacswiki.org/emacs/PrintingFromEmacs
+See [[http://www.emacswiki.org/emacs/PrintingFromEmacs][emacswiki PrintingFromEmacs]].
 
 #+BEGIN_SRC emacs-lisp
   (use-package ps-print
@@ -1768,7 +1767,7 @@ Reduce noise when compiling, and upload to Arduino by default.
 
 ** C#
 
-See http://www.emacswiki.org/emacs/CSharpMode
+See [[http://www.emacswiki.org/emacs/CSharpMode][emacswiki CSharpMode]].
 
 #+BEGIN_SRC emacs-lisp
   (use-package csharp-mode
@@ -1789,7 +1788,7 @@ See http://www.emacswiki.org/emacs/CSharpMode
 
 ** reStructuredText
 
-See http://www.emacswiki.org/emacs/reStructuredText
+See [[http://www.emacswiki.org/emacs/reStructuredText][emacswiki reStructuredText]].
 
 #+BEGIN_SRC emacs-lisp
   (defun rst-compile-html-preview ()
