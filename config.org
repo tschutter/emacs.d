@@ -1067,11 +1067,11 @@ mode?]].
 
 ** Journal and Archiving
 
-Archive a task with org-archive-subtree ("C-c C-x C-s"), by appending
-it to the journal.
+Archive a task with org-archive-subtree ("C-c C-x C-s"), by inserting
+it into a date tree in journal.org.
 
 #+BEGIN_SRC emacs-lisp
-  (setq org-archive-location (concat org-directory "/journal.org" "::"))
+  (setq org-archive-location (concat org-directory "/journal.org::datetree/"))
 #+END_SRC
 
 ** Org agenda
