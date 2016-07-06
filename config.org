@@ -752,17 +752,6 @@ All other editors work this way, so let's not confuse ourselves.
   (delete-selection-mode 1)
 #+END_SRC
 
-** Temporarily highlight changes
-
-Bring visual feedback to some operations by highlighting portions
-relating to the operations.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package volatile-highlights
-    :config
-    (volatile-highlights-mode t))
-#+END_SRC
-
 ** Join lines
 
 - ~M-^~ - join current line to one above
