@@ -428,8 +428,11 @@ Buffer manipulation.
 Make two buffers with the same file name open distinguishable.
 
 #+BEGIN_SRC emacs-lisp
-  (setq-default uniquify-buffer-name-style 'forward)
-  ;(setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special buffers
+  (use-package uniquify
+    :ensure nil  ; https://github.com/jwiegley/use-package/issues/320
+    :config
+    (setq uniquify-after-kill-buffer-p t)     ; rename after killing uniquified
+    (setq uniquify-ignore-buffers-re "^\\*")) ; don't muck with special buffers
 #+END_SRC
 
 ** Enable switching between buffers using substrings
@@ -747,6 +750,17 @@ All other editors work this way, so let's not confuse ourselves.
 #+BEGIN_SRC emacs-lisp
   (require 'delsel)  ;required for OpenSUSE-12.1 emacs-23.3-6.1.2
   (delete-selection-mode 1)
+#+END_SRC
+
+** Temporarily highlight changes
+
+Bring visual feedback to some operations by highlighting portions
+relating to the operations.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package volatile-highlights
+    :config
+    (volatile-highlights-mode t))
 #+END_SRC
 
 ** Join lines
