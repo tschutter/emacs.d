@@ -423,6 +423,15 @@ See http://www.gnu.org/software/tramp/
 
 Buffer manipulation.
 
+** Kill this buffer
+
+Make C-x k kill this buffer instead of prompting for which buffer to
+kill.  If I want to kill a different buffer, I use C-x C-b instead.
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-x k") 'kill-this-buffer)
+#+END_SRC
+
 ** Uniquely indentify buffers
 
 Make two buffers with the same file name open distinguishable.
