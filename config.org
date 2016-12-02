@@ -1432,9 +1432,6 @@ http://wiki.bitlbee.org/bitlbee-sipe
 #+BEGIN_SRC emacs-lisp
   (use-package log-edit
     :config
-    (if (string-equal system-name "takifugu") ; or should this be a 23.4 test?
-        (setq log-edit-setup-invert nil)
-      (setq log-edit-setup-invert t))
     (add-hook 'log-edit-hook
               (lambda ()
                 (erase-buffer)  ; SETUP inserts stuff we don't want.
