@@ -1086,6 +1086,32 @@ it into a date tree in journal.org.
   (setq org-archive-location (concat org-directory "/journal.org::datetree/"))
 #+END_SRC
 
+** Google calendar sync
+
+Bi-directional syncing of Google calendars.
+
+See:
+- [[http://cestlaz.github.io/posts/using-emacs-26-gcal/][Using Emacs - 26 - Google Calendar, Org Agenda]]
+- [[https://github.com/myuhe/org-gcal.el][org-gcal package]]
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-gcal
+    :ensure t
+    :init
+    (setq org-gcal-dir (concat emacs-cache-dir "org-gcal/"))
+    :config
+    (setq org-gcal-file-alist
+      '(("tschutter65@gmail.com" .  "~/org/gcal-tschutter65.org"))))
+#+END_SRC
+
+Sync gcal whenever the agenda is loaded.  Since this happens in the
+background, if something has just been added to the calendar, the
+agenda might need to be reloaded by pressing r in the agenda view.
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
+#+END_SRC
+
 ** Org agenda
 
 Globally bind org-agenda to "C-c a".
