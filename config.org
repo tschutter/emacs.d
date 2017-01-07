@@ -71,6 +71,20 @@ See [[http://www.emacswiki.org/emacs/AutoSave][emacswiki AutoSave]].
   (setq auto-save-file-name-transforms `((".*" ,auto-save-directory t)))
 #+END_SRC
 
+** Cleanup extraneous session files created by x-win.el
+
+When the window system is shutting down, emacs-session-save() is
+called which creates session.X-SESSION-ID files in the
+user-emacs-directory.
+
+I have not discovered a way to prevent these files from being created,
+so we just delete them if they exist.
+
+#+BEGIN_SRC emacs-lisp
+(dolist (filename (file-expand-wildcards (os-path-join user-emacs-directory "session.*")))
+  (delete-file filename))
+#+END_SRC
+
 * Server Mode
 
 Start an Emacs server if it is not already running.
