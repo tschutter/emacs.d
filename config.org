@@ -981,6 +981,9 @@ See:
 - [[http://cestlaz.github.io/posts/using-emacs-26-gcal/][Using Emacs - 26 - Google Calendar, Org Agenda]]
 - [[https://github.com/myuhe/org-gcal.el][org-gcal package]]
 
+This relies on the setting of org-gcal-client-id and
+org-gcal-client-secret in ~/.emacs-local.el
+
 #+BEGIN_SRC emacs-lisp
   (use-package org-gcal
     :ensure t
