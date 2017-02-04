@@ -1439,6 +1439,22 @@ smart-compile-alist which is updated by per-language sections.
   (global-set-key (kbd "C-p") 'my-previous-error)
 #+END_SRC
 
+** Projectile
+
+Projectile is a project interaction library for Emacs that provides
+easy project management and navigation.
+
+Projects are marked by a .projectile file in the project root
+directory.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package projectile
+    :init
+    (setq projectile-keymap-prefix (kbd "C-x p"))  ; default is C-c p
+    (setq projectile-enable-caching t)
+    (setq projectile-completion-system 'default))
+#+END_SRC
+
 ** CEDET
 
 [[http://cedet.sourceforge.net/][CEDET]] is a Collection of Emacs Development Environment Tools written
