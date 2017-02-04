@@ -851,15 +851,23 @@ Wrap region.
   (wrap-region-add-wrapper "#+BEGIN_SRC sh\n" "#+END_SRC\n" "s" 'org-mode)
 #+END_SRC
 
-Insert a TODO item before the current item, no matter where we are in
-the current item.
+Insert a TODO or TASK item before the current item, no matter where we
+are in the current item.
 
 #+BEGIN_SRC emacs-lisp
   (key-chord-define
    org-mode-map "TT"
    (lambda () (interactive)
      (org-forward-heading-same-level 0)
-     (org-insert-todo-heading t)))
+     (org-insert-heading)
+     (insert "TODO ")))
+
+  (key-chord-define
+   org-mode-map "KK"
+   (lambda () (interactive)
+     (org-forward-heading-same-level 0)
+     (org-insert-heading)
+     (insert "TASK ")))
 #+END_SRC
 
 ** Capturing
