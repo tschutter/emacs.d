@@ -494,6 +494,20 @@ Provide an easy goto-line (~C-c g~).
   (global-set-key (kbd "C-c g") 'goto-line)
 #+END_SRC
 
+** Better beginning, end of line
+
+Switch between various line positions, like moving to the
+beginning/end of code, line or comment.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package mwim
+    :init
+    (global-set-key (kbd "C-a") 'mwim-beginning-of-code-or-line)
+    (global-set-key (kbd "C-e") 'mwim-end-of-code-or-line)
+    (global-set-key (kbd "<home>") 'mwim-beginning-of-line-or-code)
+    (global-set-key (kbd "<end>") 'mwim-end-of-line-or-code))
+#+END_SRC
+
 ** Track EOL
 
 Vertical motion starting at EOL keeps to EOL.
