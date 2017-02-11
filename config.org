@@ -1168,7 +1168,18 @@ See https://sourcegraph.com/github.com/robert-zaremba/flycheck
          (add-hook 'text-mode-hook 'turn-on-flyspell))
 
      ;; Save dictionary without confirmation.
-     (setq ispell-silently-savep t))
+     (setq ispell-silently-savep t)
+
+     ;; Proselint English usage.
+     (flycheck-define-checker proselint
+         "A linter for prose."
+         :command ("proselint" source-inplace)
+         :error-patterns
+         ((warning line-start (file-name) ":" line ":" column ": "
+         (id (one-or-more (not (any " "))))
+         (message) line-end))
+         :modes (text-mode markdown-mode org-mode))
+     (add-to-list 'flycheck-checkers 'proselint))
 #+END_SRC
 
 Most checkers have dependencies against external tools that perform
@@ -1180,6 +1191,12 @@ JSON checking requires jsonlint.
 #+BEGIN_SRC sh
   sudo apt-get install nodejs-legacy npm
   sudo npm install jsonlint --global
+#+END_SRC
+
+Proselint requires proselint.
+
+#+BEGIN_SRC sh
+  sudo pip install proselint
 #+END_SRC
 
 * Miscellaneous
