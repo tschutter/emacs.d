@@ -700,14 +700,20 @@ Press "M-Q" to perform the inverse of fill-paragraph ("M-q").  From
     (bind-key "M-Q" 'my/unfill-paragraph)
 #+END_SRC
 
-** Insert datetime into current buffer (^C-d)
+** Insert datetime into current buffer (C-c i d, C-c i t)
 
 #+BEGIN_SRC emacs-lisp
-  (defun insert-date ()
+  (defun my-insert-date ()
+    "Insert date string into current buffer."
+    (interactive)
+    (insert (format-time-string "%Y-%m-%d")))
+  (global-set-key (kbd "C-c i d") 'my-insert-date)
+
+  (defun my-insert-date-time ()
     "Insert date time string into current buffer."
     (interactive)
     (insert (format-time-string "%Y-%m-%d %H:%M:%S")))
-  (global-set-key (kbd "C-c d") 'insert-date)
+  (global-set-key (kbd "C-c i t") 'my-insert-date-time)
 #+END_SRC
 
 ** Make URL human readable
