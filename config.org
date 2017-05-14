@@ -875,19 +875,17 @@ Insert a TODO or TASK item before the current item, no matter where we
 are in the current item.
 
 #+BEGIN_SRC emacs-lisp
-  (key-chord-define
-   org-mode-map "TT"
-   (lambda () (interactive)
-     (org-forward-heading-same-level 0)
-     (org-insert-heading)
-     (insert "TODO ")))
+  (define-key org-mode-map (kbd "C-c i o")
+    (lambda () (interactive)
+      (org-forward-heading-same-level 0)
+      (org-insert-heading)
+      (insert "TODO ")))
 
-  (key-chord-define
-   org-mode-map "KK"
-   (lambda () (interactive)
-     (org-forward-heading-same-level 0)
-     (org-insert-heading)
-     (insert "TASK ")))
+  (define-key org-mode-map (kbd "C-c i k")
+    (lambda () (interactive)
+      (org-forward-heading-same-level 0)
+      (org-insert-heading)
+      (insert "TASK ")))
 #+END_SRC
 
 ** Capturing
@@ -1843,24 +1841,6 @@ See [[http://www.emacswiki.org/emacs/reStructuredText][emacswiki reStructuredTex
 * Keyboard and Mouse
 
 This section is last to override any keymappings of various packages.
-
-** Map pairs of simultaneously pressed keys to commands
-
-Load key-chord mode.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package key-chord
-    :init
-    (key-chord-mode 1))
-#+END_SRC
-
-Press "--" to insert "_".  No shift key required.
-
-#+BEGIN_SRC emacs-lisp
-  (key-chord-define-global
-   "--"
-   (lambda () (interactive) (insert "_")))
-#+END_SRC
 
 ** Define various key bindings
 
