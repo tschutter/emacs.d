@@ -1088,6 +1088,7 @@ Enable languages for #+BEGIN_SRC blocks.
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
+     (gnuplot . t)
      (python . t)
      (sh . t)))
 #+END_SRC
@@ -1116,6 +1117,16 @@ To restore the default for a specific code block, use ~#+BEGIN_SRC
   (setq org-babel-default-header-args
         (cons '(:results . "replace verbatim")
               (assq-delete-all :results org-babel-default-header-args)))
+#+END_SRC
+
+Automatically redisplay inline images after code block execution.
+
+#+BEGIN_SRC emacs-lisp
+  (defun fix-inline-images ()
+    (when org-inline-image-overlays
+      (org-redisplay-inline-images)))
+
+  (add-hook 'org-babel-after-execute-hook 'fix-inline-images)
 #+END_SRC
 
 * Calendar and Diary
