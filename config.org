@@ -1485,6 +1485,23 @@ smart-compile-alist which is updated by per-language sections.
   (global-set-key (kbd "C-p") 'my-previous-error)
 #+END_SRC
 
+**** Other
+Work in progress:
+(setq compilation-scroll-output 'first-error)
+(make-variable-buffer-local 'compile-command)
+.dir.locals.el
+    ((nil . ((eval . (set (make-local-variable 'my-project-path)
+                          (file-name-directory
+                           (let ((d (dir-locals-find-file ".")))
+                             (if (stringp d) d (car d))))))
+             (eval . (setq cmake-ide-build-dir (concat my-project-path "build")))
+             (eval . (message "Project directory set to `%s'." my-project-path)))))
+
+
+    ((nil .
+          ((compile-command . "cd build && make"))))
+projectile-project-compilation-cmd
+
 ** Projectile
 
 Projectile is a project interaction library for Emacs that provides
@@ -1511,22 +1528,19 @@ Alternatives include
 
 #+BEGIN_SRC emacs-lisp
   (use-package ggtags
-    :init
-    (add-hook 'c-mode-common-hook
-              (lambda ()
-                (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
-                  (ggtags-mode 1))))
-
     :bind
-    (("C-c t s" . ggtags-find-other-symbol)
+    (("M-*" . pop-tag-mark)
+     ("C-c t s" . ggtags-find-other-symbol)
      ("C-c t h" . ggtags-view-tag-history)
      ("C-c t r" . ggtags-find-reference)
      ("C-c t f" . ggtags-find-file)
      ("C-c t c" . ggtags-create-tags)
      ("C-c t u" . ggtags-update-tags))
-
-    ;(define-key ggtags-mode-map (kbd "M-,") 'pop-tag-mark)
-  )
+    :init
+    (add-hook 'c-mode-common-hook
+              (lambda ()
+                (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
+                  (ggtags-mode 1)))))
 #+END_SRC
 
 ** CEDET
