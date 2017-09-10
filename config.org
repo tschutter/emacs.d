@@ -1129,6 +1129,24 @@ Automatically redisplay inline images after code block execution.
   (add-hook 'org-babel-after-execute-hook 'fix-inline-images)
 #+END_SRC
 
+** Org Drill
+
+Conduct an interactive "drill sessions" using [[http://orgmode.org/worg/org-contrib/org-drill.html][org-drill]].
+
+Unfortunately, org-drill is not available via any of the standard
+package repositories.  I installed it as following the instructions at
+[[https://stackoverflow.com/questions/34983106/how-to-install-org-drill][How to install org-drill?]]
+
+cd ~/.emacs.d/elisp
+wget https://bitbucket.org/eeeickythump/org-drill/raw/01b05cd7561ad69e5ec9c1200414d4fa128c9a17/org-drill.el
+wget http://orgmode.org/cgit.cgi/org-mode.git/plain/contrib/lisp/org-learn.el
+
+#+BEGIN_SRC emacs-lisp
+  (require 'org-drill)
+  (setq savehist-file (os-path-join emacs-cache-dir "savehist-history"))
+  (setq org-id-locations-file (os-path-join emacs-cache-dir "org-id-locations"))
+#+END_SRC
+
 * Calendar and Diary
 
 #+BEGIN_SRC emacs-lisp
