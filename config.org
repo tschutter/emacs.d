@@ -1425,7 +1425,7 @@ http://wiki.bitlbee.org/bitlbee-sipe
               (lambda ()
                 (erase-buffer)  ; SETUP inserts stuff we don't want.
                 (insert
-                 (mapconcat 'identity (log-edit-files) ",")
+                 (mapconcat 'file-name-nondirectory (log-edit-files) ",")
                  ": "))))
 #+END_SRC
 
