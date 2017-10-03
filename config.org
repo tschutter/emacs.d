@@ -126,6 +126,15 @@ Blinking cursors are obnoxious.
   (blink-cursor-mode 0)
 #+END_SRC
 
+** Make the cursor the width of the character under it
+
+If a block cursor is over a tab, it will be drawn as wide as that tab
+on the display.
+
+#+BEGIN_SRC emacs-lisp
+  (setq x-stretch-cursor t)
+#+END_SRC
+
 ** Configure the mode line
 
 Display the size of the buffer, line number, and column number in the
