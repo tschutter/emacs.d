@@ -906,22 +906,27 @@ Globally bind org-capture to "C-c c".
   (global-set-key "\C-cc" 'org-capture)
 #+END_SRC
 
-Define a standard task template.
-
+Define template strings.
 See http://orgmode.org/manual/Template-expansion.html#Template-expansion
 
 #+BEGIN_SRC emacs-lisp
-  (defvar my/org-basic-task-template "* TODO %^{Task}\n%?%i\nCaptured %<%Y-%m-%d %H:%M>")
+  (defvar
+    my/org-basic-task-template
+    "* TODO %^{TODO}\n:LOGBOOK:\n- Created on [%<%Y-%m-%d %a %H:%M>]\n:END:\n%?%i")
 #+END_SRC
 
 Define templates used by org-capture ("C-c c").
 
 #+BEGIN_SRC emacs-lisp
-    (setq org-capture-templates
-          `(("t" "Task" entry
-             (file+headline (concat org-directory "/notes.org") "Inbox")
-             ,my/org-basic-task-template
-             :empty-lines 1)))
+  (setq org-capture-templates
+        `(("t" "TODO" entry
+           (file+headline ,(concat org-directory "/notes.org") "Inbox")
+           ,my/org-basic-task-template
+           :prepend :empty-lines 1)
+          ("j" "Journal" entry
+           (file+olp+datetree ,(concat org-directory "/journal.org"))
+           "* %?"
+           :kill-buffer)))
 #+END_SRC
 
 ** Navigation
