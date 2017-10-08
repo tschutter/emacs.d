@@ -57,8 +57,38 @@ By default, Emacs saves backup files in the current directory.  See
 [[http://www.emacswiki.org/emacs/BackupDirectory][emacswiki BackupDirectory]].
 
 #+BEGIN_SRC emacs-lisp
-  (defvar backup-directory (file-name-as-directory (os-path-join emacs-cache-dir "backups")))
-  (setq backup-directory-alist `((".*" . ,backup-directory)))
+(defvar backup-directory (file-name-as-directory (os-path-join emacs-cache-dir "backups")))
+(setq backup-directory-alist `((".*" . ,backup-directory)))
+(setq vc-make-backup-files t)  ; even backup files under version control
+#+END_SRC
+
+** Create a backup every time a buffer is saved
+
+By default, Emacs creates a backup only the first time you save a
+buffer during a session.  This is incompatible with leaving Emacs and
+its buffers open all the time and constantly making changes and
+writing them to disk.
+
+See [[https://www.emacswiki.org/emacs/ForceBackups][emacswiki Force Backups]].
+
+#+BEGIN_SRC emacs-lisp
+(defun my/force-backup-of-buffer ()
+    (setq buffer-backed-up nil))
+(add-hook 'before-save-hook  'my/force-backup-of-buffer)
+#+END_SRC
+
+On 2017-10-08 I tried using the backup-each-save package from
+[[https://www.emacswiki.org/emacs/BackupEachSave][emacswiki Backup Each Save]], but that did not work.
+
+** Keep last 8 versions of backup files
+
+Keep new versions but no ancient versions.
+
+#+BEGIN_SRC emacs-lisp
+(setq version-control t
+      delete-old-versions t
+      kept-old-versions 0
+      kept-new-versions 8)
 #+END_SRC
 
 ** Put all auto-save files in ~$HOME/.cache/emacs/auto-save/~
