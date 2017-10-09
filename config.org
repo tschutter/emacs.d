@@ -1130,12 +1130,14 @@ Default is 14 days.  I can't think about things due next week.
 Enable languages for #+BEGIN_SRC blocks.
 
 #+BEGIN_SRC emacs-lisp
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (gnuplot . t)
-     (python . t)
-     (sh . t)))
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (gnuplot . t)
+   (python . t)
+   (sh . t)))
+
+(use-package gnuplot)
 #+END_SRC
 
 Fontify code in code blocks when viewing in the org file (as opposed
