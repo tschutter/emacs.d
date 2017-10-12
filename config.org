@@ -827,9 +827,18 @@ might append a newline.
 Select a region and then press ~"~, ~'~, ~(~, ~{~, or ~[~.  See [[https://github.com/rejeep/wrap-region.el][wrap-region package]].
 
 #+BEGIN_SRC emacs-lisp
-  (use-package wrap-region
-    :config
-    (add-hook 'org-mode-hook 'wrap-region-mode))
+(use-package wrap-region
+  :config
+  (add-hook 'org-mode-hook 'wrap-region-mode))
+#+END_SRC
+
+** Entering special characters with C-q
+
+Use hex radix when entering special characters with C-q.  Default is
+octal.  For example, C-q 2 0 a c <return> will enter "€".
+
+#+BEGIN_SRC emacs-lisp
+(setq read-quoted-char-radix 16)
 #+END_SRC
 
 * Desktop
