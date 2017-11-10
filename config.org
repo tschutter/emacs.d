@@ -909,7 +909,7 @@ Wrap region.
 - + = +strike-through+
 - l = BEGIN_SRC emacs_lisp
 - p = BEGIN_SRC python
-- s = BEGIN_SRC sh (shell)
+- s = BEGIN_SRC shell (sh)
 
 #+BEGIN_SRC emacs-lisp
   (wrap-region-add-wrapper "*" "*" nil 'org-mode)
@@ -917,7 +917,7 @@ Wrap region.
   (wrap-region-add-wrapper "+" "+" nil 'org-mode)
   (wrap-region-add-wrapper "#+BEGIN_SRC emacs-lisp\n" "#+END_SRC\n" "l" 'org-mode)
   (wrap-region-add-wrapper "#+BEGIN_SRC python\n" "#+END_SRC\n" "p" 'org-mode)
-  (wrap-region-add-wrapper "#+BEGIN_SRC sh\n" "#+END_SRC\n" "s" 'org-mode)
+  (wrap-region-add-wrapper "#+BEGIN_SRC shell\n" "#+END_SRC\n" "s" 'org-mode)
 #+END_SRC
 
 Insert a TODO or TASK item before the current item, no matter where we
@@ -1144,7 +1144,7 @@ Enable languages for #+BEGIN_SRC blocks.
  '((emacs-lisp . t)
    (gnuplot . t)
    (python . t)
-   (sh . t)))
+   (shell . t)))
 
 (use-package gnuplot)
 #+END_SRC
