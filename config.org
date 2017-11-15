@@ -1290,6 +1290,7 @@ Proselint requires proselint.
 
 * Miscellaneous
 
+** Startup
 We don't need to see the startup message.
 
 #+BEGIN_SRC emacs-lisp
@@ -1303,6 +1304,7 @@ And [[http://yann.hodique.info/blog/rant-obfuscation-in-emacs/][suppress the sta
        (setq inhibit-startup-echo-area-message (user-login-name)))
 #+END_SRC
 
+** Define word at point
 Get a definition of the word at point or from the minibuffer.
 
 #+BEGIN_SRC emacs-lisp
@@ -1331,6 +1333,59 @@ See [[http://www.emacswiki.org/emacs/PrintingFromEmacs][emacswiki PrintingFromEm
     (setq lpr-printer-switch "-d ")
     (setq lpr-add-switches nil)
     (setq lpr-page-header-switches '("-h" "%s" "-F" "--length=61" "--indent=4")))
+#+END_SRC
+
+** PDF editing and markup
+
+[[http://pragmaticemacs.com/emacs/view-and-annotate-pdfs-in-emacs-with-pdf-tools/][View and annotate PDFs in Emacs with pdf-tools]] and [[http://pragmaticemacs.com/emacs/more-pdf-tools-tweaks/][More pdf-tools tweaks]].
+
+The PDF-Tools package must be installed manually with M-x
+package-install, and then run M-x pdf-tools-install.
+
+Use C-c C-a to manipulate annotations.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package pdf-tools
+    :pin manual ;; manually update
+
+    :config
+
+    ;; install PDF-Tools in all future PDF buffers
+    (pdf-tools-install)
+
+    ;; open pdfs scaled to fit page
+    (setq-default pdf-view-display-size 'fit-page)
+
+    ;; automatically annotate highlights
+    (setq pdf-annot-activate-created-annotations t)
+
+    ;; use normal isearch
+    (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward)
+
+    ;; turn off cua so copy works
+    (add-hook 'pdf-view-mode-hook (lambda () (cua-mode 0)))
+
+    ;; more fine-grained zooming
+    (setq pdf-view-resize-factor 1.1)
+
+    ;; linum mode is known to conflict with PDF-Tools
+    (add-hook 'pdf-view-mode-hook (lambda() (nlinum-mode -1)))
+
+    ;; keyboard shortcuts
+    (define-key pdf-view-mode-map (kbd "h") 'pdf-annot-add-highlight-markup-annotation)
+    (define-key pdf-view-mode-map (kbd "t") 'pdf-annot-add-text-annotation)
+    (define-key pdf-view-mode-map (kbd "D") 'pdf-annot-delete))
+#+END_SRC
+
+Open links to PDF files in org mode.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-pdfview
+    :config
+    ;;  (eval-after-load 'org '(require 'org-pdfview))
+    (add-to-list
+     'org-file-apps
+     '("\\.pdf\\'" . (lambda (file link) (org-pdfview-open link)))))
 #+END_SRC
 
 ** Email
