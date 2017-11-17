@@ -9,7 +9,7 @@ Configure where Emacs stores and finds various files.
 
 See [[http://stackoverflow.com/questions/3964715/what-is-the-correct-way-to-join-multiple-path-components-into-a-single-complete][stackoverflow.com]].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (defun os-path-join (root &rest dirs)
     "Joins a series of directories together, like Python's os.path.join,
     (os-path-join \"/tmp\" \"a\" \"b\" \"c\") => /tmp/a/b/c"
@@ -19,28 +19,28 @@ See [[http://stackoverflow.com/questions/3964715/what-is-the-correct-way-to-join
       (apply 'os-path-join
              (expand-file-name (car dirs) root)
              (cdr dirs))))
-#+END_SRC
+#+end_src
 
 ** Determine the location of the ~.emacs.d~ directory
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (defvar emacs-d-directory (file-name-directory load-file-name))
-#+END_SRC
+#+end_src
 
 ** Add ~.emacs.d/elisp/~ to ~load-path~
 
 Prepend ~.emacs.d/elisp/~ to ~load-path~.  We used to append all of
 its subdirectories as well, but they no longer exist.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (add-to-list
    'load-path
    (file-name-as-directory (os-path-join emacs-d-directory "elisp")))
-#+END_SRC
+#+end_src
 
 ** Define ~emacs-cache-dir~ for location of state and cache files
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (defvar emacs-cache-dir
     (file-name-as-directory
      (os-path-join
@@ -49,18 +49,18 @@ its subdirectories as well, but they no longer exist.
       "emacs")))
   (make-directory emacs-cache-dir t)  ; create it if it does not exist
   (set-file-modes emacs-cache-dir #o700)  ; and make it private
-#+END_SRC
+#+end_src
 
 ** Put all backups in ~$HOME/.cache/emacs/backups/~
 
 By default, Emacs saves backup files in the current directory.  See
 [[http://www.emacswiki.org/emacs/BackupDirectory][emacswiki BackupDirectory]].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (defvar backup-directory (file-name-as-directory (os-path-join emacs-cache-dir "backups")))
 (setq backup-directory-alist `((".*" . ,backup-directory)))
 (setq vc-make-backup-files t)  ; even backup files under version control
-#+END_SRC
+#+end_src
 
 ** Create a backup every time a buffer is saved
 
@@ -71,11 +71,11 @@ writing them to disk.
 
 See [[https://www.emacswiki.org/emacs/ForceBackups][emacswiki Force Backups]].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (defun my/force-backup-of-buffer ()
     (setq buffer-backed-up nil))
 (add-hook 'before-save-hook  'my/force-backup-of-buffer)
-#+END_SRC
+#+end_src
 
 On 2017-10-08 I tried using the backup-each-save package from
 [[https://www.emacswiki.org/emacs/BackupEachSave][emacswiki Backup Each Save]], but that did not work.
@@ -84,22 +84,22 @@ On 2017-10-08 I tried using the backup-each-save package from
 
 Keep new versions but no ancient versions.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (setq version-control t
       delete-old-versions t
       kept-old-versions 0
       kept-new-versions 8)
-#+END_SRC
+#+end_src
 
 ** Put all auto-save files in ~$HOME/.cache/emacs/auto-save/~
 
 See [[http://www.emacswiki.org/emacs/AutoSave][emacswiki AutoSave]].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (defvar auto-save-directory (file-name-as-directory (os-path-join emacs-cache-dir "auto-save")))
   (setq auto-save-list-file-prefix auto-save-directory)
   (setq auto-save-file-name-transforms `((".*" ,auto-save-directory t)))
-#+END_SRC
+#+end_src
 
 ** Cleanup extraneous session files created by x-win.el
 
@@ -110,16 +110,16 @@ user-emacs-directory.
 I have not discovered a way to prevent these files from being created,
 so we just delete them if they exist.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (dolist (filename (file-expand-wildcards (os-path-join user-emacs-directory "session.*")))
   (delete-file filename))
-#+END_SRC
+#+end_src
 
 * Server Mode
 
 Start an Emacs server if it is not already running.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (require 'server)
   ;; Move server-auth-dir from .emacs.d to %TMP%.  If Emacs complains
   ;; that the directory is unsafe, change the ownership from
@@ -128,75 +128,75 @@ Start an Emacs server if it is not already running.
       (setq server-auth-dir (file-name-as-directory (os-path-join (getenv "TMP") "emacs"))))
   (unless (server-running-p)
     (server-start))
-#+END_SRC
+#+end_src
 
 * Display
 
 ** Configure window title
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (setq frame-title-format (concat "%b@" system-name))  ;%b = buffer name
-#+END_SRC
+#+end_src
 
 ** Set default font
 
 Setting the font here is problematic because it triggers a window
 resize, which may push the window off of the screen.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (if (and window-system (eq system-type 'windows-nt))
         (set-face-attribute 'default nil :font "Consolas-11"))
-#+END_SRC
+#+end_src
 
 ** Turn off blinking cursor
 
 Blinking cursors are obnoxious.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (blink-cursor-mode 0)
-#+END_SRC
+#+end_src
 
 ** Make the cursor the width of the character under it
 
 If a block cursor is over a tab, it will be drawn as wide as that tab
 on the display.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq x-stretch-cursor t)
-#+END_SRC
+#+end_src
 
 ** Configure the mode line
 
 Display the size of the buffer, line number, and column number in the
 mode line.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (size-indication-mode 1)
   (line-number-mode 1)
   (column-number-mode 1)
-#+END_SRC
+#+end_src
 
 Display the current function name in the mode line.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (which-function-mode 1)
-#+END_SRC
+#+end_src
 
 ** Display line numbers
 
 Display line numbers on the left side of the window.  Always use 5
 columns and display in all buffers.  See [[http://www.emacswiki.org/emacs/LineNumbers][emacswiki LineNumbers]].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package nlinum
     :init
     (setq nlinum-format "% 5d")
     (global-nlinum-mode))
-#+END_SRC
+#+end_src
 
 ** Highlight uncommitted git changes
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (when (display-graphic-p)
     (use-package git-gutter+
       :diminish git-gutter+-mode  ;; do not display in mode-line
@@ -204,14 +204,14 @@ columns and display in all buffers.  See [[http://www.emacswiki.org/emacs/LineNu
       (progn
         (use-package git-gutter-fringe+)
         (global-git-gutter+-mode 1))))
-#+END_SRC
+#+end_src
 
 ** Enable advanced highlighting of matching parenthesis
 
 Display highlighting on whatever parenthesis (and paired delimiter if
 you like this) matches the one before or after point.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package mic-paren
     :init
     (setq paren-sexp-mode t)  ; Always highlight the whole s-expression.
@@ -224,7 +224,7 @@ you like this) matches the one before or after point.
     (add-hook 'c-mode-common-hook
               (function (lambda ()
                           (paren-toggle-open-paren-context 1)))))
-#+END_SRC
+#+end_src
 
 * Files
 
@@ -234,17 +234,17 @@ Configure how files are selected and found.
 
 Ignore case.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (setq read-file-name-completion-ignore-case t)
-#+END_SRC
+#+end_src
 
 Ignore files with certain extensions.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (mapc (lambda (x)
         (add-to-list 'completion-ignored-extensions x))
       '(".exe" ".pdf"))
-#+END_SRC
+#+end_src
 
 ** Recent files
 
@@ -253,7 +253,7 @@ across Emacs sessions.
 
 See [[http://www.emacswiki.org/emacs/RecentFiles][emacswiki RecentFiles]].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package recentf
     :demand
     :init
@@ -261,7 +261,7 @@ See [[http://www.emacswiki.org/emacs/RecentFiles][emacswiki RecentFiles]].
     (recentf-mode 1)
     :bind
     ("<kp-4>" . recentf-open-files))
-#+END_SRC
+#+end_src
 
 ** Default to filename at point for ~C-x C-f~.
 
@@ -269,7 +269,7 @@ When opening a file using ~C-x C-f~, suggest the filename at point.  I
 tried ido-mode, but I don't like the M-p, M-n behaviour.  See
 [[http://www.emacswiki.org/emacs/FindFileAtPoint][emacswiki FindFileAtPoint]].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (require 'ffap)
   (ffap-bindings)
   (setq ffap-machine-p-known 'accept)   ; No pinging
@@ -323,14 +323,14 @@ tried ido-mode, but I don't like the M-p, M-n behaviour.  See
   ;;;   (add-to-list 'ffap-c-path "~/src/myproj")
   (add-to-list 'ffap-c-path "~/src")
   (setq ffap-alist (append ffap-alist '(("\\.py\\'" . ffap-c-mode))))
-#+END_SRC
+#+end_src
 
 ** TRAMP remote file access
 
 To activate, open file of the form /machine:localname
 See http://www.gnu.org/software/tramp/
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (require 'tramp)
   (require 'tramp-cache)
   (require 'tramp-sh)
@@ -344,7 +344,7 @@ See http://www.gnu.org/software/tramp/
               "HOME/.cache/emacs/tramp_history"
               (mapconcat 'identity tramp-remote-process-environment "|"))
              "|")))  ; move ~/.tramp_history file created on target to ~/.cache/emacs
-#+END_SRC
+#+end_src
 
 * Buffers
 
@@ -355,31 +355,31 @@ Buffer manipulation.
 Make C-x k kill this buffer instead of prompting for which buffer to
 kill.  If I want to kill a different buffer, I use C-x C-b instead.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
-#+END_SRC
+#+end_src
 
 ** Uniquely indentify buffers
 
 Make two buffers with the same file name open distinguishable.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package uniquify
     :ensure nil  ; https://github.com/jwiegley/use-package/issues/320
     :config
     (setq uniquify-after-kill-buffer-p t)     ; rename after killing uniquified
     (setq uniquify-ignore-buffers-re "^\\*")) ; don't muck with special buffers
-#+END_SRC
+#+end_src
 
 ** Enable switching between buffers using substrings
 
 See [[http://www.emacswiki.org/emacs/InteractivelyDoThings][emacswiki InteractivelyDoThings (ido)]].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package ido
     :init
     (ido-mode t))
-#+END_SRC
+#+end_src
 
 ** Switch between buffers
 
@@ -387,7 +387,7 @@ See [[http://www.emacswiki.org/emacs/InteractivelyDoThings][emacswiki Interactiv
 - ~C-tab~ - next user buffer
 - ~kp-subtract~ - close current buffer
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (defun close-current-buffer ()
     "Close the current buffer.
 
@@ -453,11 +453,11 @@ See [[http://www.emacswiki.org/emacs/InteractivelyDoThings][emacswiki Interactiv
   (global-set-key (kbd "<C-S-iso-lefttab>") 'previous-user-buffer)
   (global-set-key (kbd "<C-tab>") 'next-user-buffer)
   (global-set-key (kbd "<kp-subtract>") 'close-current-buffer)
-#+END_SRC
+#+end_src
 
 ** Rename buffer and the file it is visiting
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (defun rename-current-buffer-file ()
     "Renames current buffer and file it is visiting."
     (interactive)
@@ -475,19 +475,19 @@ See [[http://www.emacswiki.org/emacs/InteractivelyDoThings][emacswiki Interactiv
             (message "File '%s' successfully renamed to '%s'"
                      name (file-name-nondirectory new-name)))))))
   (global-set-key (kbd "C-x C-r") 'rename-current-buffer-file)
-#+END_SRC
+#+end_src
 
 ** Scratch buffer
 
 *** Suppress initial message in scratch buffer; we know what it is for
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq initial-scratch-message nil)
-#+END_SRC
+#+end_src
 
 *** Respawn the scratch buffer if it is killed (C-x k)
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (defun kill-scratch-buffer ()
     "Kill the *scratch* buffer and then respawn it."
     ;; The next line is just in case someone calls this manually
@@ -506,7 +506,7 @@ See [[http://www.emacswiki.org/emacs/InteractivelyDoThings][emacswiki Interactiv
     ;; Since we killed it, don't let caller do that.
     nil)
   (kill-scratch-buffer)  ;install the hook
-#+END_SRC
+#+end_src
 
 * Navigation
 
@@ -516,7 +516,7 @@ When searching forward [Return] ends the search, but puts the point at
 the end of the found text.  Define [Ctrl+Return] to put point at the
 beginning.  See [[http://www.emacswiki.org/emacs/ZapToISearch][emacswiki ZapToISearch]].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (defun isearch-exit-other-end (rbeg rend)
     "Exit isearch, but at the other end of the search string (RBEG REND).
   This is useful when followed by an immediate kill."
@@ -524,53 +524,53 @@ beginning.  See [[http://www.emacswiki.org/emacs/ZapToISearch][emacswiki ZapToIS
     (isearch-exit)
     (goto-char isearch-other-end))
   (define-key isearch-mode-map [(control return)] 'isearch-exit-other-end)
-#+END_SRC
+#+end_src
 
 ** Goto line
 
 Provide an easy goto-line (~C-c g~).
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (global-set-key (kbd "C-c g") 'goto-line)
-#+END_SRC
+#+end_src
 
 ** Better beginning, end of line
 
 Switch between various line positions, like moving to the
 beginning/end of code, line or comment.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package mwim
     :init
     (global-set-key (kbd "C-a") 'mwim-beginning-of-code-or-line)
     (global-set-key (kbd "C-e") 'mwim-end-of-code-or-line)
     (global-set-key (kbd "<home>") 'mwim-beginning-of-line-or-code)
     (global-set-key (kbd "<end>") 'mwim-end-of-line-or-code))
-#+END_SRC
+#+end_src
 
 ** Track EOL
 
 Vertical motion starting at EOL keeps to EOL.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq track-eol t)
-#+END_SRC
+#+end_src
 
 ** Scroll one line at a time instead of paging
 
 Paging is what ~PgUp~ and ~PgDn~ are for.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq scroll-conservatively 100)
-#+END_SRC
+#+end_src
 
 ** PgUp and PgDn as inverse functions
 
 Remember and restore point location after ~PgUp~ and ~PgDn~.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (setq scroll-preserve-screen-position t)
-#+END_SRC
+#+end_src
 
 ** Bookmarks
 
@@ -583,7 +583,7 @@ Bookmarking commands:
 
 See [[http://emacswiki.org/emacs/BookMarks][emacswiki BookMarks]].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package bookmark
     :config
     (setq bookmark-default-file (os-path-join emacs-cache-dir "emacs.bmk"))
@@ -592,16 +592,16 @@ See [[http://emacswiki.org/emacs/BookMarks][emacswiki BookMarks]].
     (("<kp-1>" . bookmark-bmenu-list)
      ("<kp-2>" . bookmark-set)
      ("<kp-3>" . bookmark-jump)))
-#+END_SRC
+#+end_src
 
 ** Save and restore point (F3, F4)
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (define-key global-map (kbd "C-<f3>") '(lambda () (interactive) (point-to-register 33)))  ;^F3 Save
   (define-key global-map (kbd "<f3>") '(lambda () (interactive) (jump-to-register 33)))     ; F3 Restore
   (define-key global-map (kbd "C-<f4>") '(lambda () (interactive) (point-to-register 34)))  ;^F4 Save
   (define-key global-map (kbd "<f4>") '(lambda () (interactive) (jump-to-register 34)))     ; F4 Restore
-#+END_SRC
+#+end_src
 
 ** Jump between symbols
 
@@ -612,11 +612,11 @@ Jump between symbols in your buffer, based on the initial symbol your point was 
 
 See https://github.com/mickeynp/smart-scan.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package smartscan
     :init
     (global-smartscan-mode 1))
-#+END_SRC
+#+end_src
 
 ** Goto last change in current buffer
 
@@ -625,21 +625,21 @@ Move through points at which you made edits in a buffer.
 - ~C-c C-,~ - goto last change
 - ~C-c C-.~ - goto next change
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
    (use-package goto-chg
      :bind
      (("C-c C-," . goto-last-change)
       ("C-c C-." . goto-last-change-reverse)))
-#+END_SRC
+#+end_src
 
 ** Move between windows with shift-arrow keys
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (global-set-key (kbd "S-<left>") 'windmove-left)
   (global-set-key (kbd "S-<right>") 'windmove-right)
   (global-set-key (kbd "S-<up>") 'windmove-up)
   (global-set-key (kbd "S-<down>") 'windmove-down)
-#+END_SRC
+#+end_src
 
 ** Expand Region
 
@@ -655,10 +655,10 @@ then expand to the contents of the quotes abc def, then to the entire
 quote "abc def", then to the contents of the sexp setq alphabet-start
 "abc def" and finally to the entire sexp.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package expand-region
     :bind ("C-=" . er/expand-region))
-#+END_SRC
+#+end_src
 
 ** Dired
 
@@ -666,7 +666,7 @@ Show the file from point in the other window.  Use down/up or C-n/C-p
 to display a different file.  Use SPC to scroll the peeped file down,
 and C-SPC or backspace to scroll it up.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
       (use-package peep-dired
         :ensure t
         :defer t ; don't access `dired-mode-map' until `peep-dired' is loaded
@@ -679,7 +679,7 @@ and C-SPC or backspace to scroll it up.
         (setq peep-dired-ignored-extensions '("iso"))
         :bind (:map dired-mode-map
                     ("P" . peep-dired)))
-#+END_SRC
+#+end_src
 
 * Writing
 
@@ -689,47 +689,47 @@ Set default major mode to be text-mode instead of fundamental-mode.
 Although the doc says that default-major-mode is obsolete since 23.2
 and to use major-mode instead, setting major-mode doesn't work.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq default-major-mode 'text-mode)
-#+END_SRC
+#+end_src
 
 ** Delete selected text when typing
 
 All other editors work this way, so let's not confuse ourselves.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (require 'delsel)  ;required for OpenSUSE-12.1 emacs-23.3-6.1.2
   (delete-selection-mode 1)
-#+END_SRC
+#+end_src
 
 ** Join lines
 
 - ~M-^~ - join current line to one above
 - ~M-j~ - join current line to one below
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (global-set-key (kbd "M-j") (lambda () (interactive) (join-line -1)))
-#+END_SRC
+#+end_src
 
 ** Clean up spaces
 
 Cycle between 1, 0, or original spaces around point where spaces
 includes newlines and tabs.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
     (if (and (>= emacs-major-version 24)
              (>= emacs-minor-version 4))
         (global-set-key (kbd "M-SPC") 'cycle-spacing)
       ;; Just delete newlines as well as spaces and tabs around point.
       (global-set-key (kbd "M-SPC") '(lambda () (interactive) (just-one-space -1))))
-#+END_SRC
+#+end_src
 
 ** Unfill paragraph
 
 Press "M-Q" to perform the inverse of fill-paragraph ("M-q").  From
 [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha Chua]].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
     (defun my/unfill-paragraph (&optional region)
         "Takes a multi-line paragraph and makes it into a single line of text."
         (interactive (progn
@@ -738,11 +738,11 @@ Press "M-Q" to perform the inverse of fill-paragraph ("M-q").  From
         (let ((fill-column (point-max)))
           (fill-paragraph nil region)))
     (bind-key "M-Q" 'my/unfill-paragraph)
-#+END_SRC
+#+end_src
 
 ** Insert datetime into current buffer (C-c i d, C-c i t)
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (defun my-insert-date ()
     "Insert date string into current buffer."
     (interactive)
@@ -754,32 +754,32 @@ Press "M-Q" to perform the inverse of fill-paragraph ("M-q").  From
     (interactive)
     (insert (format-time-string "%Y-%m-%d %H:%M:%S")))
   (global-set-key (kbd "C-c i t") 'my-insert-date-time)
-#+END_SRC
+#+end_src
 
 ** Make URL human readable
 
 Key binding?
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (require 'url-humanify)  ; in ./elisp/
   ;theoretically the following should work, but it does not
   ;(use-package url-humanify
   ;  :load-path "./elisp/")
-#+END_SRC
+#+end_src
 
 ** Whitespace
 
 *** Indentation should insert spaces, not tabs
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq-default indent-tabs-mode nil)
-#+END_SRC
+#+end_src
 
 *** Display and cleanup bogus whitespace
 
 See [[http://www.emacswiki.org/emacs/WhiteSpace][emacswiki WhiteSpace]].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package whitespace
     :config
     (setq whitespace-style
@@ -796,13 +796,13 @@ See [[http://www.emacswiki.org/emacs/WhiteSpace][emacswiki WhiteSpace]].
               (set (make-local-variable 'whitespace-action) '(nil))
               (set (make-local-variable 'indent-tabs-mode) t)))))
     (add-hook 'find-file-hook 'whitespace-disable-for-some-files))
-#+END_SRC
+#+end_src
 
 *** If we do see tabs, they are 4 chars wide
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq-default tab-width 4)
-#+END_SRC
+#+end_src
 
 *** Require final newline
 
@@ -812,34 +812,34 @@ require-final-newline to mode-require-final-newline, but most do not
 (Emacs-Lisp for one).  The risk here is if we open a binary file we
 might append a newline.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq require-final-newline t)
-#+END_SRC
+#+end_src
 
 *** Identify variables that are safe to be set as file variables ??
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (put 'whitespace-line-column 'safe-local-variable 'integerp)
-#+END_SRC
+#+end_src
 
 ** Wrap region with punctuation
 
 Select a region and then press ~"~, ~'~, ~(~, ~{~, or ~[~.  See [[https://github.com/rejeep/wrap-region.el][wrap-region package]].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (use-package wrap-region
   :config
   (add-hook 'org-mode-hook 'wrap-region-mode))
-#+END_SRC
+#+end_src
 
 ** Entering special characters with C-q
 
 Use hex radix when entering special characters with C-q.  Default is
 octal.  For example, C-q 2 0 a c <return> will enter "€".
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (setq read-quoted-char-radix 16)
-#+END_SRC
+#+end_src
 
 * Desktop
 
@@ -848,7 +848,7 @@ their file names, major modes, buffer positions, and so on are saved.
 
 See [[http://www.emacswiki.org/emacs/DeskTop][emacswiki DeskTop]].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package desktop
     :if window-system
     :demand
@@ -877,13 +877,13 @@ See [[http://www.emacswiki.org/emacs/DeskTop][emacswiki DeskTop]].
       "Don't allow dead emacsen to own the desktop file."
       (when (not (emacs-process-p ad-return-value))
         (setq ad-return-value nil))))
-#+END_SRC
+#+end_src
 
 * Org Mode
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (require 'org)
-#+END_SRC
+#+end_src
 
 ** Files
 
@@ -891,39 +891,39 @@ The value of org-directory is "~/org" by default.
 
 *** Default file for notes
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq org-default-notes-file (concat org-directory "/notes.org"))
-#+END_SRC
+#+end_src
 
 ** Global key bindings
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (global-set-key "\C-co" (lambda () (interactive) (find-file org-default-notes-file)))
   (global-set-key "\C-cl" 'org-store-link)
-#+END_SRC
+#+end_src
 
 Wrap region.
 
 - * = *bold*
 - ~ = ~code~
 - + = +strike-through+
-- l = BEGIN_SRC emacs_lisp
-- p = BEGIN_SRC python
-- s = BEGIN_SRC shell (sh)
+- l = begin_src emacs_lisp
+- p = begin_src python
+- s = begin_src shell (sh)
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (wrap-region-add-wrapper "*" "*" nil 'org-mode)
   (wrap-region-add-wrapper "~" "~" nil 'org-mode)
   (wrap-region-add-wrapper "+" "+" nil 'org-mode)
-  (wrap-region-add-wrapper "#+BEGIN_SRC emacs-lisp\n" "#+END_SRC\n" "l" 'org-mode)
-  (wrap-region-add-wrapper "#+BEGIN_SRC python\n" "#+END_SRC\n" "p" 'org-mode)
-  (wrap-region-add-wrapper "#+BEGIN_SRC shell\n" "#+END_SRC\n" "s" 'org-mode)
-#+END_SRC
+  (wrap-region-add-wrapper "#+begin_src emacs-lisp\n" "#+end_src\n" "l" 'org-mode)
+  (wrap-region-add-wrapper "#+begin_src python\n" "#+end_src\n" "p" 'org-mode)
+  (wrap-region-add-wrapper "#+begin_src shell\n" "#+end_src\n" "s" 'org-mode)
+#+end_src
 
 Insert a TODO or TASK item before the current item, no matter where we
 are in the current item.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (define-key org-mode-map (kbd "C-c i o")
     (lambda () (interactive)
       (org-forward-heading-same-level 0)
@@ -935,28 +935,28 @@ are in the current item.
       (org-forward-heading-same-level 0)
       (org-insert-heading)
       (insert "TASK ")))
-#+END_SRC
+#+end_src
 
 ** Capturing
 
 Globally bind org-capture to "C-c c".
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (global-set-key "\C-cc" 'org-capture)
-#+END_SRC
+#+end_src
 
 Define template strings.
 See http://orgmode.org/manual/Template-expansion.html#Template-expansion
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (defvar
     my/org-basic-task-template
     "* TODO %^{TODO}\n:LOGBOOK:\n- Created on [%<%Y-%m-%d %a %H:%M>]\n:END:\n%?%i")
-#+END_SRC
+#+end_src
 
 Define templates used by org-capture ("C-c c").
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq org-capture-templates
         `(("t" "TODO" entry
            (file+headline ,(concat org-directory "/notes.org") "Inbox")
@@ -966,36 +966,36 @@ Define templates used by org-capture ("C-c c").
            (file+olp+datetree ,(concat org-directory "/journal.org"))
            "* %?"
            :kill-buffer)))
-#+END_SRC
+#+end_src
 
 ** Navigation
 
 Globally bind org-iswitchb to "C-c b".
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (global-set-key "\C-cb" 'org-iswitchb)
-#+END_SRC
+#+end_src
 
 Configure org-refile ("C-c C-w") to use top three heading levels from
 all org agenda files.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq org-refile-targets '((org-agenda-files . (:maxlevel . 3))))
-#+END_SRC
+#+end_src
 
 When M-RET is pressed, go to the end of the line before making a new
 entry.  The default is to split the line at cursor position, which I
 rarely want to do.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq org-M-RET-may-split-line nil)
-#+END_SRC
+#+end_src
 
 Pressing RET on a link will follow the link.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq org-return-follows-link t)
-#+END_SRC
+#+end_src
 
 ** Visualization
 
@@ -1003,18 +1003,18 @@ Pressing RET on a link will follow the link.
 
 See [[https://github.com/syl20bnr/spacemacs/issues/1833][Weird org + git gutter indentation bug #1833]].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq org-startup-indented t)
-#+END_SRC
+#+end_src
 
 *** Disable "/" as indicating italics
 
 As I type path names, I don't want the text to bounce between italics
 and normal typefaces.  I rarely use italics anyways.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (delete '("/" italic "<i>" "</i>") org-emphasis-alist)
-#+END_SRC
+#+end_src
 
 *** Ellipsis
 
@@ -1027,9 +1027,9 @@ clutter.
   Note that this doesn't display correctly; empty boxes for all but
   the last.  2015-11-04.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq org-ellipsis "\u2026")
-#+END_SRC
+#+end_src
 
 *** Fine tune characters are allowed before and after the markup characters
 
@@ -1039,19 +1039,19 @@ very file when doing markup of key bindings like ~C-c C-,~.  See
 [[http://stackoverflow.com/a/24173780][stackoverflow: How can I emphasize or verbatim quote a comma in org
 mode?]].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setcar (nthcdr 2 org-emphasis-regexp-components) " \t\r\n\"'")
   (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
-#+END_SRC
+#+end_src
 
 ** Journal and Archiving
 
 Archive a task with org-archive-subtree ("C-c C-x C-s"), by inserting
 it into a date tree in journal.org.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq org-archive-location (concat org-directory "/journal.org::datetree/"))
-#+END_SRC
+#+end_src
 
 ** Google calendar sync
 
@@ -1064,7 +1064,7 @@ See:
 This relies on the setting of org-gcal-client-id and
 org-gcal-client-secret in ~/.emacs-local.el
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package org-gcal
     :ensure t
     :init
@@ -1072,73 +1072,73 @@ org-gcal-client-secret in ~/.emacs-local.el
     :config
     (setq org-gcal-file-alist
       '(("tschutter65@gmail.com" .  "~/org/gcal-tschutter65.org"))))
-#+END_SRC
+#+end_src
 
 Sync gcal whenever the agenda is loaded.  Since this happens in the
 background, if something has just been added to the calendar, the
 agenda might need to be reloaded by pressing r in the agenda view.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync) ))
-#+END_SRC
+#+end_src
 
 ** Org agenda
 
 Globally bind org-agenda to "C-c a".
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (global-set-key "\C-ca" 'org-agenda)
-#+END_SRC
+#+end_src
 
 *** Specify where to look for agenda files
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (setq org-agenda-files '())
 (if (file-directory-p "~/org/")
     (add-to-list 'org-agenda-files "~/org/"))
-#+END_SRC
+#+end_src
 
 *** Agenda custom commands
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (setq org-agenda-custom-commands
        `(;; match those that are not scheduled.
          ;; from http://stackoverflow.com/questions/17003338
          ("u" "Unscheduled tasks" tags "-SCHEDULED={.+}/!+TODO|+STARTED|+WAITING")
          ("n" "Agenda and all TODO's" ((agenda "") (alltodo)))))
-#+END_SRC
+#+end_src
 
 *** Display two weeks in agenda
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (setq org-agenda-span 14)
-#+END_SRC
+#+end_src
 
 *** Start agenda on today, not Monday
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (setq org-agenda-start-on-weekday nil)
-#+END_SRC
+#+end_src
 
 *** Highlight entire selected agenda line
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (add-hook 'org-agenda-finalize-hook (lambda () (hl-line-mode)))
-#+END_SRC
+#+end_src
 
 *** Warn of any deadlines in next 7 days
 
 Default is 14 days.  I can't think about things due next week.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq org-deadline-warning-days 7)
-#+END_SRC
+#+end_src
 
-** Org Babel BEGIN_SRC code blocks
+** Org Babel begin_src code blocks
 
-Enable languages for #+BEGIN_SRC blocks.
+Enable languages for #+begin_src blocks.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((emacs-lisp . t)
@@ -1147,43 +1147,43 @@ Enable languages for #+BEGIN_SRC blocks.
    (shell . t)))
 
 (use-package gnuplot)
-#+END_SRC
+#+end_src
 
 Fontify code in code blocks when viewing in the org file (as opposed
 to when using C-').
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq org-src-fontify-natively t)
-#+END_SRC
+#+end_src
 
 Do not ask for confirmation when evaluating code blocks with ~C-c
 C-c~.  Disabling confirmation may result in accidental evaluation of
 potentially harmful code.  But I never evaluate code blocks from
 external sources.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq org-confirm-babel-evaluate nil)
-#+END_SRC
+#+end_src
 
 Replace results verbatim instead of replacing results with a table.
-To restore the default for a specific code block, use ~#+BEGIN_SRC
+To restore the default for a specific code block, use ~#+begin_src
 <lang> :results verbatim~
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq org-babel-default-header-args
         (cons '(:results . "replace verbatim")
               (assq-delete-all :results org-babel-default-header-args)))
-#+END_SRC
+#+end_src
 
 Automatically redisplay inline images after code block execution.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (defun fix-inline-images ()
     (when org-inline-image-overlays
       (org-redisplay-inline-images)))
 
   (add-hook 'org-babel-after-execute-hook 'fix-inline-images)
-#+END_SRC
+#+end_src
 
 ** Org Drill
 
@@ -1197,15 +1197,15 @@ cd ~/.emacs.d/elisp
 wget https://bitbucket.org/eeeickythump/org-drill/raw/01b05cd7561ad69e5ec9c1200414d4fa128c9a17/org-drill.el
 wget http://orgmode.org/cgit.cgi/org-mode.git/plain/contrib/lisp/org-learn.el
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (require 'org-drill)
   (setq savehist-file (os-path-join emacs-cache-dir "savehist-history"))
   (setq org-id-locations-file (os-path-join emacs-cache-dir "org-id-locations"))
-#+END_SRC
+#+end_src
 
 * Calendar and Diary
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package calendar
     :config
     (add-hook 'today-visible-calendar-hook 'calendar-mark-today)
@@ -1219,29 +1219,29 @@ wget http://orgmode.org/cgit.cgi/org-mode.git/plain/contrib/lisp/org-learn.el
     (setq diary-number-of-entries 7)  ; number of days to display
     (setq diary-list-include-blanks t)  ; include empty days
     (add-hook 'list-diary-entries-hook 'sort-diary-entries t))  ; sort entries by time
-#+END_SRC
+#+end_src
 
 ** Encrypted diary handling
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (load-library "mydiary")
-#+END_SRC
+#+end_src
 
 * Eshell
 
 See [[http://www.emacswiki.org/emacs/CategoryEshell][emacswiki CategoryEshell]].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package eshell
     :config
     (setq eshell-directory-name (file-name-as-directory (os-path-join emacs-cache-dir "eshell"))))
-#+END_SRC
+#+end_src
 
 * Flycheck
 
 See https://sourcegraph.com/github.com/robert-zaremba/flycheck
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
    (use-package flycheck
 
      :bind
@@ -1269,7 +1269,7 @@ See https://sourcegraph.com/github.com/robert-zaremba/flycheck
          (message) line-end))
          :modes (text-mode markdown-mode org-mode))
      (add-to-list 'flycheck-checkers 'proselint))
-#+END_SRC
+#+end_src
 
 Most checkers have dependencies against external tools that perform
 the checking. Use C-c ! ? to see what a checker needs, e.g. C-c ! ?
@@ -1277,50 +1277,50 @@ python-pylint.
 
 JSON checking requires jsonlint.
 
-#+BEGIN_SRC sh
+#+begin_src shell
   sudo apt-get install nodejs-legacy npm
   sudo npm install jsonlint --global
-#+END_SRC
+#+end_src
 
 Proselint requires proselint.
 
-#+BEGIN_SRC sh
+#+begin_src shell
   sudo pip install proselint
-#+END_SRC
+#+end_src
 
 * Miscellaneous
 
 ** Startup
 We don't need to see the startup message.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq inhibit-startup-message t)
-#+END_SRC
+#+end_src
 
 And [[http://yann.hodique.info/blog/rant-obfuscation-in-emacs/][suppress the startup message in the echo area]] as well.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (put 'inhibit-startup-echo-area-message 'saved-value
        (setq inhibit-startup-echo-area-message (user-login-name)))
-#+END_SRC
+#+end_src
 
 ** Define word at point
 Get a definition of the word at point or from the minibuffer.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
     (use-package define-word
       :ensure t
       :config
       (setq define-word-limit 20)
       :bind (("s-d" . define-word-at-point)
              ("s-D" . define-word)))
-#+END_SRC
+#+end_src
 
 ** Printing
 
 See [[http://www.emacswiki.org/emacs/PrintingFromEmacs][emacswiki PrintingFromEmacs]].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package ps-print
     :config
     (setq ps-lpr-command "lp")
@@ -1333,7 +1333,7 @@ See [[http://www.emacswiki.org/emacs/PrintingFromEmacs][emacswiki PrintingFromEm
     (setq lpr-printer-switch "-d ")
     (setq lpr-add-switches nil)
     (setq lpr-page-header-switches '("-h" "%s" "-F" "--length=61" "--indent=4")))
-#+END_SRC
+#+end_src
 
 ** PDF editing and markup
 
@@ -1344,7 +1344,7 @@ package-install, and then run M-x pdf-tools-install.
 
 Use C-c C-a to manipulate annotations.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package pdf-tools
     :pin manual ;; manually update
 
@@ -1375,24 +1375,24 @@ Use C-c C-a to manipulate annotations.
     (define-key pdf-view-mode-map (kbd "h") 'pdf-annot-add-highlight-markup-annotation)
     (define-key pdf-view-mode-map (kbd "t") 'pdf-annot-add-text-annotation)
     (define-key pdf-view-mode-map (kbd "D") 'pdf-annot-delete))
-#+END_SRC
+#+end_src
 
 Open links to PDF files in org mode.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package org-pdfview
     :config
     ;;  (eval-after-load 'org '(require 'org-pdfview))
     (add-to-list
      'org-file-apps
      '("\\.pdf\\'" . (lambda (file link) (org-pdfview-open link)))))
-#+END_SRC
+#+end_src
 
 ** Email
 
 *** Outgoing mail
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (require 'smtpmail)
   (let* ((computername (downcase system-name))
          (prefixlen (min (length computername) 7))
@@ -1416,34 +1416,34 @@ Open links to PDF files in org mode.
       (setq smtpmail-local-domain "schutter.home")
       (setq smtpmail-smtp-server "smtp.schutter.home"))))
   ;(setq smtpmail-debug-info t)  ;uncomment to debug problems
-#+END_SRC
+#+end_src
 
 *** Composing mail
 
 Use Message to compose mail.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq mail-user-agent 'message-user-agent)
   (setq message-send-mail-function 'smtpmail-send-it)
   (add-hook 'message-mode-hook 'turn-on-auto-fill) ;word wrap
-#+END_SRC
+#+end_src
 
 *** Address book
 
 Integration with Google contacts.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (require 'external-abook)  ; in ./elisp/
   (custom-set-variables '(external-abook-command
                           (concat
                            (os-path-join emacs-d-directory "bin" "goobook-external-abook")
                            "query '%s'"
                            )))
-#+END_SRC
+#+end_src
 
 Following is not working.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (eval-after-load "message"
     '(progn
        (add-to-list 'message-mode-hook
@@ -1451,13 +1451,13 @@ Following is not working.
                        (local-unset-key "\C-c TAB")
                        (define-key message-mode-map "\C-c TAB" 'external-abook-try-expand
                          )))))
-#+END_SRC
+#+end_src
 
 ** IM and Chat
 
 *** ERC InternetRelayChat
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package erc
     :config
     (setq erc-nick "tschutter")
@@ -1489,7 +1489,7 @@ Following is not working.
     ;  :init
     ;  (easy-menu-add-item  nil '("tools") ["IRC with ERC" erc t]))
     )
-#+END_SRC
+#+end_src
 
 *** BitlBee gateway to IM networks
 
@@ -1498,7 +1498,7 @@ http://emacs-fu.blogspot.com/search/label/erc
 http://wiki.bitlbee.org/quickstart
 http://wiki.bitlbee.org/bitlbee-sipe
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (defun bitlbee-identify ()
     "Generate a message identifying ourself."
     (when (and (string= "localhost" erc-session-server)
@@ -1514,7 +1514,7 @@ http://wiki.bitlbee.org/bitlbee-sipe
     (erc :server "localhost" :port 6667 :nick bitlbee-nick))
   ; register user BITLBEE-PASSWORD
   ; account add yahoo tom.schutter YAHOO-PASSWORD
-#+END_SRC
+#+end_src
 
 * Programming
 
@@ -1522,13 +1522,13 @@ http://wiki.bitlbee.org/bitlbee-sipe
 
 *** Display warning instead of asking when visiting VC file via simlink
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq vc-follow-symlinks nil)
-#+END_SRC
+#+end_src
 
 *** Put list of files in default commit message
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package log-edit
     :config
     (add-hook 'log-edit-hook
@@ -1537,7 +1537,7 @@ http://wiki.bitlbee.org/bitlbee-sipe
                 (insert
                  (mapconcat 'file-name-nondirectory (log-edit-files) ",")
                  ": "))))
-#+END_SRC
+#+end_src
 
 *** Navigate previous versions of a git controlled file
 
@@ -1551,9 +1551,9 @@ Use the following keys to navigate historic version of the file:
   - ~g~ Goto nth revision
   - ~q~ Exit the time machine.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package git-timemachine)
-#+END_SRC
+#+end_src
 
 ** Compiling (F5)
 
@@ -1562,34 +1562,34 @@ smart-compile-alist which is updated by per-language sections.
 
 *** Set compile command according to mode
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package smart-compile
     :demand  ; force loading immediately
     :config
     (add-to-list 'smart-compile-alist '(cmake-mode . "make -k"))
     (add-to-list 'smart-compile-alist '(python-mode . "pycheck %f -s")))
-#+END_SRC
+#+end_src
 
 *** Force a vertical window split
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (defadvice smart-compile (around split-horizontally activate)
     "Split window vertically when smart-compile is called."
     (let ((split-width-threshold nil)
           (split-height-threshold 0))
       ad-do-it))
   (setq compilation-window-height 10)
-#+END_SRC
+#+end_src
 
 *** Bind smart-compile to F5
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (global-set-key [f5] 'smart-compile)
-#+END_SRC
+#+end_src
 
 *** Globally enable C-n, C-p to cycle through errors
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (defun my-next-error ()
     "Move point to next error and highlight it."
     (interactive)
@@ -1612,7 +1612,7 @@ smart-compile-alist which is updated by per-language sections.
       ))
   (global-set-key (kbd "C-n") 'my-next-error)
   (global-set-key (kbd "C-p") 'my-previous-error)
-#+END_SRC
+#+end_src
 
 **** Other
 Work in progress:
@@ -1639,7 +1639,7 @@ easy project management and navigation.
 Projects are marked by a .projectile file in the project root
 directory.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package projectile
     :init
     (setq projectile-keymap-prefix (kbd "C-x p"))  ; default is C-c p
@@ -1647,7 +1647,7 @@ directory.
     (setq projectile-completion-system 'default)
     (setq projectile-cache-file (os-path-join emacs-cache-dir "projectile.cache"))
     (setq projectile-known-projects-file (os-path-join emacs-cache-dir "projectile-bookmarks.eld")))
-#+END_SRC
+#+end_src
 
 ** GNU GLOBAL source code tagging system
 Alternatives include
@@ -1655,7 +1655,7 @@ Alternatives include
 - rtags handles C++ much better, but requires the C++ project be built
   with CMake.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package ggtags
     :bind
     (("M-*" . pop-tag-mark)
@@ -1670,7 +1670,7 @@ Alternatives include
               (lambda ()
                 (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
                   (ggtags-mode 1)))))
-#+END_SRC
+#+end_src
 
 ** CEDET
 
@@ -1678,7 +1678,7 @@ Alternatives include
 with the end goal of creating an advanced development environment in
 Emacs.
 
-;#+BEGIN_SRC emacs-lisp
+;#+begin_src emacs-lisp
 ;  (use-package cedet
 ;    :init
 ;    (progn
@@ -1691,22 +1691,22 @@ Emacs.
 ;
 ;      ;; Enable Semantic
 ;      (semantic-mode 1)))
-;#+END_SRC
+;#+end_src
 
 ** Common debugging
 
 *** Display a variable's value in a tooltip
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (gud-tooltip-mode)
-#+END_SRC
+#+end_src
 
 *** Use the echo area instead of frames for GUD tooltips
 
 Needs work.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   ;(setq gud-tooltip-echo-area t)
-#+END_SRC
+#+end_src
 
 ** Common Source Code Manipulation
 
@@ -1715,7 +1715,7 @@ Needs work.
 <C-S-down> to move current line down.
 <C-S-up> to move current line up.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (defun move-line-down ()
     "Move current line down."
     (interactive)
@@ -1735,13 +1735,13 @@ Needs work.
       (move-to-column col)))
   (global-set-key (kbd "<C-S-down>") 'move-line-down)
   (global-set-key (kbd "<C-S-up>") 'move-line-up)
-#+END_SRC
+#+end_src
 
 *** Line wrap function call or function definition
 
 Bound to <f2>.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (defun region-line-wrap ()
     "Line wrap region, breaking at commas."
     (let ((newline (if (eq major-mode (quote vbnet-mode)) " _\n" "\n")))
@@ -1791,7 +1791,7 @@ Bound to <f2>.
             (region-line-wrap))))))
 
   (define-key global-map (kbd "<f2>") '(lambda () (interactive) (function-line-wrap)))
-#+END_SRC
+#+end_src
 
 ** Python
 
@@ -1801,26 +1801,26 @@ When filling docstrings, put the initial triple quotes are on their
 own line, and do not put a blank line before the closing triple
 quotes.  If the docstring can fit on one line, do so.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq python-fill-docstring-style 'symmetric)
-#+END_SRC
+#+end_src
 
 *** Static code checks (either ^C-^W or ^C-^V)
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq py-pychecker-command "pycheck")
   (setq python-check-command "pycheck")
-#+END_SRC
+#+end_src
 
 *** Simplify insertion of debugging print statements
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (load "pyp.el")
-#+END_SRC
+#+end_src
 
 *** Python editing
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (add-hook 'python-mode-hook
             (lambda ()
               (if (not (eq system-type 'windows-nt))
@@ -1831,7 +1831,7 @@ quotes.  If the docstring can fit on one line, do so.
               (define-key python-mode-map (kbd "<f12>") 'pyp)  ;insert debug print
               (define-key python-mode-map "\C-m" 'newline-and-indent)
               ))
-#+END_SRC
+#+end_src
 
 *** Python doc lookup
 
@@ -1839,21 +1839,21 @@ See https://github.com/tsgates/pylookup
 
 Run "M-x pylookup-update-all" to update database.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (require 'pylookup)  ; in ./elisp/
   (setq pylookup-program (os-path-join emacs-d-directory "bin" "pylookup.py"))  ;executable
   (setq pylookup-db-file (os-path-join emacs-cache-dir "pylookup.db"))  ;database
   (setq pylookup-html-locations '("/usr/share/doc/python2.7/html"))  ;doc source
   (autoload 'pylookup-lookup "pylookup"
     "Lookup SEARCH-TERM in the Python HTML indexes." t)
-#+END_SRC
+#+end_src
 
 *** Python ropemacs refactoring
 
 Currently this is too expensive to do for all Python files, so we load
 ropemacs only if requested.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (defun load-ropemacs ()
     "Load pymacs and ropemacs."
     (interactive)
@@ -1867,7 +1867,7 @@ ropemacs only if requested.
     ;; Automatically save project python buffers before refactorings.
     (setq ropemacs-confirm-saving nil))
   (global-set-key "\C-xpl" 'load-ropemacs)
-#+END_SRC
+#+end_src
 
 *** Python vs. abbrev-mode
 
@@ -1876,29 +1876,29 @@ python-mode-abbrev-table.  And then we are bothered about saving the
 modified abbrevs.  So put the abbrev_defs file in var until we figure
 it out.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq abbrev-file-name (os-path-join emacs-cache-dir "abbrev_defs"))
-#+END_SRC
+#+end_src
 
 ** Arduino
 
 Major mode for arduino sketch (.ino) files.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package arduino-mode
     :mode
     ("\\.ino\\'" . arduino-mode))
-#+END_SRC
+#+end_src
 
 Reduce noise when compiling, and upload to Arduino by default.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (add-to-list 'smart-compile-alist '(arduino-mode . "make -k -s upload"))
-#+END_SRC
+#+end_src
 
 ** CMake
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package cmake-mode
     :mode (("\\.cmake\\'" . cmake-mode)
            ("CMakeLists\\.txt\\'" . cmake-mode))
@@ -1907,11 +1907,11 @@ Reduce noise when compiling, and upload to Arduino by default.
               (lambda ()
                 (setq-default cmake-tab-width 4)
                 )))
-#+END_SRC
+#+end_src
 
 ** C
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (defun adjust-indentation-style ()
     "Adjust C indentation style."
     ;; use C-c C-s to determine the syntactic symbol
@@ -1922,11 +1922,11 @@ Reduce noise when compiling, and upload to Arduino by default.
     (c-set-offset 'arglist-close '0)  ; no indent for close paren
     )
   (add-hook 'c-mode-hook 'adjust-indentation-style)
-#+END_SRC
+#+end_src
 
 ** C++
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (require 'c-includes)
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
   (add-hook 'c++-mode-hook 'adjust-indentation-style)
@@ -1942,13 +1942,13 @@ Reduce noise when compiling, and upload to Arduino by default.
                   (flyspell-prog-mode))
               (setq-default c-basic-offset 4)
               ))
-#+END_SRC
+#+end_src
 
 ** C#
 
 See [[http://www.emacswiki.org/emacs/CSharpMode][emacswiki CSharpMode]].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package csharp-mode
     :mode ("\\.cs\\'" . csharp-mode)
     :config
@@ -1957,19 +1957,19 @@ See [[http://www.emacswiki.org/emacs/CSharpMode][emacswiki CSharpMode]].
               (lambda ()
                 (if (not (eq system-type 'windows-nt))
                     (flyspell-prog-mode)))))
-#+END_SRC
+#+end_src
 
 ** Java
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (add-hook 'java-mode-hook 'adjust-indentation-style)
-#+END_SRC
+#+end_src
 
 ** reStructuredText
 
 See [[http://www.emacswiki.org/emacs/reStructuredText][emacswiki reStructuredText]].
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (defun rst-compile-html-preview ()
     "Compile a rst file to html and view in a browser."
     (interactive)
@@ -1982,16 +1982,16 @@ See [[http://www.emacswiki.org/emacs/reStructuredText][emacswiki reStructuredTex
       (call-interactively 'compile)
       (browse-url-of-file outname)))
   (add-to-list 'smart-compile-alist '(rst-mode rst-compile-html-preview))
-#+END_SRC
+#+end_src
 
 ** OpenSCAD
 
 [[http://www.openscad.org/][OpenSCAD]] is software for creating solid 3D CAD objects.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package scad-mode
     :mode ("\\.scad\\'" . scad-mode))
-#+END_SRC
+#+end_src
 
 * Keyboard and Mouse
 
@@ -2003,40 +2003,40 @@ See [[http://ergoemacs.org/emacs/keystroke_rep.html][Emacs's Key Syntax Explaine
 
 Zoom in and out by changing font size like Firefox.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (global-set-key (kbd "C-+") 'text-scale-increase)
   (global-set-key (kbd "C--") 'text-scale-decrease)   ; overrides negative-argument (still available via M--)
   (global-set-key (kbd "C-=") (lambda () (interactive) (text-scale-increase 0)))   ; overrides er/expand-region
-#+END_SRC
+#+end_src
 
 Undo and redo.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (global-set-key (kbd "C-z") 'undo)   ;overrides suspend-frame
   (global-set-key (kbd "C-S-z") 'redo)
-#+END_SRC
+#+end_src
 
 Various keybindings.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (global-set-key (kbd "<kp-7>") (lambda () "" (interactive) (find-file "~/.plan")))
   (global-set-key (kbd "<kp-8>") (lambda () (interactive) (diary) (other-window 1)))
   (global-set-key (kbd "<kp-9>") 'calendar)
   (global-set-key (kbd "C-h n") 'man)  ;overrides view-emacs-news
-#+END_SRC
+#+end_src
 
 ** Display incomplete key commands
 
 Display the key bindings following your currently entered incomplete
 command (prefix) in a popup.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package which-key
     :init
     (which-key-mode)
     (which-key-setup-side-window-right-bottom)
     (setq which-key-idle-delay 1.0))
-#+END_SRC
+#+end_src
 
 ** Change M-w to copy current line if region not selected
 
@@ -2057,11 +2057,11 @@ finally the current line.
 For example, ~M-w w~ saves the current word, and repeating ~w~ expands
 the kill to include the next word.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (use-package easy-kill
     :config
     (global-set-key [remap kill-ring-save] 'easy-kill))
-#+END_SRC
+#+end_src
 
 ** Configure ~Mouse-2~ to yank at point instead of at click
 
@@ -2069,9 +2069,9 @@ Do not move point on ~Mouse-2~; just insert the text at point,
 regardless of where ~Mouse-2~ was clicked.  This is especially
 important when using a touchpad.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq mouse-yank-at-point t)
-#+END_SRC
+#+end_src
 
 ** Configure clipboard interactions
 
@@ -2081,15 +2081,15 @@ mouse-select/middle-button-click).
 
 See http://hugoheden.wordpress.com/2009/03/08/copypaste-with-emacs-in-terminal/
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (setq x-select-enable-clipboard t)
-#+END_SRC
+#+end_src
 
 If emacs is run in a terminal, the clipboard functions have no effect.
 We use xsel instead.  If running under cygwin, we need to modify to
 use putclip/getclip instead or xsel.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
   (unless window-system
     (when (getenv "DISPLAY")
       ;; Callback for when user cuts
@@ -2117,7 +2117,7 @@ use putclip/getclip instead or xsel.
       ;; http://shreevatsa.wordpress.com/2006/10/22/emacs-copypaste-and-x/
       ;; http://www.mail-archive.com/help-gnu-emacs@gnu.org/msg03577.html
       ))
-#+END_SRC
+#+end_src
 
 * Configuration Documentation
 
