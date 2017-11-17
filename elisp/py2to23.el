@@ -36,63 +36,99 @@
 
 ;;; Code:
 
-(defun fixup-shebang ()
-  "Change shebang line with explicit 'python2' to generic 'python'."
+(defun replace-all (from-regexp to-string)
+  "Replace all FROM-REGEXP to TO-STRING in buffer."
   (goto-char (point-min))
-  (while (re-search-forward "#! */usr/bin/env python2\n" (point-max) t)
-    (replace-match "#!/usr/bin/env python\n")))
+  (while (re-search-forward from-regexp nil t)
+    (replace-match to-string)))
 
-(defun fixup-argparse ()
+(defun convert-shebang-to-py23 ()
+  "Change shebang line with explicit 'python2' to generic 'python'."
+  (replace-all
+   "^#! */usr/bin/env python2$"
+   "#!/usr/bin/env python"))
+
+(defun convert-shebang-to-py3 ()
+  "Change shebang line with explicit 'python2' to explicit 'python3'."
+  (replace-all
+   "^#! */usr/bin/env python2?$"
+   "#!/usr/bin/env python3"))
+
+(defun remove-future-imports ()
+  "Remove any imports from the future."
+  (replace-all
+   "^from __future__ import [^\n]+\n"
+   ""))
+
+(defun convert-argparse ()
   "Convert from optparse to argparse."
   (interactive)
-  (goto-char (point-min))
 
-  ;; fix import
-  (while (re-search-forward "\nimport optparse\n" (point-max) t)
-    (replace-match "\nimport argparse\n"))
-  (while (re-search-forward "\nfrom optparse import OptionParser\n" (point-max) t)
-    (replace-match "\nimport argparse\n"))
+  ;; convert import
+  (replace-all
+   "^\\(import optparse\\|from optparse import OptionParser\\)$"
+   "import argparse")
 
-  ;; fix parser creation
-  (while (re-search-forward "option_parser = optparse\.OptionParser" (point-max) t)
-    (replace-match "arg_parser = argparse.ArgumentParser"))
-  (while (re-search-forward "optionParser = OptionParser" (point-max) t)
-    (replace-match "arg_parser = argparse.ArgumentParser"))
-  (while (re-search-forward "(usage=\"usage:.*\n *)\" *" (point-max) t)
-    (replace-match "#\1description=\""))
+  ;; convert parser creation
+  (replace-all
+   "\\(option_parser\\|optionParser\\) = \\(optparse\\.\\)?OptionParser"
+   "arg_parser = argparse.ArgumentParser")
+  (replace-all
+   "(usage=\"usage:.*\n *)\" *"
+   "# FIXME \\1description=\"")
+  (replace-all
+   "usage=($"
+   "description=(  # FIXME")
 
-  ;; fix addition of arguments to parser
-  (while (re-search-forward "option_parser\.add_option" (point-max) t)
-    (replace-match "arg_parser.add_argument"))
-  (while (re-search-forward "optionParser\.add_option" (point-max) t)
-    (replace-match "arg_parser.add_argument"))
-  (while (re-search-forward "(options, args) = option_parser\.parse_args" (point-max) t)
-    (replace-match "args = arg_parser.parse_args"))
-  (while (re-search-forward "(options, args) = optionParser\.parse_args" (point-max) t)
-    (replace-match "args = arg_parser.parse_args"))
+  ;; convert addition of arguments to parser
+  (replace-all
+   "\\(option_parser\\|optionParser\\)\\.add_option"
+   "arg_parser.add_argument")
 
-  ;; fix general use of option_parser object
-  (while (re-search-forward "option_parser\\." (point-max) t)
-    (replace-match "arg_parser."))
-  (while (re-search-forward "optionParser\\." (point-max) t)
-    (replace-match "arg_parser."))
+  ;; convert use of "type" parameter of add_argument()
+  (replace-all
+   " type=\"\\([^\"]+\\)\","
+   " type=\\1,")
 
-  ;; fix default printing in help
-  (while (re-search-forward "default=%default" (point-max) t)
-    (replace-match "default=%(default)s"))
+  ;; convert use of "%" operator
+  (replace-all "%default" "%(default)s")
 
-  ;; fix general use of options object
-  (while (re-search-forward "options\\." (point-max) t)
-    (replace-match "args.")))
+  ;; convert call to parse_args()
+  (replace-all
+   "(options, args) = \\(option_parser\\|optionParser\\)\\.parse_args"
+   "args = arg_parser.parse_args")
 
-(defun py2to23 ()
+  ;; convert general use of option_parser object
+  (replace-all
+   "\\(option_parser\\|optionParser\\)\\."
+   "arg_parser.")
+
+  ;; convert general use of options object returned by parse_args()
+  (replace-all "options," "args,")
+  (replace-all "options\\." "args.")
+  (replace-all "(options)" "(args)"))
+
+(defun py2-to-py23 ()
   "Convert Python script to run under python2 or python3."
   (interactive)
   (save-excursion
     (save-restriction
       (widen)
-      (fixup-shebang)
-      (fixup-argparse))))
+      (convert-shebang-to-py23)
+      (convert-argparse))))
+
+(defun py2-to-py3 ()
+  "Convert Python script to run under python3."
+  (interactive)
+  (save-excursion
+    (save-restriction
+      (widen)
+      (convert-shebang-to-py3)
+      (remove-future-imports)
+      (convert-argparse)
+      (replace-all "\\.iterkeys(" ".keys(")
+      (replace-all "\\.itervalues(" ".values(")
+      (replace-all "\\.iteritems(" ".items("))))
 
 (provide 'py2to23)
 ;;; py2to23.el ends here
