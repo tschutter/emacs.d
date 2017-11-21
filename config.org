@@ -1232,7 +1232,26 @@ wget http://orgmode.org/cgit.cgi/org-mode.git/plain/contrib/lisp/org-learn.el
 (load-library "mydiary")
 #+end_src
 
-* Eshell
+* Shells
+** shell-pop
+
+Quickly pop up a shell.  See https://github.com/kyagi/shell-pop-el
+
+#+begin_src emacs-lisp
+(use-package shell-pop
+  :bind
+  (("C-t" . shell-pop)) ; C-t is bound to transpose-chars by default, which I never use.
+
+  :config
+  (setq shell-pop-window-position "right")
+  (setq shell-pop-window-size 50))
+  ;(setq shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
+  ;(setq shell-pop-term-shell "/bin/zsh")
+  ;; need to do this manually or not picked up by `shell-pop'
+  ;(shell-pop--set-shell-type 'shell-pop-shell-type shell-pop-shell-type))
+#+end_src
+
+** Eshell
 
 See [[http://www.emacswiki.org/emacs/CategoryEshell][emacswiki CategoryEshell]].
 
