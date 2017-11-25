@@ -1340,6 +1340,19 @@ Get a definition of the word at point or from the minibuffer.
          ("s-D" . define-word)))
 #+end_src
 
+** Use PCRE instead of Emacs regex flavor
+
+Although the Emacs flavor of regular expressions has interesting
+features, it is yet one more syntax to learn.  Use ``pcre-mode`` to
+make all commands that read regexps using the minibuffer use emulated
+[[https://www.pcre.org/][Perl Compatible Regular Expression]] syntax instead of Emacs syntax.
+
+#+begin_src emacs-lisp
+(use-package pcre2el
+  :config
+  (pcre-mode))
+#+end_src
+
 ** Printing
 
 See [[http://www.emacswiki.org/emacs/PrintingFromEmacs][emacswiki PrintingFromEmacs]].
