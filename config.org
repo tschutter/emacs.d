@@ -1474,7 +1474,7 @@ Integration with Google contacts.
 (custom-set-variables '(external-abook-command
                         (concat
                          (os-path-join emacs-d-directory "bin" "goobook-external-abook")
-                         "query '%s'")))
+                         " query '%s'")))
 #+end_src
 
 Following is not working.
