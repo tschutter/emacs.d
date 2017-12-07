@@ -32,7 +32,12 @@
 
 ;;; Commentary:
 
-;; None yet.
+;; To load:
+;;   M-x load-file
+;;
+;; To use, run either of:
+;;   M-x py2-to-py23
+;;   M-x py2-to-py3
 
 ;;; Code:
 
