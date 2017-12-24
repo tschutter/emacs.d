@@ -1041,6 +1041,17 @@ mode?]].
 (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
 #+end_src
 
+** Refiling
+
+The default behavior when refiling items is to show a bag of
+headlines.  But many of my headlines are the same, like "Tasks".  So
+instead of just listing headlines when refiling, show them as a path
+including the filename.  Like file.org/level1/level2.
+
+#+begin_src emacs-lisp
+(setq org-refile-use-outline-path 'file)
+#+end_src
+
 ** Journal and Archiving
 
 Archive a task with org-archive-subtree ("C-c C-x C-s"), by inserting
