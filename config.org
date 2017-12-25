@@ -1079,7 +1079,8 @@ org-gcal-client-secret in ~/.emacs-local.el
   (setq org-gcal-dir (concat emacs-cache-dir "org-gcal/"))
   :config
   (setq org-gcal-file-alist
-    '(("tschutter65@gmail.com" .  "~/org/gcal-tschutter65.org"))))
+    '(("tschutter65@gmail.com" .  "~/org/gcal-tschutter65.org")
+      ("oj9ms3gjljeseg3f37hejalr80@group.calendar.google.com" . "~/org/gcal-corelogic.org"))))
 #+end_src
 
 Sync gcal whenever the agenda is loaded.  Since this happens in the
@@ -1090,7 +1091,7 @@ agenda might need to be reloaded by pressing r in the agenda view.
 (add-hook 'org-agenda-mode-hook (lambda () (org-gcal-sync)))
 #+end_src
 
-** Org agenda
+** Org Agenda
 
 Globally bind org-agenda to "C-c a".
 
@@ -1140,6 +1141,31 @@ Default is 14 days.  I can't think about things due next week.
 
 #+begin_src emacs-lisp
 (setq org-deadline-warning-days 7)
+#+end_src
+
+*** Color items in the agenda
+Hopefully this is temporary until a better way is found.
+
+Use ~M-x list-colors-display~ for color names.
+
+#+begin_src emacs-lisp
+(defun org-agenda-color-category (category backcolor forecolor)
+  (let ((re (rx-to-string `(seq bol (0+ space) ,category ":"))))
+    (save-excursion
+      (message (concat "coloring: '" category "'")
+      (goto-char (point-min))
+      (while (re-search-forward re nil t)
+        (add-text-properties (match-beginning 0) (match-end 0)
+                             (list 'face (list :background backcolor :foreground forecolor))))))))
+
+; Try to match Google Calendar.
+; (setq org-agenda-finalize-hook nil)  ; to reset hook
+(add-hook 'org-agenda-finalize-hook
+          (lambda ()
+            (save-excursion
+              (org-agenda-color-category "gcal-tschutter65" "#616161" "#FFFFFF")  ; gray
+              (org-agenda-color-category "gcal-corelogic" "#795548" "#FFFFFF")  ; brown
+              (org-agenda-color-category "gcal-linda"  "#F6BF26" "#FFFFFF"))))  ; yellow
 #+end_src
 
 ** Org Babel begin_src code blocks
