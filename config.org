@@ -966,7 +966,6 @@ Define templates used by org-capture ("C-c c").
 #+end_src
 
 ** Navigation
-
 Globally bind org-iswitchb to "C-c b".
 
 #+begin_src emacs-lisp
@@ -992,6 +991,16 @@ Pressing RET on a link will follow the link.
 
 #+begin_src emacs-lisp
 (setq org-return-follows-link t)
+#+end_src
+
+** Structure Editing
+Do not leave a blank line before a new heading/item or when moving
+headings/items around.  The default behavior is to look at the
+surrounding headings/items and try to make an intelligent decision
+whether to insert a blank line or not.  But that ends up being
+confusing; why did it leave a blank line this time but not last time?
+#+begin_src emacs-lisp
+(setf org-blank-before-new-entry '((heading . nil) (plain-list-item . nil)))
 #+end_src
 
 ** Visualization
