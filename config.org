@@ -1088,8 +1088,9 @@ org-gcal-client-secret in ~/.emacs-local.el
   (setq org-gcal-dir (concat emacs-cache-dir "org-gcal/"))
   :config
   (setq org-gcal-file-alist
-    '(("tschutter65@gmail.com" .  "~/org/gcal-tschutter65.org")
-      ("oj9ms3gjljeseg3f37hejalr80@group.calendar.google.com" . "~/org/gcal-corelogic.org"))))
+    '(("tschutter65@gmail.com" .  "~/org/gcal-tschutter65.org"))))
+
+;      ("oj9ms3gjljeseg3f37hejalr80@group.calendar.google.com" . "~/org/gcal-corelogic.org"))))
 #+end_src
 
 Sync gcal whenever the agenda is loaded.  Since this happens in the
