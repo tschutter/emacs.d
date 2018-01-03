@@ -882,16 +882,6 @@ See [[http://www.emacswiki.org/emacs/DeskTop][emacswiki DeskTop]].
 (require 'org)
 #+end_src
 
-** Files
-
-The value of org-directory is "~/org" by default.
-
-*** Default file for notes
-
-#+begin_src emacs-lisp
-(setq org-default-notes-file (concat org-directory "/notes.org"))
-#+end_src
-
 ** Global key bindings
 
 #+begin_src emacs-lisp
@@ -942,6 +932,12 @@ Globally bind org-capture to "C-c c".
 (global-set-key "\C-cc" 'org-capture)
 #+end_src
 
+Set default target for storing captured notes.
+
+#+begin_src emacs-lisp
+(setq org-default-notes-file (concat org-directory "/inbox.org"))
+#+end_src
+
 Define template strings.
 See http://orgmode.org/manual/Template-expansion.html#Template-expansion
 
@@ -956,9 +952,9 @@ Define templates used by org-capture ("C-c c").
 #+begin_src emacs-lisp
 (setq org-capture-templates
       `(("t" "TODO" entry
-         (file+headline ,(concat org-directory "/notes.org") "Inbox")
+         (file "")  ; "" = use org-default-notes-file
          ,my/org-basic-task-template
-         :prepend :empty-lines 1)
+         :kill-buffer)
         ("j" "Journal" entry
          (file+olp+datetree ,(concat org-directory "/journal.org"))
          "* %?"
