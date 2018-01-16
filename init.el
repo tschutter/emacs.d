@@ -4,6 +4,10 @@
 (when window-system
   (tool-bar-mode -1))
 
+;;; Prevent Custom from modifying this file.  Since we do not load
+;;; custom.el, any changes via Custom will be ignored.
+(setq custom-file (concat user-emacs-directory "custom.el"))
+
 ;;; Setup package.
 (require 'package)
 
