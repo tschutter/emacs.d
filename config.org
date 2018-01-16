@@ -1181,7 +1181,8 @@ Enable languages for #+begin_src blocks.
 #+begin_src emacs-lisp
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((emacs-lisp . t)
+ '((ditaa . t)
+   (emacs-lisp . t)
    (gnuplot . t)
    (python . t)
    (shell . t)))
@@ -1231,6 +1232,12 @@ Automatically redisplay inline images after code block execution.
     (org-redisplay-inline-images)))
 
 (add-hook 'org-babel-after-execute-hook 'fix-inline-images)
+#+end_src
+
+Specify system location for ditaa.jar.
+
+#+begin_src emacs-lisp
+(setq org-ditaa-jar-path "/usr/share/ditaa/ditaa.jar")
 #+end_src
 
 ** Org Drill
