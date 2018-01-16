@@ -1657,6 +1657,17 @@ Use the following keys to navigate historic version of the file:
 (use-package git-timemachine)
 #+end_src
 
+*** Magit
+
+[[https://magit.vc/][Magit]] is an interface to the version control system Git.
+
+- [[https://magit.vc/manual/magit.html][Magit manual]]
+
+#+begin_src emacs-lisp
+(use-package magit
+  :bind (("C-x g" . magit-status)))
+#+end_src
+
 ** Compiling (F5)
 
 The compiling section must come first, because it defines
