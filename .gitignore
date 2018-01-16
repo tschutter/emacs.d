@@ -1,4 +1,5 @@
 config.el
 config.pdf
 config.tex
+custom.el
 elpa/
