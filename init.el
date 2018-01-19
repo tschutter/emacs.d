@@ -11,9 +11,13 @@
 ;;; Setup package.
 (require 'package)
 
-;; Milkypostman’s Emacs Lisp Package Archive
+;; Milkypostman’s Emacs Lisp Package Archive.
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/") t)
+
+;; Org Mode ELPA.
+(add-to-list 'package-archives
+             '("melpa" . "https://orgmode.org/elpa/") t)
 
 ;; Activate installed packages.
 (package-initialize)
