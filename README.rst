@@ -14,6 +14,10 @@ This repository should be cloned to ``~/.emacs.d``::
 
     git clone https://github.com/tschutter/emacs.d.git ~/.emacs.d
 
+On Windows, set the ``HOME`` environment variable to value of
+``APPDATA``.  This is how the Windows version of Emacs locates the
+``.emacs.d`` directory.
+
 Packages
 ========
 
