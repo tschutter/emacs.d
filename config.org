@@ -783,6 +783,8 @@ See [[http://www.emacswiki.org/emacs/WhiteSpace][emacswiki WhiteSpace]].
         '(face trailing tabs empty indentation space-before-tab))
   (global-whitespace-mode 1)
   (setq whitespace-action '(auto-cleanup))
+  (add-hook 'makefile-mode-hook
+            (lambda () (setq indent-tabs-mode t)))
   (defun whitespace-disable-for-some-files ()
     "Disable whitespace mode for some files."
     (let ((extension (file-name-extension buffer-file-name)))
@@ -871,7 +873,7 @@ See [[http://www.emacswiki.org/emacs/DeskTop][emacswiki DeskTop]].
         (if (and cmd (or (string= "emacs" cmd) (string= "emacs.exe" cmd))) t))))
 
   (defadvice desktop-owner (after pry-from-cold-dead-hands activate)
-    "Don't allow dead emacsen to own the desktop file."
+    "Do not allow dead emacsen to own the desktop file."
     (when (not (emacs-process-p ad-return-value))
       (setq ad-return-value nil))))
 #+end_src
