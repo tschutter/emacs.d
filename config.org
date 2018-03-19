@@ -1059,6 +1059,13 @@ including the filename.  Like file.org/level1/level2.
 (setq org-refile-use-outline-path 'file)
 #+end_src
 
+After refiling, save the org buffers because I often forget to do so.
+Especially inbox.org.
+
+#+begin_src emacs-lisp
+(advice-add 'org-refile :after 'org-save-all-org-buffers)
+#+end_src
+
 ** Journal and Archiving
 
 Archive a task with org-archive-subtree ("C-c C-x C-s"), by inserting
