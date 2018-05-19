@@ -959,7 +959,7 @@ Define templates used by org-capture ("C-c c").
          :kill-buffer)
         ("j" "Journal" entry
          (file+olp+datetree ,(concat org-directory "/journal.org"))
-         "* %?"
+         "- %?"
          :kill-buffer)))
 #+end_src
 
