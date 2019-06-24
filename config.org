@@ -1075,6 +1075,22 @@ it into a date tree in journal.org.
 (setq org-archive-location (concat org-directory "/journal.org::datetree/"))
 #+end_src
 
+Ask to save archive file when it is modified.
+
+#+begin_src emacs-lisp
+(defun org-archive-save-buffer ()
+  (let ((afile (org-extract-archive-file (org-get-local-archive-location))))
+    (if (file-exists-p afile)
+      (let ((buffer (find-file-noselect afile)))
+        (if (y-or-n-p (format "Save (%s)" buffer))
+          (with-current-buffer buffer
+            (save-buffer))
+          (message "You expressly chose _not_ to save (%s)" buffer)))
+      (message "Ooops ... (%s) does not exist." afile))))
+
+(add-hook 'org-archive-hook 'org-archive-save-buffer)
+#+end_src
+
 ** Google calendar sync
 
 Bi-directional syncing of Google calendars.
@@ -1301,13 +1317,17 @@ Quickly pop up a shell.  See https://github.com/kyagi/shell-pop-el
   :bind
   (("C-t" . shell-pop)) ; C-t is bound to transpose-chars by default, which I never use.
 
-  :config
-  ;; The use of custom-set-variables is needed because of a quirk in shell-pop.
-  (custom-set-variables
-   '(shell-pop-universal-key "C-t")
-   '(shell-pop-window-position "right")
-   '(shell-pop-window-size 50)
-   '(shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))))
+  ; custom.el says "init file should contain only one such instance (of custom-set-variables).
+  ; If there is more than one, they won't work right.
+  ;
+  ; :config
+  ; ;; The use of custom-set-variables is needed because of a quirk in shell-pop.
+  ; (custom-set-variables
+  ;  '(shell-pop-universal-key "C-t")
+  ;  '(shell-pop-window-position "right")
+  ;  '(shell-pop-window-size 50)
+  ;  '(shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell))))))
+)
 #+end_src
 
 ** Eshell
@@ -2121,7 +2141,7 @@ Zoom in and out by changing font size like Firefox.
 #+begin_src emacs-lisp
 (global-set-key (kbd "C-+") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)   ; overrides negative-argument (still available via M--)
-(global-set-key (kbd "C-=") (lambda () (interactive) (text-scale-increase 0)))   ; overrides er/expand-region
+(global-set-key (kbd "C-0") (lambda () (interactive) (text-scale-increase 0)))   ; overrides er/expand-region
 #+end_src
 
 Undo and redo.
