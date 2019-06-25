@@ -1453,45 +1453,46 @@ See [[http://www.emacswiki.org/emacs/PrintingFromEmacs][emacswiki PrintingFromEm
 
 ** PDF editing and markup
 
-[[http://pragmaticemacs.com/emacs/view-and-annotate-pdfs-in-emacs-with-pdf-tools/][View and annotate PDFs in Emacs with pdf-tools]] and [[http://pragmaticemacs.com/emacs/more-pdf-tools-tweaks/][More pdf-tools tweaks]].
-
-The PDF-Tools package must be installed manually with M-x
-package-install, and then run M-x pdf-tools-install.
-
-Use C-c C-a to manipulate annotations.
-
-#+begin_src emacs-lisp
-(use-package pdf-tools
-  :pin manual ;; manually update
-
-  :config
-
-  ;; install PDF-Tools in all future PDF buffers
-  (pdf-tools-install)
-
-  ;; open pdfs scaled to fit page
-  (setq-default pdf-view-display-size 'fit-page)
-
-  ;; automatically annotate highlights
-  (setq pdf-annot-activate-created-annotations t)
-
-  ;; use normal isearch
-  (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward)
-
-  ;; turn off cua so copy works
-  (add-hook 'pdf-view-mode-hook (lambda () (cua-mode 0)))
-
-  ;; more fine-grained zooming
-  (setq pdf-view-resize-factor 1.1)
-
-  ;; linum mode is known to conflict with PDF-Tools
-  (add-hook 'pdf-view-mode-hook (lambda() (nlinum-mode -1)))
-
-  ;; keyboard shortcuts
-  (define-key pdf-view-mode-map (kbd "h") 'pdf-annot-add-highlight-markup-annotation)
-  (define-key pdf-view-mode-map (kbd "t") 'pdf-annot-add-text-annotation)
-  (define-key pdf-view-mode-map (kbd "D") 'pdf-annot-delete))
-#+end_src
+# pdf-tools is in sad shape as of 2019-06-24.  pdf-tools-install fails.
+[[http://pragmaticemacs.com/emacs/view-and-annotate-pdfs-in-emacs-with-pdf-tools/][# View and annotate PDFs in Emacs with pdf-tools]] and [[http://pragmaticemacs.com/emacs/more-pdf-tools-tweaks/][More pdf-tools tweaks]].
+#
+# The PDF-Tools package must be installed manually with M-x
+# package-install, and then run M-x pdf-tools-install.
+#
+# Use C-c C-a to manipulate annotations.
+#
+# #+begin_src emacs-lisp
+# (use-package pdf-tools
+#   :pin manual ;; manually update
+#
+#   :config
+#
+#   ;; install PDF-Tools in all future PDF buffers
+#   (pdf-tools-install)
+#
+#   ;; open pdfs scaled to fit page
+#   (setq-default pdf-view-display-size 'fit-page)
+#
+#   ;; automatically annotate highlights
+#   (setq pdf-annot-activate-created-annotations t)
+#
+#   ;; use normal isearch
+#   (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward)
+#
+#   ;; turn off cua so copy works
+#   (add-hook 'pdf-view-mode-hook (lambda () (cua-mode 0)))
+#
+#   ;; more fine-grained zooming
+#   (setq pdf-view-resize-factor 1.1)
+#
+#   ;; linum mode is known to conflict with PDF-Tools
+#   (add-hook 'pdf-view-mode-hook (lambda() (nlinum-mode -1)))
+#
+#   ;; keyboard shortcuts
+#   (define-key pdf-view-mode-map (kbd "h") 'pdf-annot-add-highlight-markup-annotation)
+#   (define-key pdf-view-mode-map (kbd "t") 'pdf-annot-add-text-annotation)
+#   (define-key pdf-view-mode-map (kbd "D") 'pdf-annot-delete))
+# #+end_src
 
 Open links to PDF files in org mode.
 
