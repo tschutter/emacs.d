@@ -1059,11 +1059,13 @@ including the filename.  Like file.org/level1/level2.
 (setq org-refile-use-outline-path 'file)
 #+end_src
 
-After refiling, save the org buffers because I often forget to do so.
-Especially inbox.org.
+Automatically save your all .org files at regular intervals (10
+seconds) because I often forget to do so.  Especially inbox.org.
 
 #+begin_src emacs-lisp
-(advice-add 'org-refile :after 'org-save-all-org-buffers)
+(use-package real-auto-save
+  :config
+  (add-hook 'org-mode-hook 'real-auto-save-mode))
 #+end_src
 
 ** Journal and Archiving
@@ -1073,22 +1075,6 @@ it into a date tree in journal.org.
 
 #+begin_src emacs-lisp
 (setq org-archive-location (concat org-directory "/journal.org::datetree/"))
-#+end_src
-
-Ask to save archive file when it is modified.
-
-#+begin_src emacs-lisp
-(defun org-archive-save-buffer ()
-  (let ((afile (org-extract-archive-file (org-get-local-archive-location))))
-    (if (file-exists-p afile)
-      (let ((buffer (find-file-noselect afile)))
-        (if (y-or-n-p (format "Save (%s)" buffer))
-          (with-current-buffer buffer
-            (save-buffer))
-          (message "You expressly chose _not_ to save (%s)" buffer)))
-      (message "Ooops ... (%s) does not exist." afile))))
-
-(add-hook 'org-archive-hook 'org-archive-save-buffer)
 #+end_src
 
 ** Google calendar sync
