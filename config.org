@@ -886,9 +886,15 @@ See [[http://www.emacswiki.org/emacs/DeskTop][emacswiki DeskTop]].
 
 ** Global key bindings
 
+Use "C-c o" as the common prefix.
+
 #+begin_src emacs-lisp
-(global-set-key "\C-co" (lambda () (interactive) (find-file org-default-notes-file)))
-(global-set-key "\C-cl" 'org-store-link)
+  ; do not use lambda so that which-key can be informative
+(defun change-to-org-notes-buffer ()
+  "Change to default org notes buffer."
+  (interactive) (find-file org-default-notes-file))
+(global-set-key "\C-coh" 'change-to-org-notes-buffer)
+(global-set-key "\C-col" 'org-store-link)
 #+end_src
 
 Wrap region.
@@ -961,6 +967,15 @@ Define templates used by org-capture ("C-c c").
          (file+olp+datetree ,(concat org-directory "/journal.org"))
          "- %?"
          :kill-buffer)))
+#+end_src
+
+Take an URL from the clipboard and insert an org-mode link with a
+title of a page found by the URL into the current buffer.
+
+#+begin_src emacs-lisp
+(use-package org-cliplink
+  :bind
+  (("C-c o l" . org-cliplink)))
 #+end_src
 
 ** Navigation
