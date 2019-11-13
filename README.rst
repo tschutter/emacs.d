@@ -18,6 +18,10 @@ On Windows, set the ``HOME`` environment variable to value of
 ``APPDATA``.  This is how the Windows version of Emacs locates the
 ``.emacs.d`` directory.
 
+Install the ``diminish`` package by running ``M-x list-packages``,
+marking the ``diminish`` package with ``i``, and installing with
+``x``.
+
 Packages
 ========
 
