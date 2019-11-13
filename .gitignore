@@ -3,3 +3,4 @@ config.pdf
 config.tex
 custom.el
 elpa/
+transient/
