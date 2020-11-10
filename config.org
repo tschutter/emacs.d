@@ -1,6 +1,12 @@
 #+TITLE: Emacs Configuration
 #+AUTHOR: Tom Schutter
 
+To update packages:
+
+1. M-x package-list-packages
+2. U (mark Upgradable packages)
+3. x (eXecute the installs and deletions).
+
 * Standard Directories
 
 Configure where Emacs stores and finds various files.
@@ -1316,18 +1322,12 @@ Quickly pop up a shell.  See https://github.com/kyagi/shell-pop-el
 #+begin_src emacs-lisp
 (use-package shell-pop
   :bind
-  (("C-t" . shell-pop)) ; C-t is bound to transpose-chars by default, which I never use.
+  (("C-$" . shell-pop)) ; $ is the shell prompt
 
-  ; custom.el says "init file should contain only one such instance (of custom-set-variables).
-  ; If there is more than one, they won't work right.
-  ;
-  ; :config
-  ; ;; The use of custom-set-variables is needed because of a quirk in shell-pop.
-  ; (custom-set-variables
-  ;  '(shell-pop-universal-key "C-t")
-  ;  '(shell-pop-window-position "right")
-  ;  '(shell-pop-window-size 50)
-  ;  '(shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell))))))
+  :config
+  (setq shell-pop-window-position "left")  ; which really means right?
+  (setq shell-pop-window-size 50)  ; currently ignored?
+  (setq shell-pop-shell-type (quote ("ansi-term" "*ansi-term*" (lambda nil (ansi-term shell-pop-term-shell)))))
 )
 #+end_src
 
