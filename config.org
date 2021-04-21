@@ -885,7 +885,8 @@ See [[http://www.emacswiki.org/emacs/DeskTop][emacswiki DeskTop]].
 
 ** Global key bindings
 
-Use "C-c o" as the common prefix.
+I was using "C-c o" as a common prefix, but that did not always work.
+For example, using "\Col" with org-store-link gives a "Bad URL" error.
 
 #+begin_src emacs-lisp
   ; do not use lambda so that which-key can be informative
@@ -893,7 +894,8 @@ Use "C-c o" as the common prefix.
   "Change to default org notes buffer."
   (interactive) (find-file org-default-notes-file))
 (global-set-key "\C-coh" 'change-to-org-notes-buffer)
-(global-set-key "\C-col" 'org-store-link)
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-c\C-l" 'org-insert-link)
 #+end_src
 
 Wrap region.  Select a region and then press ~"~, ~'~, ~(~, ~{~, or
@@ -911,6 +913,7 @@ Wrap region.  Select a region and then press ~"~, ~'~, ~(~, ~{~, or
 - l = begin_src emacs_lisp
 - p = begin_src python
 - s = begin_src shell (sh)
+- e = begin_example
 
 #+begin_src emacs-lisp
 (wrap-region-add-wrapper "*" "*" nil 'org-mode)
@@ -919,6 +922,7 @@ Wrap region.  Select a region and then press ~"~, ~'~, ~(~, ~{~, or
 (wrap-region-add-wrapper "#+begin_src emacs-lisp\n" "#+end_src\n" "l" 'org-mode)
 (wrap-region-add-wrapper "#+begin_src python\n" "#+end_src\n" "p" 'org-mode)
 (wrap-region-add-wrapper "#+begin_src shell\n" "#+end_src\n" "s" 'org-mode)
+(wrap-region-add-wrapper "#+begin_example\n" "#+end_example\n" "e" 'org-mode)
 #+end_src
 
 Insert a TODO or TASK item before the current item, no matter where we
@@ -1237,9 +1241,9 @@ Sometimes I use C-c ' to edit code blocks, and sometimes I just edit
 them directly.  Do not add extra indentation when editing code blocks
 using C-c '.
 
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp
 (setq org-edit-src-content-indentation 0)
-#+END_SRC
+#+end_src
 
 Fontify code in code blocks when viewing in the org file (as opposed
 to only when using C-c ').
