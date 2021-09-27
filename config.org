@@ -1510,16 +1510,19 @@ See [[http://www.emacswiki.org/emacs/PrintingFromEmacs][emacswiki PrintingFromEm
 #   (define-key pdf-view-mode-map (kbd "D") 'pdf-annot-delete))
 # #+end_src
 
-Open links to PDF files in org mode.
-
-#+begin_src emacs-lisp
-(use-package org-pdfview
-  :config
-  ;;  (eval-after-load 'org '(require 'org-pdfview))
-  (add-to-list
-   'org-file-apps
-   '("\\.pdf\\'" . (lambda (file link) (org-pdfview-open link)))))
-#+end_src
+# org-pdfview not installable since 2018-02-25:
+#   https://github.com/markus1189/org-pdfview/issues/18
+#
+# Open links to PDF files in org mode.
+#
+# #+begin_src emacs-lisp
+# (use-package org-pdfview
+#   :config
+#   ;;  (eval-after-load 'org '(require 'org-pdfview))
+#   (add-to-list
+#    'org-file-apps
+#    '("\\.pdf\\'" . (lambda (file link) (org-pdfview-open link)))))
+# #+end_src
 
 ** Web browsing
 
