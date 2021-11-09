@@ -758,7 +758,13 @@ brackets for org formatting.  Use C-u to insert without the brackets.
 (defun my-insert-date-time (universal)
   "Insert date time string into current buffer."
   (interactive "P")
-  (insert (format-time-string (if universal "%Y-%m-%d %H:%M" "[%Y-%m-%d %H:%M]"))))
+  (insert (format-time-string (cond
+                               ((equal universal '(4))  ; C-u
+                                "%Y-%m-%d %H:%M")
+                               ((equal universal '(16))  ; C-u C-u
+                                "%Y-%m-%dT%H:%M")
+                               (t
+                                "[%Y-%m-%d %H:%M]")))))
 (global-set-key (kbd "C-c i t") 'my-insert-date-time)
 #+end_src
 
