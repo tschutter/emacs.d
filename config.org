@@ -1530,20 +1530,6 @@ See [[http://www.emacswiki.org/emacs/PrintingFromEmacs][emacswiki PrintingFromEm
 #    '("\\.pdf\\'" . (lambda (file link) (org-pdfview-open link)))))
 # #+end_src
 
-** Web browsing
-
-I use Chromium instead of Firefox because Firefox dropped the Keysnail
-extension.
-
-The ~browse-url-default-browser~ function is the default value for
-~browse-url-browser-function~.  But rather than using the preferred
-browser, it uses the first browser it finds and it looks for Firefox
-before Chromium.
-
-#+begin_src emacs-lisp
-(setq browse-url-browser-function 'browse-url-chromium)
-#+end_src
-
 ** Email
 
 *** Outgoing mail
