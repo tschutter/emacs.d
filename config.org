@@ -962,27 +962,34 @@ Set default target for storing captured notes.
 (setq org-default-notes-file (concat org-directory "/inbox.org"))
 #+end_src
 
-Define template strings.
-See http://orgmode.org/manual/Template-expansion.html#Template-expansion
-
+Define current client org file.
 #+begin_src emacs-lisp
-(defvar
-  my/org-basic-task-template
-  "* TODO %^{TODO}\n:LOGBOOK:\n- Created on [%<%Y-%m-%d %a %H:%M>]\n:END:\n%?%i")
+(setq org-client-file "~/Documents/bloomberg/bloomberg.org")
 #+end_src
 
 Define templates used by org-capture ("C-c c").
 
+Useful template expansion %-escapes:
+  %? - After completing the template, position cursor here.
+  %i - Initial content, copied from the active region.
+  %u, %U - Inactive date or time stamp.
+  %x - Content of the X clipboard.
+
 #+begin_src emacs-lisp
 (setq org-capture-templates
-      `(("t" "TODO" entry
-         (file "")  ; "" = use org-default-notes-file
-         ,my/org-basic-task-template
-         :kill-buffer)
-        ("j" "Journal" entry
-         (file+olp+datetree ,(concat org-directory "/journal.org"))
-         "- %?"
-         :kill-buffer)))
+      '(
+        ("t" "TODO" entry (file "inbox.org")
+         "* TODO %?\n" :prepend t :empty-lines-after 1)
+        ("T" "TODO with clipboard" entry (file "inbox.org")
+         "* TODO %?\n%c\n" :prepend t :empty-lines-after 1)
+        ("c" "Client TODO" entry (file+headline org-client-file "Tasks")
+         "* TODO %?\n" :prepend t :empty-lines-after 1)
+        ("C" "Client TODO with clipboard" entry (file+headline org-client-file "Tasks")
+         "* TODO %?\n%c\n" :prepend t :empty-lines-after 1)
+        ("j" "Journal" entry (file+datetree "journal.org")
+         "* %?\n" :empty-lines-after 1)
+        ("J" "Journal with clipboard" entry (file+datetree "journal.org")
+         "* %?\n^c\n" :empty-lines-after 1)))
 #+end_src
 
 Take an URL from the clipboard and insert an org-mode link with a
