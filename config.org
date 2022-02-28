@@ -992,6 +992,14 @@ Useful template expansion %-escapes:
          "* %?\n^c\n" :empty-lines-after 1)))
 #+end_src
 
+Enable capture from outside Emacs.  See [[https://orgmode.org/worg/org-contrib/org-protocol.html][org-protocol]].
+Use with: emacsclient "org-protocol://capture?template=T"
+With xubuntu, Settings -> Keyboard Application Shortcuts -> Super+C
+
+#+begin_src emacs-lisp
+(require 'org-protocol)
+#+end_src
+
 Take an URL from the clipboard and insert an org-mode link with a
 title of a page found by the URL into the current buffer.
 
