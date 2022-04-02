@@ -7,6 +7,10 @@ To update packages:
 2. U (mark Upgradable packages)
 3. x (eXecute the installs and deletions).
 
+Helpful resources:
+
+- [[https://www.masteringemacs.org/article/mastering-key-bindings-emacs][Mastering Key Bindings in Emacs - Mastering Emacs]]
+
 * Standard Directories
 
 Configure where Emacs stores and finds various files.
@@ -1009,6 +1013,14 @@ title of a page found by the URL into the current buffer.
   (("C-c o l" . org-cliplink)))
 #+end_src
 
+Override org keybindings that I will never use.
+#+begin_src emacs-lisp
+(defun set-my-org-keys ()
+  (define-key org-mode-map (kbd "<C-S-down>") 'move-line-down)
+  (define-key org-mode-map (kbd "<C-S-up>") 'move-line-up))
+(add-hook 'org-mode-hook 'set-my-org-keys)
+#+end_src
+
 ** Navigation
 Globally bind org-iswitchb to "C-c b".
 
@@ -1897,7 +1909,7 @@ Needs work.
   (let ((col (current-column)))
     (save-excursion
       (transpose-lines 1))
-    (forward-line -1)
+    (forward-line -2)
     (move-to-column col)))
 (global-set-key (kbd "<C-S-down>") 'move-line-down)
 (global-set-key (kbd "<C-S-up>") 'move-line-up)
