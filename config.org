@@ -1153,6 +1153,15 @@ it into a date tree in journal.org.
 (setq org-archive-location (concat org-directory "/journal.org::datetree/"))
 #+end_src
 
+** Exporting
+
+Github flavored markdown exporter ("C-c C-e g g"). It supports the
+features [[https://help.github.com/articles/github-flavored-markdown/][listed here]].
+
+#+begin_src emacs-lisp
+(use-package ox-gfm :ensure t)
+#+end_src
+
 ** Google calendar sync
 
 Bi-directional syncing of Google calendars.
