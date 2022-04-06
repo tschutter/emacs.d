@@ -15,10 +15,6 @@
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/") t)
 
-;; Org Mode ELPA.
-(add-to-list 'package-archives
-             '("org-elpa" . "https://orgmode.org/elpa/") t)
-
 ;; Activate installed packages.
 (package-initialize)
 
