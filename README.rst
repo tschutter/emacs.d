@@ -20,7 +20,7 @@ On Windows, set the ``HOME`` environment variable to value of
 
 Install the ``diminish`` package by running ``M-x list-packages``,
 marking the ``diminish`` package with ``i``, and installing with
-``x``.
+``x``.  Then restart Emacs.
 
 Packages
 ========
