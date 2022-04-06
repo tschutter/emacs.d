@@ -11,6 +11,14 @@ Helpful resources:
 
 - [[https://www.masteringemacs.org/article/mastering-key-bindings-emacs][Mastering Key Bindings in Emacs - Mastering Emacs]]
 
+* Debugging Elisp Errors
+
+Uncomment to see a stack trace on error.
+
+#+begin_src emacs-lisp
+;(setq debug-on-error t)
+#+end_src
+
 * Standard Directories
 
 Configure where Emacs stores and finds various files.
@@ -1109,8 +1117,7 @@ clutter.
 By default, commas are now allowed next to markup characters.  For
 example, ~code,~ is not rendered as code.  This is a problem in this
 very file when doing markup of key bindings like ~C-c C-,~.  See
-[[http://stackoverflow.com/a/24173780][stackoverflow: How can I emphasize or verbatim quote a comma in org
-mode?]].
+[[http://stackoverflow.com/a/24173780][stackoverflow: How can I emphasize or quote a comma in org mode?]].
 
 #+begin_src emacs-lisp
 (setcar (nthcdr 2 org-emphasis-regexp-components) " \t\r\n\"'")
@@ -1447,13 +1454,6 @@ We don't need to see the startup message.
 
 #+begin_src emacs-lisp
 (setq inhibit-startup-message t)
-#+end_src
-
-And [[http://yann.hodique.info/blog/rant-obfuscation-in-emacs/][suppress the startup message in the echo area]] as well.
-
-#+begin_src emacs-lisp
-(put 'inhibit-startup-echo-area-message 'saved-value
-     (setq inhibit-startup-echo-area-message (user-login-name)))
 #+end_src
 
 ** Define word at point
