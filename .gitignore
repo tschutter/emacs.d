@@ -3,5 +3,6 @@ config.el
 config.pdf
 config.tex
 custom.el
+ido.last
 elpa/
 transient/
