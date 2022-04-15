@@ -87,16 +87,28 @@ buffer during a session.  This is incompatible with leaving Emacs and
 its buffers open all the time and constantly making changes and
 writing them to disk.
 
-See [[https://www.emacswiki.org/emacs/ForceBackups][emacswiki Force Backups]].
+See [[https://www.emacswiki.org/emacs/BackupEachSave][emacswiki Backup Each Save]].
 
 #+begin_src emacs-lisp
-(defun my/force-backup-of-buffer ()
-    (setq buffer-backed-up nil))
-(add-hook 'before-save-hook  'my/force-backup-of-buffer)
+(require 'backup-each-save)
+(add-hook 'after-save-hook 'backup-each-save)
+(setq backup-each-save-mirror-location backup-directory)
+(setq backup-each-save-time-format "%Y-%m-%dT%H-%M-%S")
+
+; Use "!" instead of "/" to separate the path components so that whole
+; trees under backup-directory is not created.
+(defun backup-each-save-compute-location (filename)
+  (let* ((containing-dir (file-name-directory filename))
+     (basename (file-name-nondirectory filename))
+     (backup-container
+      (concat
+          backup-each-save-mirror-location
+          (replace-regexp-in-string "/" "!" containing-dir))))
+    (concat backup-container basename "_"
+        (format-time-string backup-each-save-time-format))))
 #+end_src
 
-On 2017-10-08 I tried using the backup-each-save package from
-[[https://www.emacswiki.org/emacs/BackupEachSave][emacswiki Backup Each Save]], but that did not work.
+Also see [[https://www.emacswiki.org/emacs/ForceBackups][emacswiki Force Backups]].
 
 ** Keep last 8 versions of backup files
 
