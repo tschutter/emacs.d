@@ -1707,6 +1707,14 @@ http://wiki.bitlbee.org/bitlbee-sipe
 ; account add yahoo tom.schutter YAHOO-PASSWORD
 #+end_src
 
+** Cheat Sheets
+
+Use ~M-x cheat-sh~.
+
+#+begin_src emacs-lisp
+(use-package cheat-sh)
+#+end_src
+
 * Programming
 
 ** VC (Version Control)
