@@ -10,6 +10,7 @@ To update packages:
 Helpful resources:
 
 - [[https://www.masteringemacs.org/article/mastering-key-bindings-emacs][Mastering Key Bindings in Emacs - Mastering Emacs]]
+- [[https://emacs.stackexchange.com/a/360][Overriding key bindings]]
 
 * Debugging Elisp Errors
 
@@ -619,6 +620,17 @@ See [[http://emacswiki.org/emacs/BookMarks][emacswiki BookMarks]].
   (("<kp-1>" . bookmark-bmenu-list)
    ("<kp-2>" . bookmark-set)
    ("<kp-3>" . bookmark-jump)))
+#+end_src
+
+** Spin Markers
+
+See https://www.emacswiki.org/emacs/SpinMarkers
+See https://github.com/tsgates/pylookup
+
+#+begin_src emacs-lisp
+(require 'spin-markers)  ; in ./elisp/
+(bind-key* (kbd "C-\"") 'spin-marker-add)
+(bind-key* (kbd "C-'") 'spin-marker-jump-next)
 #+end_src
 
 ** Save and restore point (F3, F4)
