@@ -638,11 +638,17 @@ See https://www.emacswiki.org/emacs/SpinMarkers
 
 ** Save and restore point (F3, F4)
 
+Deprecated on 2023-01-21.  Use spin markers instead.
+
 #+begin_src emacs-lisp
-(global-set-key (kbd "C-<f3>") '(lambda () (interactive) (point-to-register 33)))  ;^F3 Save
-(global-set-key (kbd "<f3>") '(lambda () (interactive) (jump-to-register 33)))     ; F3 Restore
-(global-set-key (kbd "C-<f4>") '(lambda () (interactive) (point-to-register 34)))  ;^F4 Save
-(global-set-key (kbd "<f4>") '(lambda () (interactive) (jump-to-register 34)))     ; F4 Restore
+(global-set-key (kbd "C-<f3>")
+    '(lambda () (interactive) (progn (message "Use C-\" instead!") (ding))))
+(global-set-key (kbd "<f3>")
+    '(lambda () (interactive) (progn (message "Use C-' instead!") (ding))))
+(global-set-key (kbd "C-<f4>")
+    '(lambda () (interactive) (progn (message "Use C-\" instead!") (ding))))
+(global-set-key (kbd "<f4>")
+    '(lambda () (interactive) (progn (message "Use C-' instead!") (ding))))
 #+end_src
 
 ** Jump between symbols
