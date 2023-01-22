@@ -624,6 +624,10 @@ See [[http://emacswiki.org/emacs/BookMarks][emacswiki BookMarks]].
 
 ** Spin Markers
 
+- C-" to add a marker at point.
+- C-' to jump to the next marker.
+- C-u C-" to remove the marker at point.
+
 See https://www.emacswiki.org/emacs/SpinMarkers
 
 #+begin_src emacs-lisp
