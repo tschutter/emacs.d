@@ -37,13 +37,15 @@
 ;; Uncomment to debug use-package.
 ;(setq use-package-verbose t)
 
+;;; Load the local config.
+(if (file-exists-p "~/.emacs-local.el")
+    (load-file "~/.emacs-local.el"))
+
 ;;; Load the config.
 (require 'org)
 (org-babel-load-file (concat user-emacs-directory "config.org"))
 
-;;; Load the local config.
-;; This *must* be last so that it can override settings in config.org.
-(if (file-exists-p "~/.emacs-local.el")
-    (load-file "~/.emacs-local.el"))
+(if (fboundp 'emacs-local-final-config)
+   (emacs-local-final-config))
 
 ;;; init.el ends here
