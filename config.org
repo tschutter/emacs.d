@@ -625,7 +625,6 @@ See [[http://emacswiki.org/emacs/BookMarks][emacswiki BookMarks]].
 ** Spin Markers
 
 See https://www.emacswiki.org/emacs/SpinMarkers
-See https://github.com/tsgates/pylookup
 
 #+begin_src emacs-lisp
 (require 'spin-markers)  ; in ./elisp/
@@ -2039,24 +2038,27 @@ quotes.  If the docstring can fit on one line, do so.
                 (flyspell-prog-mode))  ;on-the-fly spell check in comments
             (make-local-variable 'whitespace-style)
             (add-to-list 'whitespace-style 'lines-tail)  ;highlight cols beyond whitespace-line-column
-            (define-key python-mode-map (kbd "C-c h") 'pylookup-lookup)  ;lookup in Python doc
+            ; (define-key python-mode-map (kbd "C-c h") 'pylookup-lookup)  ;lookup in Python doc
             (define-key python-mode-map (kbd "<f12>") 'pyp)  ;insert debug print
             (define-key python-mode-map "\C-m" 'newline-and-indent)))
 #+end_src
 
 *** Python doc lookup
 
+As of 2023-01-21, pylookup still requires cl, but cl has been
+deprecated and replaced by cl-lib.
+
 See https://github.com/tsgates/pylookup
 
 Run "M-x pylookup-update-all" to update database.
 
 #+begin_src emacs-lisp
-(require 'pylookup)  ; in ./elisp/
-(setq pylookup-program (os-path-join emacs-d-directory "bin" "pylookup.py"))  ;executable
-(setq pylookup-db-file (os-path-join emacs-cache-dir "pylookup.db"))  ;database
-(setq pylookup-html-locations '("/usr/share/doc/python2.7/html"))  ;doc source
-(autoload 'pylookup-lookup "pylookup"
-  "Lookup SEARCH-TERM in the Python HTML indexes." t)
+; (require 'pylookup)  ; in ./elisp/
+; (setq pylookup-program (os-path-join emacs-d-directory "bin" "pylookup.py"))  ;executable
+; (setq pylookup-db-file (os-path-join emacs-cache-dir "pylookup.db"))  ;database
+; (setq pylookup-html-locations '("/usr/share/doc/python2.7/html"))  ;doc source
+; (autoload 'pylookup-lookup "pylookup"
+;   "Lookup SEARCH-TERM in the Python HTML indexes." t)
 #+end_src
 
 *** Python ropemacs refactoring
