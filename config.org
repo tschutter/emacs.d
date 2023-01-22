@@ -10,7 +10,7 @@ To update packages:
 Helpful resources:
 
 - [[https://www.masteringemacs.org/article/mastering-key-bindings-emacs][Mastering Key Bindings in Emacs - Mastering Emacs]]
-- [[https://emacs.stackexchange.com/a/360][Overriding key bindings]]
+- [[https://emacs.stackexchange.com/a/360][Overriding key bindings]] (bind-key)
 
 * Debugging Elisp Errors
 
@@ -636,10 +636,10 @@ See https://github.com/tsgates/pylookup
 ** Save and restore point (F3, F4)
 
 #+begin_src emacs-lisp
-(define-key global-map (kbd "C-<f3>") '(lambda () (interactive) (point-to-register 33)))  ;^F3 Save
-(define-key global-map (kbd "<f3>") '(lambda () (interactive) (jump-to-register 33)))     ; F3 Restore
-(define-key global-map (kbd "C-<f4>") '(lambda () (interactive) (point-to-register 34)))  ;^F4 Save
-(define-key global-map (kbd "<f4>") '(lambda () (interactive) (jump-to-register 34)))     ; F4 Restore
+(global-set-key (kbd "C-<f3>") '(lambda () (interactive) (point-to-register 33)))  ;^F3 Save
+(global-set-key (kbd "<f3>") '(lambda () (interactive) (jump-to-register 33)))     ; F3 Restore
+(global-set-key (kbd "C-<f4>") '(lambda () (interactive) (point-to-register 34)))  ;^F4 Save
+(global-set-key (kbd "<f4>") '(lambda () (interactive) (jump-to-register 34)))     ; F4 Restore
 #+end_src
 
 ** Jump between symbols
@@ -2009,7 +2009,7 @@ Bound to <f2>.
           (forward-list)
           (region-line-wrap))))))
 
-(define-key global-map (kbd "<f2>") '(lambda () (interactive) (function-line-wrap)))
+(global-set-key (kbd "<f2>") '(lambda () (interactive) (function-line-wrap)))
 #+end_src
 
 ** Python
