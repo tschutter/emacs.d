@@ -1746,7 +1746,7 @@ Use ~M-x cheat-sh~.
   :config
   (add-hook 'log-edit-hook
             (lambda ()
-              (erase-buffer)  ; SETUP inserts stuff we don't want.
+              (erase-buffer)  ; SETUP inserts unwanted stuff like "Summary".
               (insert
                (mapconcat 'file-name-nondirectory (log-edit-files) ",")
                ": "))))
