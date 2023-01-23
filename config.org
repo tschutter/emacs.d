@@ -1485,10 +1485,18 @@ Proselint requires proselint.
 * Miscellaneous
 
 ** Startup
-We don't need to see the startup message.
+We do not need to see the startup message.
 
 #+begin_src emacs-lisp
 (setq inhibit-startup-message t)
+#+end_src
+
+** Sound
+We do not need to hear an annoying system sound when Emacs thinks we
+have done something wrong.  Flash the frame instead.
+
+#+begin_src emacs-lisp
+(setq visible-bell t)
 #+end_src
 
 ** Define word at point
