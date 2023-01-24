@@ -626,6 +626,7 @@ See [[http://emacswiki.org/emacs/BookMarks][emacswiki BookMarks]].
 
 - C-" to add a marker at point.
 - C-' to jump to the next marker.
+- C-M-" to remove all markers.
 - C-u C-" to remove the marker at point.
 
 See https://www.emacswiki.org/emacs/SpinMarkers
@@ -634,6 +635,7 @@ See https://www.emacswiki.org/emacs/SpinMarkers
 (require 'spin-markers)  ; in ./elisp/
 (bind-key* (kbd "C-\"") 'spin-marker-add)
 (bind-key* (kbd "C-'") 'spin-marker-jump-next)
+(bind-key* (kbd "C-M-\"") 'spin-marker-remove-all)
 #+end_src
 
 ** Save and restore point (F3, F4)
