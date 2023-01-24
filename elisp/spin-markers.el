@@ -64,10 +64,10 @@ instead."
       (spin-marker-remove)
     (let ((cur-mark (point-marker)))
       (if (not (member cur-mark spin-marker-list))
-	  (progn
-	    (push (point-marker) spin-marker-list)
-	    (message "pushed %S" (car spin-marker-list)))
-	(message "%S already a member" cur-mark)))
+      (progn
+        (push (point-marker) spin-marker-list)
+        (message "pushed %S" (car spin-marker-list)))
+    (message "%S already a member" cur-mark)))
     )
   )
 
@@ -76,12 +76,19 @@ instead."
   ;; (interactive)
   (let ((cur-mark (point-marker)) (mess-fmt "%S not found in list"))
     (if (member cur-mark spin-marker-list)
-	(setq mess-fmt "%S removed from list"))
+    (setq mess-fmt "%S removed from list"))
     (setq spin-marker-list (delete cur-mark spin-marker-list))
     (setq spin-marker-next-marker-list (delete cur-mark spin-marker-next-marker-list))
     (message mess-fmt cur-mark)
     )
   )
+
+(defun spin-marker-remove-all ()
+  "Remove all of the markers."
+  (interactive)
+  (setq spin-marker-list nil)
+  (setq spin-marker-next-marker-list nil)
+  (message "removed all spin markers"))
 
 (defun spin-marker-jump-next ()
   "Jump to the next marker in the list.
@@ -92,21 +99,21 @@ Use `spin-marker-add' to add or remove markers from the
 
   (if (not (car spin-marker-next-marker-list))
       (setq spin-marker-next-marker-list spin-marker-list))
-  
+
   (let ((next-marker (car spin-marker-next-marker-list)))
     (cond ((not next-marker)
-	   (message "spin-marker-list empty"))
+       (message "spin-marker-list empty"))
 
-	  ((not (marker-buffer next-marker))
-	   (setq spin-marker-list (delete next-marker spin-marker-list))
-	   (setq spin-marker-next-marker-list
-		 (delete next-marker spin-marker-next-marker-list))	   
-	   (message "%S lost -- removed -- spin more" next-marker))
+      ((not (marker-buffer next-marker))
+       (setq spin-marker-list (delete next-marker spin-marker-list))
+       (setq spin-marker-next-marker-list
+         (delete next-marker spin-marker-next-marker-list))
+       (message "%S lost -- removed -- spin more" next-marker))
 
-	  (t
-	   (switch-to-buffer (marker-buffer next-marker))
-	   (goto-char next-marker)
-	   (setq spin-marker-next-marker-list (cdr spin-marker-next-marker-list))))
+      (t
+       (switch-to-buffer (marker-buffer next-marker))
+       (goto-char next-marker)
+       (setq spin-marker-next-marker-list (cdr spin-marker-next-marker-list))))
     )
   )
 
