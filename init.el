@@ -4,9 +4,8 @@
 (when window-system
   (tool-bar-mode -1))
 
-;;; Prevent Custom from modifying this (init.el) file.  Since we do
-;;; not load custom.el, any changes via Custom will be ignored.
-(setq custom-file (make-temp-file "emacs-custom-file.el"))
+;;; Prevent Custom from modifying this (init.el) file.
+(setq custom-file "~/.config/emacs/custom-file.el")
 
 ;;; Setup package.
 (require 'package)
