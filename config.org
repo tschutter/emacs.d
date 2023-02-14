@@ -171,12 +171,8 @@ Start an Emacs server if it is not already running.
 
 ** Set default font
 
-Setting the font here is problematic because it triggers a window
-resize, which may push the window off of the screen.
-
 #+begin_src emacs-lisp
-(if (and window-system (eq system-type 'windows-nt))
-      (set-face-attribute 'default nil :font "Consolas-11"))
+(set-frame-font "Monospace-20" nil t)
 #+end_src
 
 ** Turn off blinking cursor
