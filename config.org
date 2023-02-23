@@ -1432,6 +1432,7 @@ See [[http://www.emacswiki.org/emacs/CategoryEshell][emacswiki CategoryEshell]].
 * Flycheck
 
 See https://sourcegraph.com/github.com/robert-zaremba/flycheck
+See https://www.flycheck.org/en/latest/user/flycheck-versus-flymake.html
 
 #+begin_src emacs-lisp
 (use-package flycheck
