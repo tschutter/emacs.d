@@ -228,6 +228,9 @@ columns and display in all buffers.  See [[http://www.emacswiki.org/emacs/LineNu
   (use-package git-gutter+
     :diminish git-gutter+-mode  ;; do not display in mode-line
     :config
+    ;; In case it is very slow to save an org-mode buffer, try these:
+    ;; (setq git-gutter+-disabled-modes '(org-mode))
+    ;; (setq git-gutter+-update-interval 0.02)
     (progn
       (use-package git-gutter-fringe+)
       (global-git-gutter+-mode 1))))
