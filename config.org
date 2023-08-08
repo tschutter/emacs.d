@@ -1091,6 +1091,18 @@ Pressing RET on a link will follow the link.
 (setq org-return-follows-link t)
 #+end_src
 
+Default for .docx files is to convert the first page to an image and
+display it.  Use the system default handler instead.
+
+#+begin_src emacs-lisp
+(add-hook 'org-mode-hook
+      '(lambda ()
+             (setq org-file-apps
+                   (append '(
+                             ("\\.docx\\'" . system)
+                             ) org-file-apps))))
+#+end_src
+
 ** Structure Editing
 
 Do not leave a blank line before a new heading/item or when moving
