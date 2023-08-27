@@ -1064,6 +1064,7 @@ Override org keybindings that I will never use.
 #+end_src
 
 ** Navigation
+
 Globally bind org-iswitchb to "C-c b".
 
 #+begin_src emacs-lisp
@@ -1391,6 +1392,15 @@ Conduct an interactive "drill sessions" using [[http://orgmode.org/worg/org-cont
   :config
   (setq savehist-file (os-path-join emacs-cache-dir "savehist-history"))
   (setq org-id-locations-file (os-path-join emacs-cache-dir "org-id-locations")))
+#+end_src
+
+** Link Handling
+
+Specify browser used to open a link.  For example, use chrome:dog.com.
+
+#+begin_src emacs-lisp
+(org-link-set-parameters "chrome" :follow (lambda (path) (browse-url-chrome (concat "https:" path))))
+(org-link-set-parameters "chromium" :follow (lambda (path) (browse-url-chromium (concat "https:" path))))
 #+end_src
 
 * Calendar and Diary
