@@ -2360,7 +2360,7 @@ mouse-select/middle-button-click).
 See http://hugoheden.wordpress.com/2009/03/08/copypaste-with-emacs-in-terminal/
 
 #+begin_src emacs-lisp
-(setq x-select-enable-clipboard t)
+(setq select-enable-clipboard t)
 #+end_src
 
 If emacs is run in a terminal, the clipboard functions have no effect.
