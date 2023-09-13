@@ -553,6 +553,13 @@ This is useful when followed by an immediate kill."
 (define-key isearch-mode-map [(control return)] 'isearch-exit-other-end)
 #+end_src
 
+Since 24.3, a single space in an incremental search matches any number
+of spaces.  If I wanted that behavior, I would use a regexp search.
+
+#+begin_src emacs-lisp
+(setq search-whitespace-regexp nil)
+#+end_src
+
 ** Goto line
 
 Provide an easy goto-line (~C-c g~).
