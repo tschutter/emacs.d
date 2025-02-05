@@ -779,7 +779,9 @@ Cycle between 1, 0, or original spaces around point where spaces includes newlin
 
 The variable that starts religious wars.
 
-(setq fill-column 100)
+#+begin_src emacs-lisp
+(setq-default fill-column 100)
+#+end_src
 
 ** Unfill paragraph
 
