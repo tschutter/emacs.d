@@ -765,8 +765,7 @@ All other editors work this way, so let's not confuse ourselves.
 
 ** Clean up spaces
 
-Cycle between 1, 0, or original spaces around point where spaces
-includes newlines and tabs.
+Cycle between 1, 0, or original spaces around point where spaces includes newlines and tabs.
 
 #+begin_src emacs-lisp
 (if (and (>= emacs-major-version 24)
@@ -776,10 +775,15 @@ includes newlines and tabs.
   (global-set-key (kbd "M-SPC") '(lambda () (interactive) (just-one-space -1))))
 #+end_src
 
+** Paragraph filling (word wrap)
+
+The variable that starts religious wars.
+
+(setq fill-column 100)
+
 ** Unfill paragraph
 
-Press "M-Q" to perform the inverse of fill-paragraph ("M-q").  From
-[[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha Chua]].
+Press "M-Q" to perform the inverse of fill-paragraph ("M-q").  From [[http://pages.sachachua.com/.emacs.d/Sacha.html][Sacha Chua]].
 
 #+begin_src emacs-lisp
 (defun my/unfill-paragraph (&optional region)
