@@ -3,6 +3,8 @@ config.el
 config.pdf
 config.tex
 custom.el
+eln-cache/
 ido.last
 elpa/
+persist/
 transient/
