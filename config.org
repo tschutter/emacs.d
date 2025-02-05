@@ -211,14 +211,10 @@ Display the current function name in the mode line.
 
 ** Display line numbers
 
-Display line numbers on the left side of the window.  Always use 5
-columns and display in all buffers.  See [[http://www.emacswiki.org/emacs/LineNumbers][emacswiki LineNumbers]].
+Display line numbers on the left side of the window.  See [[http://www.emacswiki.org/emacs/LineNumbers][EmacsWiki LineNumbers]].
 
 #+begin_src emacs-lisp
-(use-package nlinum
-  :init
-  (setq nlinum-format "% 5d")
-  (global-nlinum-mode))
+(global-display-line-numbers-mode 1)
 #+end_src
 
 ** Highlight uncommitted git changes
@@ -1304,6 +1300,7 @@ Hopefully this is temporary until a better way is found.
 
 Use ~M-x list-colors-display~ for color names.
 
+[2024-09-15] Not causing Error (frameset): Undefined color: "unspecified-bg"
 #+begin_src emacs-lisp
 (defun org-agenda-color-category (category backcolor forecolor)
   (let ((re (rx-to-string `(seq bol (0+ space) ,category ":"))))
